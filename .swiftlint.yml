@@ -1,0 +1,26 @@
+disabled_rules:
+  - todo
+  - trailing_comma
+  - opening_brace
+
+included:
+  - Sources/
+  - Tests/
+
+identifier_name:
+  excluded:
+    - h1
+    - h2
+    - h3
+    - p1
+    - p2
+    - r
+    - vm
+    - B
+    - KB
+    - MB
+    - GB
+
+type_name:
+  excluded:
+    - T

@@ -1,0 +1,10 @@
+--swiftversion 5.8
+--exclude .build
+--maxwidth 120
+--allman false
+--disable wrapMultilineStatementBraces
+--funcattributes prev-line
+--typeattributes prev-line
+--varattributes prev-line
+--wraparguments before-first
+--wrapparameters before-first
