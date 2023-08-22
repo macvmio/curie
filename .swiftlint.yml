@@ -24,3 +24,4 @@ identifier_name:
 type_name:
   excluded:
     - T
+    - VM
