@@ -2,13 +2,13 @@ import CurieCommon
 import Foundation
 import TSCBasic
 
-public struct MacOSVMBundle {
+public struct VMBundle {
     public let path: AbsolutePath
 
     static let fileExtension = "curie"
 
     init(path: AbsolutePath) throws {
-        guard path.pathString.hasSuffix(".\(MacOSVMBundle.fileExtension)") else {
+        guard path.pathString.hasSuffix(".\(VMBundle.fileExtension)") else {
             throw CoreError
                 .generic("Invalid VM bundle, unexpected extension at path '\(path)' (expected <filename>.curie)")
         }

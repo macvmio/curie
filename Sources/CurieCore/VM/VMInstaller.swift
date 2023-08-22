@@ -3,12 +3,12 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-protocol MacOSVMInstaller {
-    func install(vm: MacOSVM, restoreImagePath: AbsolutePath) async throws
+protocol VMInstaller {
+    func install(vm: VM, restoreImagePath: AbsolutePath) async throws
 }
 
 @MainActor
-final class DefaultMacOSVMInstaller: MacOSVMInstaller {
+final class DefaultVMInstaller: VMInstaller {
     private let console: Console
     private var observer: NSKeyValueObservation?
 
@@ -18,7 +18,7 @@ final class DefaultMacOSVMInstaller: MacOSVMInstaller {
         self.console = console
     }
 
-    func install(vm: MacOSVM, restoreImagePath: AbsolutePath) async throws {
+    func install(vm: VM, restoreImagePath: AbsolutePath) async throws {
         console.text("Install VM image")
 
         let installer = VZMacOSInstaller(

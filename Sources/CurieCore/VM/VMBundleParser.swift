@@ -3,14 +3,14 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-protocol MacOSVMBundleParser {
-    func readPlatformConfiguration(from bundle: MacOSVMBundle) throws -> VZMacPlatformConfiguration
-    func readConfig(from bundle: MacOSVMBundle) throws -> MacOSVMConfig
-    func writeConfig(_ config: MacOSVMConfig, toBundle bundle: MacOSVMBundle) throws
+protocol VMBundleParser {
+    func readPlatformConfiguration(from bundle: VMBundle) throws -> VZMacPlatformConfiguration
+    func readConfig(from bundle: VMBundle) throws -> VMConfig
+    func writeConfig(_ config: VMConfig, toBundle bundle: VMBundle) throws
     func canParseConfig(at path: AbsolutePath) -> Bool
 }
 
-final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
+final class DefaultVMBundleParser: VMBundleParser {
     private let fileSystem: CurieCommon.FileSystem
     private let jsonDecoder = JSONDecoder()
     private let jsonEncoder = {
@@ -25,9 +25,9 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         self.fileSystem = fileSystem
     }
 
-    func writePlatformConfiguration(from _: MacOSVMBundle) throws {}
+    func writePlatformConfiguration(from _: VMBundle) throws {}
 
-    func readPlatformConfiguration(from bundle: MacOSVMBundle) throws -> VZMacPlatformConfiguration {
+    func readPlatformConfiguration(from bundle: VMBundle) throws -> VZMacPlatformConfiguration {
         try validateBundle(bundle: bundle)
 
         let configuration = VZMacPlatformConfiguration()
@@ -37,10 +37,10 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         return configuration
     }
 
-    func readConfig(from bundle: MacOSVMBundle) throws -> MacOSVMConfig {
+    func readConfig(from bundle: VMBundle) throws -> VMConfig {
         let data = try fileSystem.read(from: bundle.config)
-        let partialConfig = try jsonDecoder.decode(MacOSVMPartialConfig.self, from: data)
-        let config = MacOSVMConfig(
+        let partialConfig = try jsonDecoder.decode(VMPartialConfig.self, from: data)
+        let config = VMConfig(
             name: bundle.name,
             cpuCount: prepareCPUCount(config: partialConfig),
             memorySize: prepareMemorySize(config: partialConfig),
@@ -50,7 +50,7 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         return config
     }
 
-    func writeConfig(_ config: MacOSVMConfig, toBundle bundle: MacOSVMBundle) throws {
+    func writeConfig(_ config: VMConfig, toBundle bundle: VMBundle) throws {
         let data = try jsonEncoder.encode(config)
         try fileSystem.write(data: data, to: bundle.config)
     }
@@ -58,7 +58,7 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
     func canParseConfig(at path: AbsolutePath) -> Bool {
         do {
             let data = try Data(contentsOf: path.asURL)
-            _ = try jsonDecoder.decode(MacOSVMPartialConfig.self, from: data)
+            _ = try jsonDecoder.decode(VMPartialConfig.self, from: data)
             return true
         } catch {
             return false
@@ -67,7 +67,7 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
 
     // MARK: - Private
 
-    private func readAuxilaryStorage(from bundle: MacOSVMBundle) throws -> VZMacAuxiliaryStorage {
+    private func readAuxilaryStorage(from bundle: VMBundle) throws -> VZMacAuxiliaryStorage {
         guard fileSystem.exists(at: bundle.auxilaryStorage) else {
             throw CoreError
                 .generic("VM Bundle does not contain auxilary storage file at path '\(bundle.auxilaryStorage)'")
@@ -75,7 +75,7 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         return VZMacAuxiliaryStorage(contentsOf: bundle.auxilaryStorage.asURL)
     }
 
-    private func readHardwareModel(from bundle: MacOSVMBundle) throws -> VZMacHardwareModel {
+    private func readHardwareModel(from bundle: VMBundle) throws -> VZMacHardwareModel {
         guard fileSystem.exists(at: bundle.hardwareModel) else {
             throw CoreError.generic("VM Bundle does not contain hardware model file at path '\(bundle.hardwareModel)'")
         }
@@ -92,7 +92,7 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         return hardwareModel
     }
 
-    private func readMachineIdentifier(from bundle: MacOSVMBundle) throws -> VZMacMachineIdentifier {
+    private func readMachineIdentifier(from bundle: VMBundle) throws -> VZMacMachineIdentifier {
         guard fileSystem.exists(at: bundle.machineIdentifier) else {
             throw CoreError
                 .generic("VM Bundle does not contain machine identifier file at path '\(bundle.machineIdentifier)'")
@@ -108,13 +108,13 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
 
     // MARK: - Private
 
-    private func validateBundle(bundle: MacOSVMBundle) throws {
+    private func validateBundle(bundle: VMBundle) throws {
         guard fileSystem.exists(at: bundle.path) else {
             throw CoreError.generic("VM Bundle does not exist at path '\(bundle.path)'")
         }
     }
 
-    private func prepareCPUCount(config: MacOSVMPartialConfig) -> Int {
+    private func prepareCPUCount(config: VMPartialConfig) -> Int {
         let normalize: (Int) -> Int = { count in
             var result = count
             result = max(result, VZVirtualMachineConfiguration.minimumAllowedCPUCount)
@@ -134,7 +134,7 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         }
     }
 
-    private func prepareMemorySize(config: MacOSVMPartialConfig) -> MemorySize {
+    private func prepareMemorySize(config: VMPartialConfig) -> MemorySize {
         let normalize: (UInt64) -> UInt64 = { size in
             var result = size
             result = max(result, VZVirtualMachineConfiguration.minimumAllowedMemorySize)
@@ -154,29 +154,29 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         }
     }
 
-    private func prepareDisplay(config: MacOSVMPartialConfig) -> MacOSVMConfig.DisplayConfig {
-        let display = MacOSVMConfig.DisplayConfig(
+    private func prepareDisplay(config: VMPartialConfig) -> VMConfig.DisplayConfig {
+        let display = VMConfig.DisplayConfig(
             width: config.display?.width ?? defaultConfig.display.width,
             height: config.display?.height ?? defaultConfig.display.height,
             pixelsPerInch: config.display?.pixelsPerInch ?? defaultConfig.display.pixelsPerInch
         )
         return .init(
             width: max(
-                min(display.width, MacOSVMConfig.DisplayConfig.maxWidth),
-                MacOSVMConfig.DisplayConfig.minWidth
+                min(display.width, VMConfig.DisplayConfig.maxWidth),
+                VMConfig.DisplayConfig.minWidth
             ),
             height: max(
-                min(display.height, MacOSVMConfig.DisplayConfig.maxHeight),
-                MacOSVMConfig.DisplayConfig.minHeight
+                min(display.height, VMConfig.DisplayConfig.maxHeight),
+                VMConfig.DisplayConfig.minHeight
             ),
             pixelsPerInch: max(
-                min(display.pixelsPerInch, MacOSVMConfig.DisplayConfig.maxPixelsPerInch),
-                MacOSVMConfig.DisplayConfig.minPixelsPerInch
+                min(display.pixelsPerInch, VMConfig.DisplayConfig.maxPixelsPerInch),
+                VMConfig.DisplayConfig.minPixelsPerInch
             )
         )
     }
 
-    private func prepareNetwork(config: MacOSVMPartialConfig) -> MacOSVMConfig.NetworkConfig {
+    private func prepareNetwork(config: VMPartialConfig) -> VMConfig.NetworkConfig {
         config.network ?? defaultConfig.network
     }
 }

@@ -3,20 +3,20 @@ import Foundation
 
 // swiftlint:disable nesting
 
-public struct MacOSVMPartialConfig: Equatable, Codable {
+public struct VMPartialConfig: Equatable, Codable {
     struct DisplayPartialConfig: Equatable, Codable {
         var width: Int?
         var height: Int?
         var pixelsPerInch: Int?
     }
 
-    var cpu: MacOSVMConfig.CPUConfig?
-    var memory: MacOSVMConfig.MemoryConfig?
+    var cpu: VMConfig.CPUConfig?
+    var memory: VMConfig.MemoryConfig?
     var display: DisplayPartialConfig?
-    var network: MacOSVMConfig.NetworkConfig?
+    var network: VMConfig.NetworkConfig?
 }
 
-public struct MacOSVMConfig: Equatable, Codable {
+public struct VMConfig: Equatable, Codable {
     enum CPUConfig: Equatable, Codable {
         case manual(CPUCount: Int)
         case minimumAllowedCPUCount
@@ -89,7 +89,7 @@ public struct MacOSVMConfig: Equatable, Codable {
     var network: NetworkConfig
 }
 
-extension MacOSVMConfig {
+extension VMConfig {
     func asString() -> String {
         """
         MacOS VM Config:
@@ -107,7 +107,7 @@ extension MacOSVMConfig {
     }
 }
 
-extension [MacOSVMConfig.NetworkConfig.Device] {
+extension [VMConfig.NetworkConfig.Device] {
     func asString() -> String {
         let prefix = "      "
         return enumerated().map { index, value in

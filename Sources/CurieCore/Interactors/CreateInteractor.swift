@@ -2,7 +2,7 @@ import CurieCommon
 import Foundation
 import TSCBasic
 
-public struct MacOSCreateInteractorContext {
+public struct CreateInteractorContext {
     public enum Source {
         case latest
         case ipsw(path: String)
@@ -26,22 +26,22 @@ public struct MacOSCreateInteractorContext {
     }
 }
 
-public protocol MacOSCreateInteractor {
-    func execute(with context: MacOSCreateInteractorContext) throws
+public protocol CreateInteractor {
+    func execute(with context: CreateInteractorContext) throws
 }
 
-final class DefaultMacOSCreateInteractor: MacOSCreateInteractor {
-    private let downloader: MacOSRestoreImageDownloader
-    private let configurator: MacOSVMConfigurator
-    private let installer: MacOSVMInstaller
+final class DefaultCreateInteractor: CreateInteractor {
+    private let downloader: RestoreImageDownloader
+    private let configurator: VMConfigurator
+    private let installer: VMInstaller
     private let system: System
     private let fileSystem: CurieCommon.FileSystem
     private let console: Console
 
     init(
-        downloader: MacOSRestoreImageDownloader,
-        configurator: MacOSVMConfigurator,
-        installer: MacOSVMInstaller,
+        downloader: RestoreImageDownloader,
+        configurator: VMConfigurator,
+        installer: VMInstaller,
         system: System,
         fileSystem: CurieCommon.FileSystem,
         console: Console
@@ -54,8 +54,8 @@ final class DefaultMacOSCreateInteractor: MacOSCreateInteractor {
         self.console = console
     }
 
-    func execute(with context: MacOSCreateInteractorContext) throws {
-        let bundle = try MacOSVMBundle(path: prepareBundlePath(context: context))
+    func execute(with context: CreateInteractorContext) throws {
+        let bundle = try VMBundle(path: prepareBundlePath(context: context))
 
         switch context.source {
         case .latest:
@@ -68,8 +68,8 @@ final class DefaultMacOSCreateInteractor: MacOSCreateInteractor {
     // MARK: - Private
 
     private func createVM(
-        bundle: MacOSVMBundle,
-        context: MacOSCreateInteractorContext,
+        bundle: VMBundle,
+        context: CreateInteractorContext,
         restoreImagePath: String
     ) throws {
         let cancellable = StateCancellable()
@@ -105,16 +105,16 @@ final class DefaultMacOSCreateInteractor: MacOSCreateInteractor {
         })
     }
 
-    private func prepareBundlePath(context: MacOSCreateInteractorContext) throws -> AbsolutePath {
+    private func prepareBundlePath(context: CreateInteractorContext) throws -> AbsolutePath {
         let destinationPath = try fileSystem.absolutePath(from: context.vmPath ?? UUID().uuidString)
-        guard destinationPath.extension == MacOSVMBundle.fileExtension else {
+        guard destinationPath.extension == VMBundle.fileExtension else {
             let filename = destinationPath.basename
-            return destinationPath.parentDirectory.appending(component: "\(filename).\(MacOSVMBundle.fileExtension)")
+            return destinationPath.parentDirectory.appending(component: "\(filename).\(VMBundle.fileExtension)")
         }
         return destinationPath
     }
 
-    private func prepareDiskSize(context: MacOSCreateInteractorContext) throws -> MemorySize {
+    private func prepareDiskSize(context: CreateInteractorContext) throws -> MemorySize {
         guard let diskSize = context.diskSize else {
             return Constants.defaultDiskSize
         }
@@ -124,7 +124,7 @@ final class DefaultMacOSCreateInteractor: MacOSCreateInteractor {
         return diskSize
     }
 
-    private func prepareConfigPath(context: MacOSCreateInteractorContext) throws -> AbsolutePath? {
+    private func prepareConfigPath(context: CreateInteractorContext) throws -> AbsolutePath? {
         guard let path = context.configPath else {
             return nil
         }

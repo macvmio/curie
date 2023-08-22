@@ -2,15 +2,15 @@ import CurieCommon
 import Foundation
 import Virtualization
 
-final class MacOSVM {
-    let config: MacOSVMConfig
+final class VM {
+    let config: VMConfig
 
     private let vm: VZVirtualMachine
     private let console: Console
 
     init(
         vm: VZVirtualMachine,
-        config: MacOSVMConfig,
+        config: VMConfig,
         console: Console
     ) {
         self.vm = vm

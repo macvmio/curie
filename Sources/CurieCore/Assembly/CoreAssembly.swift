@@ -12,19 +12,19 @@ public final class CoreAssembly: Assembly {
     // MARK: - Private
 
     private func assembleInteractors(_ registry: Registry) {
-        registry.register(MacOSRunInteractor.self) { r in
-            DefaultMacOSRunInteractor(
-                configurator: r.resolve(MacOSVMConfigurator.self),
+        registry.register(RunInteractor.self) { r in
+            DefaultRunInteractor(
+                configurator: r.resolve(VMConfigurator.self),
                 windowAppLauncher: r.resolve(MacOSWindowAppLauncher.self),
                 system: r.resolve(System.self),
                 console: r.resolve(Console.self)
             )
         }
-        registry.register(MacOSCreateInteractor.self) { r in
-            DefaultMacOSCreateInteractor(
-                downloader: r.resolve(MacOSRestoreImageDownloader.self),
-                configurator: r.resolve(MacOSVMConfigurator.self),
-                installer: r.resolve(MacOSVMInstaller.self),
+        registry.register(CreateInteractor.self) { r in
+            DefaultCreateInteractor(
+                downloader: r.resolve(RestoreImageDownloader.self),
+                configurator: r.resolve(VMConfigurator.self),
+                installer: r.resolve(VMInstaller.self),
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self),
                 console: r.resolve(Console.self)
@@ -33,34 +33,34 @@ public final class CoreAssembly: Assembly {
     }
 
     private func assembleUtils(_ registry: Registry) {
-        registry.register(MacOSVMBundleParser.self) { r in
-            DefaultMacOSVMBundleParser(
+        registry.register(VMBundleParser.self) { r in
+            DefaultVMBundleParser(
                 fileSystem: r.resolve(FileSystem.self)
             )
         }
-        registry.register(MacOSVMConfigurator.self) { r in
-            DefaultMacOSMVConfigurator(
-                bundleParser: r.resolve(MacOSVMBundleParser.self),
+        registry.register(VMConfigurator.self) { r in
+            DefaultVMConfigurator(
+                bundleParser: r.resolve(VMBundleParser.self),
                 fileSystem: r.resolve(FileSystem.self),
-                virtualMachineDelegate: r.resolve(MacOSVirtualMachineDelegate.self),
+                virtualMachineDelegate: r.resolve(VirtualMachineDelegate.self),
                 console: r.resolve(Console.self)
             )
         }
         registry.register(MacOSWindowAppLauncher.self) { _ in
             MacOSWindowAppLauncher()
         }
-        registry.register(MacOSRestoreImageDownloader.self) { r in
-            DefaultMacOSRestoreImageDownloader(
+        registry.register(RestoreImageDownloader.self) { r in
+            DefaultRestoreImageDownloader(
                 console: r.resolve(Console.self)
             )
         }
-        registry.register(MacOSVMInstaller.self) { r in
-            DefaultMacOSVMInstaller(
+        registry.register(VMInstaller.self) { r in
+            DefaultVMInstaller(
                 console: r.resolve(Console.self)
             )
         }
-        registry.register(MacOSVirtualMachineDelegate.self) { r in
-            MacOSVirtualMachineDelegate(
+        registry.register(VirtualMachineDelegate.self) { r in
+            VirtualMachineDelegate(
                 console: r.resolve(Console.self)
             )
         }

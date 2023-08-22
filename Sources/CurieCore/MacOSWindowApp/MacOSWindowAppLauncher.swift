@@ -5,12 +5,10 @@ import SwiftUI
 import Virtualization
 
 final class MacOSWindowAppLauncher {
-    func launchWindow(with vm: MacOSVM) {
+    func launchWindow(with vm: VM) {
         let app = NSApplication.shared
         app.setActivationPolicy(.regular)
         app.activate(ignoringOtherApps: true)
-
-//        nsApp.applicationIconImage = NSImage(data: AppIconData)
 
         MacOSWindowApp.vm = vm
         MacOSWindowApp.main()
@@ -18,7 +16,7 @@ final class MacOSWindowAppLauncher {
 }
 
 private struct MacOSWindowApp: App {
-    static var vm: MacOSVM!
+    static var vm: VM!
 
     @NSApplicationDelegateAdaptor
     private var appDelegate: MacOSWindowAppDelegate
@@ -32,15 +30,14 @@ private struct MacOSWindowApp: App {
                     MacOSWindowApp.vm.exit(exit: exit)
                 }
             }.frame(
-                minWidth: CGFloat(MacOSVMConfig.DisplayConfig.minWidth),
+                minWidth: CGFloat(VMConfig.DisplayConfig.minWidth),
                 idealWidth: CGFloat(MacOSWindowApp.vm.config.display.width),
                 maxWidth: .infinity,
-                minHeight: CGFloat(MacOSVMConfig.DisplayConfig.minHeight),
+                minHeight: CGFloat(VMConfig.DisplayConfig.minHeight),
                 idealHeight: CGFloat(MacOSWindowApp.vm.config.display.height),
                 maxHeight: .infinity
             )
         }.commands {
-            // Remove some standard menu options
             CommandGroup(replacing: .help, addition: {})
             CommandGroup(replacing: .newItem, addition: {})
             CommandGroup(replacing: .pasteboard, addition: {})
@@ -62,9 +59,9 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
 private struct MacOSWindowAppViewView: NSViewRepresentable {
     typealias NSViewType = VZVirtualMachineView
 
-    private var vm: MacOSVM
+    private var vm: VM
 
-    init(vm: MacOSVM) {
+    init(vm: VM) {
         self.vm = vm
     }
 

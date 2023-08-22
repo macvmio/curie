@@ -3,7 +3,7 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-public struct MacOSRunInteractorContext {
+public struct RunInteractorContext {
     public var path: AbsolutePath
     public var noWindow: Bool
 
@@ -16,18 +16,18 @@ public struct MacOSRunInteractorContext {
     }
 }
 
-public protocol MacOSRunInteractor {
-    func execute(with context: MacOSRunInteractorContext) throws
+public protocol RunInteractor {
+    func execute(with context: RunInteractorContext) throws
 }
 
-public final class DefaultMacOSRunInteractor: MacOSRunInteractor {
-    private let configurator: MacOSVMConfigurator
+public final class DefaultRunInteractor: RunInteractor {
+    private let configurator: VMConfigurator
     private let windowAppLauncher: MacOSWindowAppLauncher
     private let system: System
     private let console: Console
 
     init(
-        configurator: MacOSVMConfigurator,
+        configurator: VMConfigurator,
         windowAppLauncher: MacOSWindowAppLauncher,
         system: System,
         console: Console
@@ -38,10 +38,10 @@ public final class DefaultMacOSRunInteractor: MacOSRunInteractor {
         self.console = console
     }
 
-    public func execute(with context: MacOSRunInteractorContext) throws {
+    public func execute(with context: RunInteractorContext) throws {
         console.text("Run VM at path '\(context.path)'")
 
-        let bundle = try MacOSVMBundle(path: context.path)
+        let bundle = try VMBundle(path: context.path)
         let vm = try configurator.loadVM(with: bundle)
 
         console.text(vm.config.asString())
@@ -66,7 +66,7 @@ public final class DefaultMacOSRunInteractor: MacOSRunInteractor {
         }
     }
 
-    private func launchConsole(with vm: MacOSVM) {
+    private func launchConsole(with vm: VM) {
         withExtendedLifetime(vm) { _ in
             system.keepAliveWithSIGINTEventHandler { exit in
                 vm.exit(exit: exit)
@@ -74,7 +74,7 @@ public final class DefaultMacOSRunInteractor: MacOSRunInteractor {
         }
     }
 
-    private func launchWindow(with vm: MacOSVM) {
+    private func launchWindow(with vm: VM) {
         windowAppLauncher.launchWindow(with: vm)
     }
 }

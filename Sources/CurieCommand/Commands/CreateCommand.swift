@@ -39,10 +39,10 @@ struct CreateCommand: Command {
     var configPath: String?
 
     final class Executor: CommandExecutor {
-        private let interactor: MacOSCreateInteractor
+        private let interactor: CreateInteractor
         private let console: Console
 
-        init(interactor: MacOSCreateInteractor, console: Console) {
+        init(interactor: CreateInteractor, console: Console) {
             self.interactor = interactor
             self.console = console
         }
@@ -61,7 +61,7 @@ struct CreateCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(MacOSCreateInteractor.self),
+                    interactor: r.resolve(CreateInteractor.self),
                     console: r.resolve(Console.self)
                 )
             }
@@ -70,7 +70,7 @@ struct CreateCommand: Command {
 }
 
 private extension CreateCommand {
-    var source: MacOSCreateInteractorContext.Source {
+    var source: CreateInteractorContext.Source {
         if let ipswPath {
             return .ipsw(path: ipswPath)
         }

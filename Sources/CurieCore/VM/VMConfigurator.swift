@@ -3,27 +3,27 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-struct MacOSVMSpec {
+struct VMSpec {
     var restoreImagePath: AbsolutePath
     var diskSize: MemorySize
     var configPath: AbsolutePath?
 }
 
-protocol MacOSVMConfigurator {
-    func createVM(with bundle: MacOSVMBundle, spec: MacOSVMSpec) async throws
-    func loadVM(with bundle: MacOSVMBundle) throws -> MacOSVM
+protocol VMConfigurator {
+    func createVM(with bundle: VMBundle, spec: VMSpec) async throws
+    func loadVM(with bundle: VMBundle) throws -> VM
 }
 
-final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
-    private let bundleParser: MacOSVMBundleParser
+final class DefaultVMConfigurator: VMConfigurator {
+    private let bundleParser: VMBundleParser
     private let fileSystem: CurieCommon.FileSystem
-    private let virtualMachineDelegate: MacOSVirtualMachineDelegate
+    private let virtualMachineDelegate: VirtualMachineDelegate
     private let console: Console
 
     init(
-        bundleParser: MacOSVMBundleParser,
+        bundleParser: VMBundleParser,
         fileSystem: CurieCommon.FileSystem,
-        virtualMachineDelegate: MacOSVirtualMachineDelegate,
+        virtualMachineDelegate: VirtualMachineDelegate,
         console: Console
     ) {
         self.bundleParser = bundleParser
@@ -32,7 +32,7 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
         self.virtualMachineDelegate = virtualMachineDelegate
     }
 
-    func createVM(with bundle: MacOSVMBundle, spec: MacOSVMSpec) async throws {
+    func createVM(with bundle: VMBundle, spec: VMSpec) async throws {
         console.text("Create VM")
 
         guard !fileSystem.exists(at: bundle.path) else {
@@ -56,7 +56,7 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
         try createPlatformConfiguration(bundle: bundle, restoreImage: restoreImage)
     }
 
-    func loadVM(with bundle: MacOSVMBundle) throws -> MacOSVM {
+    func loadVM(with bundle: VMBundle) throws -> VM {
         console.text("Load VM")
 
         let config = try bundleParser.readConfig(from: bundle)
@@ -64,7 +64,7 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
 
         vm.delegate = virtualMachineDelegate
 
-        return MacOSVM(
+        return VM(
             vm: vm,
             config: config,
             console: console
@@ -74,8 +74,8 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
     // MARK: - Private
 
     private func makeConfiguration(
-        bundle: MacOSVMBundle,
-        config: MacOSVMConfig
+        bundle: VMBundle,
+        config: VMConfig
     ) throws -> VZVirtualMachineConfiguration {
         let configuration = VZVirtualMachineConfiguration()
         configuration.platform = try bundleParser.readPlatformConfiguration(from: bundle)
@@ -96,7 +96,7 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
         VZMacOSBootLoader()
     }
 
-    private func prepareGraphicsDeviceConfigurations(config: MacOSVMConfig) -> [VZGraphicsDeviceConfiguration] {
+    private func prepareGraphicsDeviceConfigurations(config: VMConfig) -> [VZGraphicsDeviceConfiguration] {
         let graphicsConfiguration = VZMacGraphicsDeviceConfiguration()
         graphicsConfiguration.displays = [
             VZMacGraphicsDisplayConfiguration(
@@ -109,13 +109,13 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
         return [graphicsConfiguration]
     }
 
-    private func prepareStorageDeviceConfigurations(with bundle: MacOSVMBundle) throws
+    private func prepareStorageDeviceConfigurations(with bundle: VMBundle) throws
         -> [VZStorageDeviceConfiguration] {
         let diskImageAttachment = try VZDiskImageStorageDeviceAttachment(url: bundle.diskImage.asURL, readOnly: false)
         return [VZVirtioBlockDeviceConfiguration(attachment: diskImageAttachment)]
     }
 
-    private func prepareNetworkDeviceConfigurations(config: MacOSVMConfig) throws -> [VZNetworkDeviceConfiguration] {
+    private func prepareNetworkDeviceConfigurations(config: VMConfig) throws -> [VZNetworkDeviceConfiguration] {
         try config.network.devices.map { device in
             let networkDevice = VZVirtioNetworkDeviceConfiguration()
             switch device.macAddress {
@@ -161,7 +161,7 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
         }
     }
 
-    private func createConfig(bundle: MacOSVMBundle, sourcePath: AbsolutePath?) throws {
+    private func createConfig(bundle: VMBundle, sourcePath: AbsolutePath?) throws {
         guard let sourcePath else {
             try bundleParser.writeConfig(Constants.defaultConfig, toBundle: bundle)
             return
@@ -172,7 +172,7 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
         try fileSystem.move(from: sourcePath, to: bundle.config)
     }
 
-    private func loadRestoreImage(spec: MacOSVMSpec) async throws -> VZMacOSRestoreImage {
+    private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {
         let restoreImage = try await withCheckedContinuation { continuation in
             VZMacOSRestoreImage.load(
                 from: spec.restoreImagePath.asURL,
@@ -183,7 +183,7 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
         return restoreImage
     }
 
-    private func createPlatformConfiguration(bundle: MacOSVMBundle, restoreImage: VZMacOSRestoreImage) throws {
+    private func createPlatformConfiguration(bundle: VMBundle, restoreImage: VZMacOSRestoreImage) throws {
         guard let macOSConfiguration = restoreImage.mostFeaturefulSupportedConfiguration else {
             throw CoreError.generic("No supported configuration is available")
         }

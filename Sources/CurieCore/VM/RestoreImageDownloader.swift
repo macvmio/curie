@@ -1,9 +1,9 @@
 import CurieCommon
 import Foundation
 
-protocol MacOSRestoreImageDownloader {}
+protocol RestoreImageDownloader {}
 
-final class DefaultMacOSRestoreImageDownloader: MacOSRestoreImageDownloader {
+final class DefaultRestoreImageDownloader: RestoreImageDownloader {
     private let console: Console
 
     init(

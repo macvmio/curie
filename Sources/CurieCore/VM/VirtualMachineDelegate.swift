@@ -2,7 +2,7 @@ import CurieCommon
 import Foundation
 import Virtualization
 
-final class MacOSVirtualMachineDelegate: NSObject, VZVirtualMachineDelegate {
+final class VirtualMachineDelegate: NSObject, VZVirtualMachineDelegate {
     private let console: Console
 
     init(console: Console) {

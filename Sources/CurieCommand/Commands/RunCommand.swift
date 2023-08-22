@@ -21,10 +21,10 @@ struct RunCommand: Command {
     var path: String
 
     final class Executor: CommandExecutor {
-        private let interactor: MacOSRunInteractor
+        private let interactor: RunInteractor
         private let console: Console
 
-        init(interactor: MacOSRunInteractor, console: Console) {
+        init(interactor: RunInteractor, console: Console) {
             self.interactor = interactor
             self.console = console
         }
@@ -42,7 +42,7 @@ struct RunCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(MacOSRunInteractor.self),
+                    interactor: r.resolve(RunInteractor.self),
                     console: r.resolve(Console.self)
                 )
             }
