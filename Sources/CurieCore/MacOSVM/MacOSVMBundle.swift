@@ -10,7 +10,7 @@ public struct MacOSVMBundle {
     init(path: AbsolutePath) throws {
         guard path.pathString.hasSuffix(".\(MacOSVMBundle.fileExtension)") else {
             throw CoreError
-                .generic("Invalid MacOSVMBundle, unexpected extension at path '\(path)' (expected <filename>.curie)")
+                .generic("Invalid VM bundle, unexpected extension at path '\(path)' (expected <filename>.curie)")
         }
         self.path = path
     }
@@ -20,36 +20,28 @@ public struct MacOSVMBundle {
     }
 
     public var machineIdentifier: AbsolutePath {
-        vmComponent("vz-mac-machine-identifier.bin")
+        path("machine-identifier.bin")
     }
 
     public var auxilaryStorage: AbsolutePath {
-        vmComponent("vz-mac-auxilary-storage.bin")
+        path("auxilary-storage.bin")
     }
 
     public var hardwareModel: AbsolutePath {
-        vmComponent("vz-mac-hardware-model.bin")
+        path("hardware-model.bin")
     }
 
     public var diskImage: AbsolutePath {
-        vmComponent("vz-disk-image-storage-device-attachement.img")
+        path("disk.img")
     }
 
     public var config: AbsolutePath {
-        path.appending(component: "config.json")
-    }
-
-    public var content: AbsolutePath {
-        path.appending(component: "Content")
-    }
-
-    public var vm: AbsolutePath {
-        content.appending(component: "VM")
+        path("config.json")
     }
 
     // MARK: - Private
 
-    private func vmComponent(_ filename: String) -> AbsolutePath {
-        vm.appending(component: filename)
+    private func path(_ filename: String) -> AbsolutePath {
+        path.appending(component: filename)
     }
 }
