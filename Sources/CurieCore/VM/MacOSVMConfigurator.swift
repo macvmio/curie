@@ -41,8 +41,6 @@ final class DefaultMacOSMVConfigurator: MacOSVMConfigurator {
 
         // Create basic VM directory stricture
         try fileSystem.createDirectory(at: bundle.path)
-        try fileSystem.createDirectory(at: bundle.content)
-        try fileSystem.createDirectory(at: bundle.vm)
 
         // Verify config file
         try createConfig(bundle: bundle, sourcePath: spec.configPath)

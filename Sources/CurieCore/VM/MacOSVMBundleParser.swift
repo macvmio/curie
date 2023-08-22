@@ -112,10 +112,6 @@ final class DefaultMacOSVMBundleParser: MacOSVMBundleParser {
         guard fileSystem.exists(at: bundle.path) else {
             throw CoreError.generic("VM Bundle does not exist at path '\(bundle.path)'")
         }
-        guard fileSystem.exists(at: bundle.vm) else {
-            throw CoreError
-                .generic("VM Bundle has invalid structure, missing Content/VM directory at path '\(bundle.path)")
-        }
     }
 
     private func prepareCPUCount(config: MacOSVMPartialConfig) -> Int {
