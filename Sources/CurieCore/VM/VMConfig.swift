@@ -56,7 +56,6 @@ public struct VMConfig: Equatable, Codable {
                 default:
                     self = .manual(MACAddress: value)
                 }
-                self = .automatic
             }
 
             func encode(to encoder: Encoder) throws {
