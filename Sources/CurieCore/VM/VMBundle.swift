@@ -8,10 +8,6 @@ public struct VMBundle {
     static let fileExtension = "curie"
 
     init(path: AbsolutePath) throws {
-        guard path.pathString.hasSuffix(".\(VMBundle.fileExtension)") else {
-            throw CoreError
-                .generic("Invalid VM bundle, unexpected extension at path '\(path)' (expected <filename>.curie)")
-        }
         self.path = path
     }
 
