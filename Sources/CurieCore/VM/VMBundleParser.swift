@@ -122,7 +122,7 @@ final class DefaultVMBundleParser: VMBundleParser {
             return result
         }
 
-        switch config.cpu {
+        switch config.cpuCount {
         case let .manual(CPUCount: count):
             return normalize(count)
         case .maximumAllowedCPUCount:
@@ -142,7 +142,7 @@ final class DefaultVMBundleParser: VMBundleParser {
             return result
         }
 
-        switch config.memory {
+        switch config.memorySize {
         case let .manual(memorySize: size):
             return MemorySize(bytes: normalize(size.bytes))
         case .maximumAllowedMemorySize:

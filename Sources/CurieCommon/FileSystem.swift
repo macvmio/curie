@@ -14,25 +14,6 @@ public enum FileSystemItem {
     case directory(Directory)
 }
 
-public struct FileSystemTree {
-    public struct File {
-        let path: RelativePath
-    }
-
-    public struct Directory {
-        let path: RelativePath
-        let items: [Item]
-    }
-
-    public enum Item {
-        case file(File)
-        case directory(Directory)
-    }
-
-    public let path: AbsolutePath
-    public let items: [Item]
-}
-
 public protocol FileSystem {
     var currentWorkingDirectory: AbsolutePath { get }
 
@@ -43,8 +24,6 @@ public protocol FileSystem {
     func remove(at path: AbsolutePath) throws
 
     func list(at path: AbsolutePath) throws -> [FileSystemItem]
-
-    func tree(at path: AbsolutePath) throws -> FileSystemTree
 
     func createDirectory(at path: AbsolutePath) throws
 
@@ -100,10 +79,6 @@ final class DefaultFileSystem: FileSystem {
                     return .file(FileSystemItem.File(path: $0))
                 }
             }
-    }
-
-    func tree(at path: AbsolutePath) throws -> FileSystemTree {
-        try FileSystemTree(path: path, items: treeItems(at: path))
     }
 
     func createDirectory(at path: AbsolutePath) throws {
@@ -163,20 +138,5 @@ final class DefaultFileSystem: FileSystem {
 
     func read(from path: AbsolutePath) throws -> Data {
         try Data(contentsOf: path.asURL)
-    }
-
-    // MARK: - Private
-
-    private func treeItems(at path: AbsolutePath) throws -> [FileSystemTree.Item] {
-        try list(at: path).reduce(into: [FileSystemTree.Item]()) { acc, fileSystemItem in
-            switch fileSystemItem {
-            case let .file(file):
-                acc.append(.file(.init(path: file.path)))
-            case let .directory(directory):
-                let absolutePath = path.appending(directory.path)
-                let items = try treeItems(at: absolutePath)
-                acc.append(.directory(.init(path: directory.path, items: items)))
-            }
-        }
     }
 }
