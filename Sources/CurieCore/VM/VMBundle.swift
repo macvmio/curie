@@ -7,7 +7,7 @@ public struct VMBundle {
 
     static let fileExtension = "curie"
 
-    init(path: AbsolutePath) throws {
+    init(path: AbsolutePath) {
         self.path = path
     }
 

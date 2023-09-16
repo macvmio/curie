@@ -41,7 +41,7 @@ public final class DefaultRunInteractor: RunInteractor {
     public func execute(with context: RunInteractorContext) throws {
         console.text("Run VM at path '\(context.path)'")
 
-        let bundle = try VMBundle(path: context.path)
+        let bundle = VMBundle(path: context.path)
         let vm = try configurator.loadVM(with: bundle)
 
         console.text(vm.config.asString())

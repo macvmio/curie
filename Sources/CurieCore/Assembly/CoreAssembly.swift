@@ -31,6 +31,12 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(RemoveInteractor.self) { r in
+            DefaultRemoveInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
@@ -67,6 +73,7 @@ public final class CoreAssembly: Assembly {
         }
         registry.register(ImageCache.self) { r in
             DefaultImageCache(
+                bundleParser: r.resolve(VMBundleParser.self),
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self)
             )
