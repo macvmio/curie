@@ -1,8 +1,12 @@
 clean:
 	xcrun swift package clean
 
-build:
+env: 
+	xcrun sw_vers
 	xcrun xcode-select -p
+	xcrun xcodebuild -version
+
+build: env
 	xcrun swift build
 
 sign:
