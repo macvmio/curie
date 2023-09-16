@@ -26,5 +26,5 @@ struct ImageDescriptor: Equatable {
 
 struct ImageReference: Equatable {
     let id: ImageID
-    let desciptor: ImageDescriptor
+    let descriptor: ImageDescriptor
 }

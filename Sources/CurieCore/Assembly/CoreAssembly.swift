@@ -38,6 +38,12 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(CloneInteractor.self) { r in
+            DefaultCloneInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
