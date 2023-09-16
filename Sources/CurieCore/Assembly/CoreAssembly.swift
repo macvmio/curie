@@ -16,6 +16,7 @@ public final class CoreAssembly: Assembly {
             DefaultRunInteractor(
                 configurator: r.resolve(VMConfigurator.self),
                 windowAppLauncher: r.resolve(MacOSWindowAppLauncher.self),
+                imageCache: r.resolve(ImageCache.self),
                 system: r.resolve(System.self),
                 console: r.resolve(Console.self)
             )

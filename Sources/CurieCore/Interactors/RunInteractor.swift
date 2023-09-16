@@ -4,14 +4,14 @@ import TSCBasic
 import Virtualization
 
 public struct RunInteractorContext {
-    public var path: AbsolutePath
+    public var reference: String
     public var noWindow: Bool
 
     public init(
-        path: AbsolutePath,
+        reference: String,
         noWindow: Bool
     ) {
-        self.path = path
+        self.reference = reference
         self.noWindow = noWindow
     }
 }
@@ -23,25 +23,30 @@ public protocol RunInteractor {
 public final class DefaultRunInteractor: RunInteractor {
     private let configurator: VMConfigurator
     private let windowAppLauncher: MacOSWindowAppLauncher
+    private let imageCache: ImageCache
     private let system: System
     private let console: Console
 
     init(
         configurator: VMConfigurator,
         windowAppLauncher: MacOSWindowAppLauncher,
+        imageCache: ImageCache,
         system: System,
         console: Console
     ) {
         self.configurator = configurator
         self.windowAppLauncher = windowAppLauncher
+        self.imageCache = imageCache
         self.system = system
         self.console = console
     }
 
     public func execute(with context: RunInteractorContext) throws {
-        console.text("Run VM at path '\(context.path)'")
+        console.text("Run image \(context.reference)")
 
-        let bundle = VMBundle(path: context.path)
+        let reference = try imageCache.findReference(context.reference)
+
+        let bundle = VMBundle(path: imageCache.path(to: reference))
         let vm = try configurator.loadVM(with: bundle)
 
         console.text(vm.config.asString())

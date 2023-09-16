@@ -10,15 +10,11 @@ struct RunCommand: Command {
         abstract: "Run a macOS VM."
     )
 
+    @Argument(help: "Reference <repository>:<tag>.")
+    var reference: String
+
     @Flag(help: "Do not create Window.")
     var noWindow: Bool = false
-
-    @Option(
-        name: .shortAndLong,
-        help: "Path to VM bundle.",
-        completion: .directory
-    )
-    var path: String
 
     final class Executor: CommandExecutor {
         private let interactor: RunInteractor
@@ -30,9 +26,8 @@ struct RunCommand: Command {
         }
 
         func execute(command: RunCommand) throws {
-            let path = try AbsolutePath(validating: command.path)
             try interactor.execute(with: .init(
-                path: path,
+                reference: command.reference,
                 noWindow: command.noWindow
             ))
         }
