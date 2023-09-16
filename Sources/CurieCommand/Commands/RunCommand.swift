@@ -7,7 +7,7 @@ import TSCBasic
 struct RunCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: "run",
-        abstract: "Run a macOS VM."
+        abstract: "Run image."
     )
 
     @Argument(help: "Reference <repository>:<tag>.")
