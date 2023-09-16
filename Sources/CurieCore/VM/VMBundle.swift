@@ -7,7 +7,7 @@ public struct VMBundle {
 
     static let fileExtension = "curie"
 
-    init(path: AbsolutePath) throws {
+    init(path: AbsolutePath) {
         self.path = path
     }
 
@@ -33,6 +33,10 @@ public struct VMBundle {
 
     public var config: AbsolutePath {
         path("config.json")
+    }
+
+    public var state: AbsolutePath {
+        path("state.json")
     }
 
     // MARK: - Private

@@ -21,6 +21,7 @@ identifier_name:
     - KB
     - MB
     - GB
+    - id
 
 type_name:
   excluded:

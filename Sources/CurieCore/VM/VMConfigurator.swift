@@ -4,6 +4,7 @@ import TSCBasic
 import Virtualization
 
 struct VMSpec {
+    var reference: ImageReference
     var restoreImagePath: AbsolutePath
     var diskSize: MemorySize
     var configPath: AbsolutePath?
@@ -42,8 +43,11 @@ final class DefaultVMConfigurator: VMConfigurator {
         // Create basic VM directory stricture
         try fileSystem.createDirectory(at: bundle.path)
 
-        // Verify config file
+        // Create config file
         try createConfig(bundle: bundle, sourcePath: spec.configPath)
+
+        // Create state file
+        try createState(bundle: bundle, reference: spec.reference)
 
         // Create disk image
         try createDiskImage(
@@ -170,6 +174,11 @@ final class DefaultVMConfigurator: VMConfigurator {
             throw CoreError.generic("Failed to parse config at path '\(sourcePath)'")
         }
         try fileSystem.move(from: sourcePath, to: bundle.config)
+    }
+
+    private func createState(bundle: VMBundle, reference: ImageReference) throws {
+        let state = VMState(id: reference.id)
+        try bundleParser.writeState(state, toBundle: bundle)
     }
 
     private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {

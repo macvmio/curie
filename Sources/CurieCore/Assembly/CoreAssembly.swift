@@ -16,6 +16,7 @@ public final class CoreAssembly: Assembly {
             DefaultRunInteractor(
                 configurator: r.resolve(VMConfigurator.self),
                 windowAppLauncher: r.resolve(MacOSWindowAppLauncher.self),
+                imageCache: r.resolve(ImageCache.self),
                 system: r.resolve(System.self),
                 console: r.resolve(Console.self)
             )
@@ -25,8 +26,15 @@ public final class CoreAssembly: Assembly {
                 downloader: r.resolve(RestoreImageDownloader.self),
                 configurator: r.resolve(VMConfigurator.self),
                 installer: r.resolve(VMInstaller.self),
+                imageCache: r.resolve(ImageCache.self),
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self),
+                console: r.resolve(Console.self)
+            )
+        }
+        registry.register(RemoveInteractor.self) { r in
+            DefaultRemoveInteractor(
+                imageCache: r.resolve(ImageCache.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -62,6 +70,13 @@ public final class CoreAssembly: Assembly {
         registry.register(VirtualMachineDelegate.self) { r in
             VirtualMachineDelegate(
                 console: r.resolve(Console.self)
+            )
+        }
+        registry.register(ImageCache.self) { r in
+            DefaultImageCache(
+                bundleParser: r.resolve(VMBundleParser.self),
+                system: r.resolve(System.self),
+                fileSystem: r.resolve(FileSystem.self)
             )
         }
     }

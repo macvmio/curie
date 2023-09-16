@@ -17,6 +17,8 @@ public enum FileSystemItem {
 public protocol FileSystem {
     var currentWorkingDirectory: AbsolutePath { get }
 
+    var homeDirectory: AbsolutePath { get }
+
     func exists(at path: AbsolutePath) -> Bool
 
     func move(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws
@@ -52,6 +54,11 @@ final class DefaultFileSystem: FileSystem {
     var currentWorkingDirectory: AbsolutePath {
         // swiftlint:disable:next force_try
         try! AbsolutePath(validating: fileManager.currentDirectoryPath)
+    }
+
+    var homeDirectory: AbsolutePath {
+        // swiftlint:disable:next force_try
+        try! AbsolutePath(validating: fileManager.homeDirectoryForCurrentUser.path())
     }
 
     func exists(at path: AbsolutePath) -> Bool {

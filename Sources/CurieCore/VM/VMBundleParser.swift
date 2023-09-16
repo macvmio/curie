@@ -8,6 +8,8 @@ protocol VMBundleParser {
     func readConfig(from bundle: VMBundle) throws -> VMConfig
     func writeConfig(_ config: VMConfig, toBundle bundle: VMBundle) throws
     func canParseConfig(at path: AbsolutePath) -> Bool
+    func readState(from bundle: VMBundle) throws -> VMState
+    func writeState(_ state: VMState, toBundle bundle: VMBundle) throws
 }
 
 final class DefaultVMBundleParser: VMBundleParser {
@@ -63,6 +65,17 @@ final class DefaultVMBundleParser: VMBundleParser {
         } catch {
             return false
         }
+    }
+
+    func readState(from bundle: VMBundle) throws -> VMState {
+        let data = try fileSystem.read(from: bundle.state)
+        let state = try jsonDecoder.decode(VMState.self, from: data)
+        return state
+    }
+
+    func writeState(_ state: VMState, toBundle bundle: VMBundle) throws {
+        let data = try jsonEncoder.encode(state)
+        try fileSystem.write(data: data, to: bundle.state)
     }
 
     // MARK: - Private

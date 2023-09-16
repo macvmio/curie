@@ -5,9 +5,10 @@ import Foundation
 
 private enum Setup {
     static let allSubcommands: [(ParsableCommand.Type, Assembly)] = [
-        (VersionCommand.self, VersionCommand.Assembly()),
-        (RunCommand.self, RunCommand.Assembly()),
         (CreateCommand.self, CreateCommand.Assembly()),
+        (RemoveCommand.self, RemoveCommand.Assembly()),
+        (RunCommand.self, RunCommand.Assembly()),
+        (VersionCommand.self, VersionCommand.Assembly()),
     ]
 }
 
