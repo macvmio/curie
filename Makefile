@@ -2,6 +2,7 @@ clean:
 	xcrun swift package clean
 
 build:
+	xcrun xcode-select -p
 	xcrun swift build
 
 sign:
