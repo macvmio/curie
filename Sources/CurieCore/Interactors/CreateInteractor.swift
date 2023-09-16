@@ -9,18 +9,18 @@ public struct CreateInteractorContext {
     }
 
     var source: Source
-    var vmPath: String?
+    var reference: String
     var diskSize: String?
     var configPath: String?
 
     public init(
         source: Source,
-        vmPath: String?,
+        reference: String,
         diskSize: String?,
         configPath: String?
     ) {
         self.source = source
-        self.vmPath = vmPath
+        self.reference = reference
         self.diskSize = diskSize
         self.configPath = configPath
     }
@@ -34,6 +34,7 @@ final class DefaultCreateInteractor: CreateInteractor {
     private let downloader: RestoreImageDownloader
     private let configurator: VMConfigurator
     private let installer: VMInstaller
+    private let imageCache: ImageCache
     private let system: System
     private let fileSystem: CurieCommon.FileSystem
     private let console: Console
@@ -42,6 +43,7 @@ final class DefaultCreateInteractor: CreateInteractor {
         downloader: RestoreImageDownloader,
         configurator: VMConfigurator,
         installer: VMInstaller,
+        imageCache: ImageCache,
         system: System,
         fileSystem: CurieCommon.FileSystem,
         console: Console
@@ -49,25 +51,34 @@ final class DefaultCreateInteractor: CreateInteractor {
         self.downloader = downloader
         self.configurator = configurator
         self.installer = installer
+        self.imageCache = imageCache
         self.system = system
         self.fileSystem = fileSystem
         self.console = console
     }
 
     func execute(with context: CreateInteractorContext) throws {
-        let bundle = try VMBundle(path: prepareBundlePath(context: context))
+        let reference = try imageCache.makeEmptyRef(reference: context.reference)
+        let bundlePath = imageCache.path(to: reference)
+        let bundle = try VMBundle(path: bundlePath)
 
         switch context.source {
         case .latest:
             console.error("Downloading the latest restore image is not yet supported")
         case let .ipsw(path: path):
-            try createVM(bundle: bundle, context: context, restoreImagePath: path)
+            try createVM(
+                reference: reference,
+                bundle: bundle,
+                context: context,
+                restoreImagePath: path
+            )
         }
     }
 
     // MARK: - Private
 
     private func createVM(
+        reference: ImageReference,
         bundle: VMBundle,
         context: CreateInteractorContext,
         restoreImagePath: String
@@ -82,6 +93,7 @@ final class DefaultCreateInteractor: CreateInteractor {
 
                 // Create VM bundle
                 try await configurator.createVM(with: bundle, spec: .init(
+                    reference: reference,
                     restoreImagePath: restoreImagePath,
                     diskSize: prepareDiskSize(context: context),
                     configPath: prepareConfigPath(context: context)
@@ -103,15 +115,6 @@ final class DefaultCreateInteractor: CreateInteractor {
             cancellable.cancel()
             exit(0)
         })
-    }
-
-    private func prepareBundlePath(context: CreateInteractorContext) throws -> AbsolutePath {
-        let destinationPath = try fileSystem.absolutePath(from: context.vmPath ?? UUID().uuidString)
-        guard destinationPath.extension == VMBundle.fileExtension else {
-            let filename = destinationPath.basename
-            return destinationPath.parentDirectory.appending(component: "\(filename).\(VMBundle.fileExtension)")
-        }
-        return destinationPath
     }
 
     private func prepareDiskSize(context: CreateInteractorContext) throws -> MemorySize {

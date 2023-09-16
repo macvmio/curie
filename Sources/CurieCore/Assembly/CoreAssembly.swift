@@ -25,6 +25,7 @@ public final class CoreAssembly: Assembly {
                 downloader: r.resolve(RestoreImageDownloader.self),
                 configurator: r.resolve(VMConfigurator.self),
                 installer: r.resolve(VMInstaller.self),
+                imageCache: r.resolve(ImageCache.self),
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self),
                 console: r.resolve(Console.self)
@@ -62,6 +63,12 @@ public final class CoreAssembly: Assembly {
         registry.register(VirtualMachineDelegate.self) { r in
             VirtualMachineDelegate(
                 console: r.resolve(Console.self)
+            )
+        }
+        registry.register(ImageCache.self) { r in
+            DefaultImageCache(
+                system: r.resolve(System.self),
+                fileSystem: r.resolve(FileSystem.self)
             )
         }
     }

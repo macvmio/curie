@@ -10,19 +10,15 @@ struct CreateCommand: Command {
         abstract: "Create a macOS VM."
     )
 
+    @Argument(help: "Reference <repository>:<tag>.")
+    var reference: String
+
     @Option(
         name: .shortAndLong,
         help: "Path to .ipsw file.",
         completion: .directory
     )
     var ipswPath: String?
-
-    @Option(
-        name: .shortAndLong,
-        help: "Path to VM (.curie bundle).",
-        completion: .directory
-    )
-    var vmPath: String?
 
     @Option(
         name: .shortAndLong,
@@ -50,7 +46,7 @@ struct CreateCommand: Command {
         func execute(command: CreateCommand) throws {
             try interactor.execute(with: .init(
                 source: command.source,
-                vmPath: command.vmPath,
+                reference: command.reference,
                 diskSize: command.diskSize,
                 configPath: command.configPath
             ))

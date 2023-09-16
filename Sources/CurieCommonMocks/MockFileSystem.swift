@@ -7,15 +7,20 @@ public final class MockFileSystem: CurieCommon.FileSystem {
         case write(data: Data, path: AbsolutePath)
     }
 
-    public init(currentWorkingDirectory: TSCBasic.AbsolutePath) {
+    public var currentWorkingDirectory: TSCBasic.AbsolutePath
+    public var homeDirectory: TSCBasic.AbsolutePath
+
+    init(currentWorkingDirectory: TSCBasic.AbsolutePath, homeDirectory: TSCBasic.AbsolutePath) {
         self.currentWorkingDirectory = currentWorkingDirectory
+        self.homeDirectory = homeDirectory
     }
 
     public convenience init() {
-        self.init(currentWorkingDirectory: try! AbsolutePath(validating: "/test"))
+        self.init(
+            currentWorkingDirectory: try! AbsolutePath(validating: "/test"),
+            homeDirectory: try! AbsolutePath(validating: "/Users/testuser")
+        )
     }
-
-    public var currentWorkingDirectory: TSCBasic.AbsolutePath
 
     public private(set) var calls: [Call] = []
 

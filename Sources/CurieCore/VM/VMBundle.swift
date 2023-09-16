@@ -35,6 +35,10 @@ public struct VMBundle {
         path("config.json")
     }
 
+    public var state: AbsolutePath {
+        path("state.json")
+    }
+
     // MARK: - Private
 
     private func path(_ filename: String) -> AbsolutePath {
