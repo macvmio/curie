@@ -10,8 +10,8 @@ public struct VMPartialConfig: Equatable, Codable {
         var pixelsPerInch: Int?
     }
 
-    var cpu: VMConfig.CPUConfig?
-    var memory: VMConfig.MemoryConfig?
+    var cpuCount: VMConfig.CPUConfig?
+    var memorySize: VMConfig.MemoryConfig?
     var display: DisplayPartialConfig?
     var network: VMConfig.NetworkConfig?
 }
@@ -21,12 +21,46 @@ public struct VMConfig: Equatable, Codable {
         case manual(CPUCount: Int)
         case minimumAllowedCPUCount
         case maximumAllowedCPUCount
+
+        init(from decoder: Decoder) throws {
+            if let value = try? decoder.singleValueContainer().decode(String.self) {
+                if value == "minimumAllowedCPUCount" {
+                    self = .minimumAllowedCPUCount
+                    return
+                }
+                if value == "maximumAllowedCPUCount" {
+                    self = .maximumAllowedCPUCount
+                    return
+                }
+            }
+            guard let value = try? decoder.singleValueContainer().decode(Int.self) else {
+                throw CoreError.generic("Failed to read cpu count config")
+            }
+            self = .manual(CPUCount: value)
+        }
     }
 
     enum MemoryConfig: Equatable, Codable {
         case manual(memorySize: MemorySize)
         case minimumAllowedMemorySize
         case maximumAllowedMemorySize
+
+        init(from decoder: Decoder) throws {
+            if let value = try? decoder.singleValueContainer().decode(String.self) {
+                if value == "minimumAllowedMemorySize" {
+                    self = .minimumAllowedMemorySize
+                    return
+                }
+                if value == "maximumAllowedMemorySize" {
+                    self = .maximumAllowedMemorySize
+                    return
+                }
+            }
+            guard let value = try? decoder.singleValueContainer().decode(MemorySize.self) else {
+                throw CoreError.generic("Failed to read memory size config")
+            }
+            self = .manual(memorySize: value)
+        }
     }
 
     struct DisplayConfig: Equatable, Codable {

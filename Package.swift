@@ -36,9 +36,24 @@ let package = Package(
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
             ]
         ),
+        .testTarget(
+            name: "CurieCoreTests",
+            dependencies: [
+                .target(name: "CurieCore"),
+                .target(name: "CurieCommonMocks"),
+                .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+            ]
+        ),
         .target(
             name: "CurieCommon",
             dependencies: [
+                .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+            ]
+        ),
+        .target(
+            name: "CurieCommonMocks",
+            dependencies: [
+                .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
             ]
         ),

@@ -3,6 +3,10 @@ import Foundation
 public struct MemorySize: Equatable, Codable, CustomStringConvertible, Comparable {
     public let bytes: UInt64
 
+    enum CodingKeys: CodingKey {
+        case bytes
+    }
+
     enum Unit {
         case B
         case KB
@@ -17,6 +21,13 @@ public struct MemorySize: Equatable, Codable, CustomStringConvertible, Comparabl
     // MARK: - Init
 
     public init(from decoder: Decoder) throws {
+        if let container = try? decoder.container(keyedBy: CodingKeys.self) {
+            if let value = try? container.decode(UInt64.self, forKey: .bytes) {
+                self = .init(bytes: value)
+                return
+            }
+        }
+
         let container = try decoder.singleValueContainer()
         guard let value = try MemorySize(string: container.decode(String.self)) else {
             throw CoreError.generic("Cannot decode FileSize")
