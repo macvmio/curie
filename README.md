@@ -4,7 +4,7 @@
 
 ### Requirements
 
-- Xcode 14.3 or newer
+- Xcode 14.2 or newer
 
 ### Build
 
