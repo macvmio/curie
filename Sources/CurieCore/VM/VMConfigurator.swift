@@ -176,9 +176,8 @@ final class DefaultVMConfigurator: VMConfigurator {
         try fileSystem.move(from: sourcePath, to: bundle.config)
     }
 
-    private func createState(bundle: VMBundle, reference: ImageReference) throws {
-        let state = VMState(id: reference.id)
-        try bundleParser.writeState(state, toBundle: bundle)
+    private func createState(bundle _: VMBundle, reference _: ImageReference) throws {
+//        try bundleParser.writeState(state, toBundle: bundle)
     }
 
     private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {

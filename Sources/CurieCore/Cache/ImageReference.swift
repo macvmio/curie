@@ -1,6 +1,11 @@
 import CurieCommon
 import Foundation
 
+enum ImageType {
+    case ephemeral
+    case persistent
+}
+
 struct ImageDescriptor: Equatable {
     let repository: String
     let tag: String?
@@ -27,4 +32,5 @@ struct ImageDescriptor: Equatable {
 struct ImageReference: Equatable {
     let id: ImageID
     let descriptor: ImageDescriptor
+    let type: ImageType
 }

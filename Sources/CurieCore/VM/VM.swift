@@ -1,12 +1,23 @@
+import Combine
 import CurieCommon
 import Foundation
 import Virtualization
 
 final class VM {
+    enum Event: Equatable {
+        case imageDidStop
+        case imageStopFailed
+    }
+
+    public var events: AnyPublisher<Event, Never> {
+        _events.eraseToAnyPublisher()
+    }
+
     let config: VMConfig
 
     private let vm: VZVirtualMachine
     private let console: Console
+    private let _events = PassthroughSubject<Event, Never>()
 
     init(
         vm: VZVirtualMachine,
@@ -40,10 +51,13 @@ final class VM {
         }
 
         console.text("Will stop VM")
-        vm.stop { error in
+        // swiftlint:disable:next identifier_name
+        vm.stop { [_events] error in
             if let error {
+                _events.send(.imageStopFailed)
                 completionHandler(.failure(error))
             } else {
+                _events.send(.imageDidStop)
                 completionHandler(.success(()))
             }
         }

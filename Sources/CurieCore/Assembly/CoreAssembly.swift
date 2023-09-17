@@ -15,7 +15,16 @@ public final class CoreAssembly: Assembly {
         registry.register(RunInteractor.self) { r in
             DefaultRunInteractor(
                 configurator: r.resolve(VMConfigurator.self),
-                windowAppLauncher: r.resolve(MacOSWindowAppLauncher.self),
+                imageRunner: r.resolve(ImageRunner.self),
+                imageCache: r.resolve(ImageCache.self),
+                system: r.resolve(System.self),
+                console: r.resolve(Console.self)
+            )
+        }
+        registry.register(StartInteractor.self) { r in
+            DefaultStartInteractor(
+                configurator: r.resolve(VMConfigurator.self),
+                imageRunner: r.resolve(ImageRunner.self),
                 imageCache: r.resolve(ImageCache.self),
                 system: r.resolve(System.self),
                 console: r.resolve(Console.self)
@@ -83,6 +92,14 @@ public final class CoreAssembly: Assembly {
                 bundleParser: r.resolve(VMBundleParser.self),
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self)
+            )
+        }
+        registry.register(ImageRunner.self) { r in
+            DefaultImageRunner(
+                windowAppLauncher: r.resolve(MacOSWindowAppLauncher.self),
+                imageCache: r.resolve(ImageCache.self),
+                system: r.resolve(System.self),
+                console: r.resolve(Console.self)
             )
         }
     }
