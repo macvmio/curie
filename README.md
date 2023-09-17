@@ -168,7 +168,7 @@ Example:
 }
 ```
 
-### CPU Count
+### CPU count
 
 Possible values:
 * `<count>`, e.g. `8` - hardcoded number of CPUs
@@ -193,8 +193,8 @@ Properties:
 
 Currently we only support `NAT` interfaces. Each interface can have MAC address assigned in the following way:
 * `"automatic"` - Virtualization Framework will transparently assign new MAC address
-* `"synthesized"` - Curie will automatically generate unique MAC address per `run` or `start` operation. The MAC as well as IP address can be found via `curie inspect` command.
-* `"6e:7e:67:0c:93:65"` - manual MAC address
+* `"synthesized"` - Curie will automatically generate unique MAC address per `run` or `start` operation (both MAC and IP address can be found using `curie inspect` command)
+* e.g. `"6e:7e:67:0c:93:65"` - manual MAC address
 
 ## Development
 
@@ -231,4 +231,4 @@ We would like to thank the authors and contributors of the following projects:
 
 ## License
 
-curie is released under version 2.0 of the [Apache License](LICENSE.txt).
+Curie is released under version 2.0 of the [Apache License](LICENSE.txt).
