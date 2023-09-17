@@ -15,10 +15,12 @@ protocol ImageCache {
     func makeReference(_ reference: String) throws -> ImageReference
     func findReference(_ reference: String) throws -> ImageReference
     func listImages() throws -> [ImageItem]
+    func listContainers() throws -> [ImageItem]
     func removeImage(_ reference: ImageReference) throws
 
     @discardableResult
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference
+    func moveImage(source: ImageReference, target: ImageReference) throws
     func path(to reference: ImageReference) -> AbsolutePath
 }
 
@@ -43,25 +45,23 @@ final class DefaultImageCache: ImageCache {
                     "Cannot create empty reference, image with given reference (<repository>:<tag>) already exists"
                 )
         }
-        return ImageReference(id: ImageID.make(), descriptor: descriptor, type: .persistent)
+        return ImageReference(id: ImageID.make(), descriptor: descriptor, type: .image)
     }
 
     func findReference(_ reference: String) throws -> ImageReference {
-        let descriptor = try ImageDescriptor(reference: reference)
-        let absolutePath = imagesAbsolutePath.appending(descriptor.relativePath())
-        guard fileSystem.exists(at: absolutePath) else {
-            guard let image = try listImages().first(where: { $0.reference.id.description == reference }) else {
-                throw CoreError.generic("Cannot find the image")
-            }
-            return image.reference
-        }
-        let bundle = VMBundle(path: absolutePath)
-        let state = try bundleParser.readState(from: bundle)
-        return ImageReference(id: state.id, descriptor: descriptor, type: .persistent)
+        try findReference(reference, type: .image)
     }
 
     func listImages() throws -> [ImageItem] {
-        let references = try listImages(at: imagesAbsolutePath, basePath: imagesAbsolutePath)
+        let references = try listImages(at: imagesAbsolutePath, basePath: imagesAbsolutePath, type: .image)
+        let items = references.map {
+            ImageItem(reference: $0)
+        }
+        return items
+    }
+
+    func listContainers() throws -> [ImageItem] {
+        let references = try listImages(at: containersAbsolutePath, basePath: containersAbsolutePath, type: .container)
         let items = references.map {
             ImageItem(reference: $0)
         }
@@ -72,14 +72,14 @@ final class DefaultImageCache: ImageCache {
         let absolutePath = path(to: reference)
         try fileSystem.remove(at: absolutePath)
         try removeEmptySubdirectories(of: imagesAbsolutePath)
-        try removeEmptySubdirectories(of: ephemeralImagesAbsolutePath)
+        try removeEmptySubdirectories(of: containersAbsolutePath)
     }
 
     @discardableResult
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference {
         let sourceAbsolutePath = path(to: source)
         let targetId = ImageID.make()
-        let targetDescriptor = try target.imageDescriptor(source: source)
+        let targetDescriptor = try target.imageDescriptor(source: source, imageId: targetId)
         let targetReference = ImageReference(id: targetId, descriptor: targetDescriptor, type: target.imageType())
         let targetAbsolutePath = path(to: targetReference)
         guard sourceAbsolutePath != targetAbsolutePath else {
@@ -97,16 +97,32 @@ final class DefaultImageCache: ImageCache {
         return targetReference
     }
 
+    func moveImage(source: ImageReference, target: ImageReference) throws {
+        let sourceAbsolutePath = path(to: source)
+        let targetAbsolutePath = path(to: target)
+
+        try removeImage(target)
+
+        try fileSystem.createDirectory(at: targetAbsolutePath)
+        try system.execute(["mv", sourceAbsolutePath.pathString, targetAbsolutePath.parentDirectory.pathString])
+
+        try removeEmptySubdirectories(of: containersAbsolutePath)
+    }
+
     func path(to reference: ImageReference) -> AbsolutePath {
-        switch reference.type {
-        case .ephemeral:
-            return ephemeralImagesAbsolutePath.appending(reference.descriptor.relativePath())
-        case .persistent:
-            return imagesAbsolutePath.appending(reference.descriptor.relativePath())
-        }
+        storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
     }
 
     // MARK: - Private
+
+    private func storeAbsolutePath(_ type: ImageType) -> AbsolutePath {
+        switch type {
+        case .container:
+            return containersAbsolutePath
+        case .image:
+            return imagesAbsolutePath
+        }
+    }
 
     private var imagesAbsolutePath: AbsolutePath {
         fileSystem.homeDirectory
@@ -114,14 +130,32 @@ final class DefaultImageCache: ImageCache {
             .appending(component: "images")
     }
 
-    private var ephemeralImagesAbsolutePath: AbsolutePath {
+    private var containersAbsolutePath: AbsolutePath {
         fileSystem.homeDirectory
             .appending(component: ".curie")
-            .appending(component: "ephemeral-images")
+            .appending(component: "containers")
     }
 
-    private func listImages(at path: AbsolutePath, basePath: AbsolutePath) throws -> [ImageReference] {
+    func findReference(_ reference: String, type: ImageType) throws -> ImageReference {
+        let descriptor = try ImageDescriptor(reference: reference)
+        let absolutePath = storeAbsolutePath(type).appending(descriptor.relativePath())
+        guard fileSystem.exists(at: absolutePath) else {
+            guard let image = try listImages().first(where: { $0.reference.id.description == reference }) else {
+                throw CoreError.generic("Cannot find the image")
+            }
+            return image.reference
+        }
+        let bundle = VMBundle(path: absolutePath)
+        let state = try bundleParser.readState(from: bundle)
+        return ImageReference(id: state.id, descriptor: descriptor, type: .image)
+    }
+
+    private func listImages(at path: AbsolutePath, basePath: AbsolutePath, type: ImageType) throws -> [ImageReference] {
         var result: [ImageReference] = []
+
+        guard fileSystem.exists(at: path) else {
+            return []
+        }
 
         let list = try fileSystem.list(at: path)
 
@@ -134,14 +168,14 @@ final class DefaultImageCache: ImageCache {
 
         let images = Set(directories.filter { bundleParser.canParseConfig(at: VMBundle(path: $0).config) })
         let paths = images.map { $0.relative(to: basePath) }
-        let references = try paths.map { try findReference($0.pathString) }
+        let references = try paths.map { try findReference($0.pathString, type: type) }
 
         result.append(contentsOf: references)
 
         let subdirectories = directories.subtracting(images)
 
         try subdirectories.forEach {
-            let references = try listImages(at: $0, basePath: basePath)
+            let references = try listImages(at: $0, basePath: basePath, type: type)
             result.append(contentsOf: references)
         }
 
@@ -192,13 +226,13 @@ private extension ImageDescriptor {
 }
 
 private extension Target {
-    func imageDescriptor(source: ImageReference) throws -> ImageDescriptor {
+    func imageDescriptor(source: ImageReference, imageId: ImageID) throws -> ImageDescriptor {
         switch self {
         case let .reference(reference):
             return try ImageDescriptor(reference: reference)
         case .ephemeral:
             return ImageDescriptor(
-                repository: "\(UUID().uuidString)/\(source.descriptor.repository)",
+                repository: "@\(imageId.description)/\(source.descriptor.repository)",
                 tag: source.descriptor.tag
             )
         }
@@ -207,9 +241,9 @@ private extension Target {
     func imageType() -> ImageType {
         switch self {
         case .reference:
-            return .persistent
+            return .image
         case .ephemeral:
-            return .ephemeral
+            return .container
         }
     }
 }

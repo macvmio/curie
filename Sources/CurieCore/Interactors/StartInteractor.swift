@@ -1,3 +1,4 @@
+import Combine
 import CurieCommon
 import Foundation
 import TSCBasic
@@ -26,6 +27,7 @@ public final class DefaultStartInteractor: StartInteractor {
     private let imageCache: ImageCache
     private let system: System
     private let console: Console
+    private var cancellables = Set<AnyCancellable>()
 
     init(
         configurator: VMConfigurator,
@@ -44,10 +46,22 @@ public final class DefaultStartInteractor: StartInteractor {
     public func execute(with context: StartInteractorContext) throws {
         console.text("Start image \(context.reference)")
 
-        let reference = try imageCache.findReference(context.reference)
+        let sourceReference = try imageCache.findReference(context.reference)
+        let targetReference = try imageCache.cloneImage(source: sourceReference, target: .ephemeral)
 
-        let bundle = VMBundle(path: imageCache.path(to: reference))
+        let bundle = VMBundle(path: imageCache.path(to: targetReference))
         let vm = try configurator.loadVM(with: bundle)
+
+        vm.events
+            .filter { $0 == .imageDidStop || $0 == .imageStopFailed }
+            .sink { [imageCache, console] _ in
+                do {
+                    try imageCache.moveImage(source: targetReference, target: sourceReference)
+                } catch {
+                    console.error(error.localizedDescription)
+                }
+            }
+            .store(in: &cancellables)
 
         try imageRunner.run(vm: vm, noWindow: context.noWindow)
     }
