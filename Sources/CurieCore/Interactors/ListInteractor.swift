@@ -46,13 +46,7 @@ final class DefaultListInteractor: ListInteractor {
         let items = try context.listContainers
             ? imageCache.listContainers()
             : imageCache.listImages()
-        let images = items.sorted {
-            if $0.reference.descriptor.repository == $1.reference.descriptor.repository {
-                return $0.reference.descriptor.tag ?? "" < $1.reference.descriptor.tag ?? ""
-            } else {
-                return $0.reference.descriptor.repository < $1.reference.descriptor.repository
-            }
-        }
+        let images = items.sorted { $0.createAt > $1.createAt }
 
         let rendered = TableRenderer()
 
