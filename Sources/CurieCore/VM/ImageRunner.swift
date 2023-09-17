@@ -2,35 +2,39 @@ import CurieCommon
 import Foundation
 
 protocol ImageRunner {
-    func run(vm: VM, noWindow: Bool) throws
+    func run(vm: VM, bundle: VMBundle, noWindow: Bool) throws
 }
 
 final class DefaultImageRunner: ImageRunner {
     private let windowAppLauncher: MacOSWindowAppLauncher
     private let imageCache: ImageCache
+    private let bundleParser: VMBundleParser
     private let system: System
     private let console: Console
 
     init(
         windowAppLauncher: MacOSWindowAppLauncher,
         imageCache: ImageCache,
+        bundleParser: VMBundleParser,
         system: System,
         console: Console
     ) {
         self.windowAppLauncher = windowAppLauncher
         self.imageCache = imageCache
+        self.bundleParser = bundleParser
         self.system = system
         self.console = console
     }
 
-    func run(vm: VM, noWindow: Bool) throws {
-        console.text(vm.config.asString())
+    func run(vm: VM, bundle: VMBundle, noWindow: Bool) throws {
+        let info = try bundleParser.readInfo(from: bundle)
+        console.text(info.description)
 
         // Automatically start the vm
         vm.start(completionHandler: { [console] result in
             switch result {
             case .success:
-                console.text("Container started")
+                console.text("Container \(info.state.id.description) started")
             case let .failure(error):
                 console.error("Failed to start container. \(error)")
             }

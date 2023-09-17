@@ -134,7 +134,7 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "ls"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "ls -c"

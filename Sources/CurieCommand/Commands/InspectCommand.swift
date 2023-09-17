@@ -4,17 +4,14 @@ import CurieCore
 import Foundation
 import TSCBasic
 
-struct ListCommand: Command, HasFormatOption {
+struct InspectCommand: Command, HasFormatOption {
     static let configuration: CommandConfiguration = .init(
-        commandName: "ls",
-        abstract: "List images."
+        commandName: "inspect",
+        abstract: "Show image details."
     )
 
-    @Flag(
-        name: .shortAndLong,
-        help: "List containers."
-    )
-    var containers: Bool = false
+    @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
+    var reference: String
 
     @Option(
         name: .shortAndLong,
@@ -24,17 +21,17 @@ struct ListCommand: Command, HasFormatOption {
     var format: String = Options.format.defaultValue
 
     final class Executor: CommandExecutor {
-        private let interactor: ListInteractor
+        private let interactor: InspectInteractor
         private let console: Console
 
-        init(interactor: ListInteractor, console: Console) {
+        init(interactor: InspectInteractor, console: Console) {
             self.interactor = interactor
             self.console = console
         }
 
-        func execute(command: ListCommand) throws {
+        func execute(command: InspectCommand) throws {
             try interactor.execute(with: .init(
-                listContainers: command.containers,
+                reference: command.reference,
                 format: command.parseFormatOption()
             ))
         }
@@ -44,7 +41,7 @@ struct ListCommand: Command, HasFormatOption {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(ListInteractor.self),
+                    interactor: r.resolve(InspectInteractor.self),
                     console: r.resolve(Console.self)
                 )
             }

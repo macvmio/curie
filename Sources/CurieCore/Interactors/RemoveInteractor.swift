@@ -26,7 +26,7 @@ final class DefaultRemoveInteractor: RemoveInteractor {
     }
 
     func execute(with context: RemoveInteractorContext) throws {
-        let reference = try imageCache.findReference(context.reference)
+        let reference = try imageCache.findImageReference(context.reference)
 
         try imageCache.removeImage(reference)
 

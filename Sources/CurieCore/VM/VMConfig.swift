@@ -81,12 +81,15 @@ public struct VMConfig: Equatable, Codable {
         enum MACAddress: Equatable, Codable {
             case manual(MACAddress: String)
             case automatic
+            case synthesized
 
             init(from decoder: Decoder) throws {
                 let value = try decoder.singleValueContainer().decode(String.self)
                 switch value {
                 case "automatic":
                     self = .automatic
+                case "synthesized":
+                    self = .synthesized
                 default:
                     self = .manual(MACAddress: value)
                 }
@@ -97,6 +100,8 @@ public struct VMConfig: Equatable, Codable {
                 switch self {
                 case .automatic:
                     try container.encode("automatic")
+                case .synthesized:
+                    try container.encode("synthesized")
                 case let .manual(MACAddress: macAddress):
                     try container.encode(macAddress)
                 }
@@ -122,10 +127,10 @@ public struct VMConfig: Equatable, Codable {
     var network: NetworkConfig
 }
 
-extension VMConfig {
-    func asString() -> String {
+extension VMConfig: CustomStringConvertible {
+    public var description: String {
         """
-        MacOS image config:
+        Config:
           name: \(name)
           cpuCount: \(cpuCount)
           memorySize: \(memorySize)
@@ -135,17 +140,17 @@ extension VMConfig {
             pixelsPerInch: \(display.pixelsPerInch)
           network:
             devices:
-        \(network.devices.asString())
+        \(network.devices.description)
         """
     }
 }
 
 extension [VMConfig.NetworkConfig.Device] {
-    func asString() -> String {
+    var description: String {
         let prefix = "      "
         return enumerated().map { index, value in
             """
-            \(prefix)index: \(index + 1)
+            \(prefix)index: \(index)
             \(prefix)macAddress: \(value.macAddress)
             \(prefix)mode: \(value.mode)
             """

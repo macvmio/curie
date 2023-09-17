@@ -1,6 +1,7 @@
 import CurieCommon
 import Foundation
 
+// swiftlint:disable function_body_length
 public final class CoreAssembly: Assembly {
     public init() {}
 
@@ -60,6 +61,14 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(InspectInteractor.self) { r in
+            DefaultInspectInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                bundleParser: r.resolve(VMBundleParser.self),
+                aprClient: r.resolve(ARPClient.self),
+                console: r.resolve(Console.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
@@ -101,6 +110,7 @@ public final class CoreAssembly: Assembly {
             DefaultImageRunner(
                 windowAppLauncher: r.resolve(MacOSWindowAppLauncher.self),
                 imageCache: r.resolve(ImageCache.self),
+                bundleParser: r.resolve(VMBundleParser.self),
                 system: r.resolve(System.self),
                 console: r.resolve(Console.self)
             )
@@ -108,5 +118,12 @@ public final class CoreAssembly: Assembly {
         registry.register(WallClock.self) { _ in
             DefaultWallClock()
         }
+        registry.register(ARPClient.self) { r in
+            DefaultARPClient(
+                system: r.resolve(System.self)
+            )
+        }
     }
 }
+
+// swiftlint:enable function_body_length

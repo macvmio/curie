@@ -14,8 +14,10 @@ struct ImageItem: Equatable {
 }
 
 protocol ImageCache {
-    func makeReference(_ reference: String) throws -> ImageReference
+    func makeImageReference(_ reference: String) throws -> ImageReference
     func findReference(_ reference: String) throws -> ImageReference
+    func findImageReference(_ reference: String) throws -> ImageReference
+    func findContainerReference(_ reference: String) throws -> ImageReference
     func listImages() throws -> [ImageItem]
     func listContainers() throws -> [ImageItem]
     func removeImage(_ reference: ImageReference) throws
@@ -44,7 +46,7 @@ final class DefaultImageCache: ImageCache {
         self.fileSystem = fileSystem
     }
 
-    func makeReference(_ reference: String) throws -> ImageReference {
+    func makeImageReference(_ reference: String) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
         let relativePath = RelativePath(reference)
         let absolutePath = imagesAbsolutePath.appending(relativePath)
@@ -59,7 +61,18 @@ final class DefaultImageCache: ImageCache {
     }
 
     func findReference(_ reference: String) throws -> ImageReference {
+        if let reference = try? findImageReference(reference) {
+            return reference
+        }
+        return try findContainerReference(reference)
+    }
+
+    func findImageReference(_ reference: String) throws -> ImageReference {
         try findReference(reference, type: .image)
+    }
+
+    func findContainerReference(_ reference: String) throws -> ImageReference {
+        try findReference(reference, type: .container)
     }
 
     func listImages() throws -> [ImageItem] {
@@ -158,10 +171,18 @@ final class DefaultImageCache: ImageCache {
         let descriptor = try ImageDescriptor(reference: reference)
         let absolutePath = storeAbsolutePath(type).appending(descriptor.relativePath())
         guard fileSystem.exists(at: absolutePath) else {
-            guard let image = try listImages().first(where: { $0.reference.id.description == reference }) else {
-                throw CoreError.generic("Cannot find the image")
+            switch type {
+            case .container:
+                guard let image = try listContainers().first(where: { $0.reference.id.description == reference }) else {
+                    throw CoreError.generic("Cannot find the image")
+                }
+                return image.reference
+            case .image:
+                guard let image = try listImages().first(where: { $0.reference.id.description == reference }) else {
+                    throw CoreError.generic("Cannot find the image")
+                }
+                return image.reference
             }
-            return image.reference
         }
         let bundle = VMBundle(path: absolutePath)
         let state = try bundleParser.readState(from: bundle)

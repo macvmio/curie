@@ -85,7 +85,7 @@ final class DefaultVMConfigurator: VMConfigurator {
         configuration.memorySize = config.memorySize.bytes
         configuration.graphicsDevices = prepareGraphicsDeviceConfigurations(config: config)
         configuration.storageDevices = try prepareStorageDeviceConfigurations(with: bundle)
-        configuration.networkDevices = try prepareNetworkDeviceConfigurations(config: config)
+        configuration.networkDevices = try prepareNetworkDeviceConfigurations(with: bundle, config: config)
         configuration.pointingDevices = preparePointingDeviceConfigurations()
         configuration.keyboards = prepareKeyboardConfigurations()
         try configuration.validate()
@@ -116,12 +116,27 @@ final class DefaultVMConfigurator: VMConfigurator {
         return [VZVirtioBlockDeviceConfiguration(attachment: diskImageAttachment)]
     }
 
-    private func prepareNetworkDeviceConfigurations(config: VMConfig) throws -> [VZNetworkDeviceConfiguration] {
-        try config.network.devices.map { device in
+    private func prepareNetworkDeviceConfigurations(
+        with bundle: VMBundle,
+        config: VMConfig
+    ) throws -> [VZNetworkDeviceConfiguration] {
+        try config.network.devices.enumerated().map { index, device in
             let networkDevice = VZVirtioNetworkDeviceConfiguration()
             switch device.macAddress {
             case .automatic:
                 break
+            case .synthesized:
+                var state = try bundleParser.readState(from: bundle)
+                let generatedMACAddress = generateMACAddress()
+                var network = state.network ?? VMState.Network()
+                network.devices[index] = .init(MACAddress: generatedMACAddress)
+                state.network = network
+                try bundleParser.writeState(state, toBundle: bundle)
+
+                guard let macAddress = VZMACAddress(string: generatedMACAddress) else {
+                    throw CoreError.generic("Invalid MAC Address '\(generatedMACAddress)'")
+                }
+                networkDevice.macAddress = macAddress
             case let .manual(MACAddress: string):
                 guard let macAddress = VZMACAddress(string: string) else {
                     throw CoreError.generic("Invalid MAC Address '\(string)'")
@@ -216,5 +231,13 @@ final class DefaultVMConfigurator: VMConfigurator {
 
         try fileSystem.write(data: configuration.hardwareModel.dataRepresentation, to: bundle.hardwareModel)
         try fileSystem.write(data: configuration.machineIdentifier.dataRepresentation, to: bundle.machineIdentifier)
+    }
+
+    private func generateMACAddress() -> String {
+        (0 ..< 6)
+            .map { _ in UInt8.random(in: UInt8.min ..< UInt8.max) }
+            .map { String(format: "%02X", $0) }
+            .map { $0.lowercased() }
+            .joined(separator: ":")
     }
 }

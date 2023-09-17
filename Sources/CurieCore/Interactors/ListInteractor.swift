@@ -2,15 +2,10 @@ import CurieCommon
 import Foundation
 
 public struct ListInteractorContext {
-    public enum Format {
-        case text
-        case json
-    }
-
     public let listContainers: Bool
-    public let format: Format
+    public let format: OutputFormat
 
-    public init(listContainers: Bool, format: Format) {
+    public init(listContainers: Bool, format: OutputFormat) {
         self.listContainers = listContainers
         self.format = format
     }
@@ -49,10 +44,13 @@ final class DefaultListInteractor: ListInteractor {
         let images = items.sorted { $0.createAt > $1.createAt }
 
         let rendered = TableRenderer()
-
         let content = TableRenderer.Content(
             headers: [
-                "repository", "tag", context.listContainers ? "container id" : "image id", "created", "size",
+                "repository",
+                "tag",
+                context.listContainers ? "container id" : "image id",
+                "created",
+                "size",
             ],
             values: images.map { [
                 $0.reference.descriptor.repository,
@@ -62,22 +60,9 @@ final class DefaultListInteractor: ListInteractor {
                 $0.size.description,
             ] }
         )
-
         let config = TableRenderer.Config(format: context.format.rendererFormat())
-
         let text = rendered.render(content: content, config: config)
 
         console.text(text)
-    }
-}
-
-private extension ListInteractorContext.Format {
-    func rendererFormat() -> TableRenderer.Format {
-        switch self {
-        case .text:
-            return .text
-        case .json:
-            return .json
-        }
     }
 }
