@@ -24,7 +24,7 @@ final class DefaultImageRunner: ImageRunner {
     }
 
     func run(vm: VM, noWindow: Bool) throws {
-        console.text(vm.config.asString())
+        console.text(vm.config.description)
 
         // Automatically start the vm
         vm.start(completionHandler: { [console] result in

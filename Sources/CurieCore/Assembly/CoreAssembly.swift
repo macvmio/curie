@@ -11,6 +11,7 @@ public final class CoreAssembly: Assembly {
 
     // MARK: - Private
 
+    // swiftlint:disable:next function_body_length
     private func assembleInteractors(_ registry: Registry) {
         registry.register(RunInteractor.self) { r in
             DefaultRunInteractor(
@@ -57,6 +58,13 @@ public final class CoreAssembly: Assembly {
         registry.register(CloneInteractor.self) { r in
             DefaultCloneInteractor(
                 imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
+        registry.register(InspectInteractor.self) { r in
+            DefaultInspectInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                bundleParser: r.resolve(VMBundleParser.self),
                 console: r.resolve(Console.self)
             )
         }

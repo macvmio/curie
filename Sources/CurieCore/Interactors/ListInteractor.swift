@@ -2,15 +2,10 @@ import CurieCommon
 import Foundation
 
 public struct ListInteractorContext {
-    public enum Format {
-        case text
-        case json
-    }
-
     public let listContainers: Bool
-    public let format: Format
+    public let format: OutputFormat
 
-    public init(listContainers: Bool, format: Format) {
+    public init(listContainers: Bool, format: OutputFormat) {
         self.listContainers = listContainers
         self.format = format
     }
@@ -69,16 +64,5 @@ final class DefaultListInteractor: ListInteractor {
         let text = rendered.render(content: content, config: config)
 
         console.text(text)
-    }
-}
-
-private extension ListInteractorContext.Format {
-    func rendererFormat() -> TableRenderer.Format {
-        switch self {
-        case .text:
-            return .text
-        case .json:
-            return .json
-        }
     }
 }

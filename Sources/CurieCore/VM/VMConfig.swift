@@ -122,10 +122,10 @@ public struct VMConfig: Equatable, Codable {
     var network: NetworkConfig
 }
 
-extension VMConfig {
-    func asString() -> String {
+extension VMConfig: CustomStringConvertible {
+    public var description: String {
         """
-        MacOS image config:
+        Config:
           name: \(name)
           cpuCount: \(cpuCount)
           memorySize: \(memorySize)
@@ -135,13 +135,13 @@ extension VMConfig {
             pixelsPerInch: \(display.pixelsPerInch)
           network:
             devices:
-        \(network.devices.asString())
+        \(network.devices.description)
         """
     }
 }
 
 extension [VMConfig.NetworkConfig.Device] {
-    func asString() -> String {
+    var description: String {
         let prefix = "      "
         return enumerated().map { index, value in
             """
