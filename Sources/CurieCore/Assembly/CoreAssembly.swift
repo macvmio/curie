@@ -41,6 +41,12 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(ListInteractor.self) { r in
+            DefaultListInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
         registry.register(RemoveInteractor.self) { r in
             DefaultRemoveInteractor(
                 imageCache: r.resolve(ImageCache.self),
