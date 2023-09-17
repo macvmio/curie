@@ -3,7 +3,7 @@ import CurieCommon
 import Foundation
 import Virtualization
 
-final class VM {
+final class VM: NSObject {
     enum Event: Equatable {
         case imageDidStop
         case imageStopFailed
@@ -27,6 +27,10 @@ final class VM {
         self.vm = vm
         self.config = config
         self.console = console
+
+        super.init()
+
+        vm.delegate = self
     }
 
     public func start(completionHandler: @escaping (Result<Void, Error>) -> Void) {
@@ -79,5 +83,19 @@ final class VM {
 
     public var virtualMachine: VZVirtualMachine {
         vm
+    }
+}
+
+extension VM: VZVirtualMachineDelegate {
+    func virtualMachine(_: VZVirtualMachine, didStopWithError error: Error) {
+        console.error("VM stopped with error. \(error)")
+        _events.send(.imageStopFailed)
+        Darwin.exit(1)
+    }
+
+    func guestDidStop(_: VZVirtualMachine) {
+        console.text("Guest did stop VM")
+        _events.send(.imageDidStop)
+        Darwin.exit(0)
     }
 }

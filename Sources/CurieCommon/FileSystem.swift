@@ -3,11 +3,11 @@ import TSCBasic
 
 public enum FileSystemItem {
     public struct File {
-        let path: RelativePath
+        public let path: RelativePath
     }
 
     public struct Directory {
-        let path: RelativePath
+        public let path: RelativePath
     }
 
     case file(File)

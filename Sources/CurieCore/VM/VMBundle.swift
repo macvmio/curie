@@ -12,7 +12,7 @@ public struct VMBundle {
     }
 
     public var name: String {
-        path.basenameWithoutExt
+        path.basename
     }
 
     public var machineIdentifier: AbsolutePath {

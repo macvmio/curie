@@ -65,7 +65,6 @@ public final class CoreAssembly: Assembly {
             DefaultVMConfigurator(
                 bundleParser: r.resolve(VMBundleParser.self),
                 fileSystem: r.resolve(FileSystem.self),
-                virtualMachineDelegate: r.resolve(VirtualMachineDelegate.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -79,11 +78,6 @@ public final class CoreAssembly: Assembly {
         }
         registry.register(VMInstaller.self) { r in
             DefaultVMInstaller(
-                console: r.resolve(Console.self)
-            )
-        }
-        registry.register(VirtualMachineDelegate.self) { r in
-            VirtualMachineDelegate(
                 console: r.resolve(Console.self)
             )
         }

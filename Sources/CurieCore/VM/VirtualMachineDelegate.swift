@@ -8,14 +8,4 @@ final class VirtualMachineDelegate: NSObject, VZVirtualMachineDelegate {
     init(console: Console) {
         self.console = console
     }
-
-    func virtualMachine(_: VZVirtualMachine, didStopWithError error: Error) {
-        console.error("VM stopped with error. \(error)")
-        exit(1)
-    }
-
-    func guestDidStop(_: VZVirtualMachine) {
-        console.text("Guest did stop VM")
-        exit(0)
-    }
 }

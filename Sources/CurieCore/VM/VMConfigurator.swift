@@ -18,19 +18,16 @@ protocol VMConfigurator {
 final class DefaultVMConfigurator: VMConfigurator {
     private let bundleParser: VMBundleParser
     private let fileSystem: CurieCommon.FileSystem
-    private let virtualMachineDelegate: VirtualMachineDelegate
     private let console: Console
 
     init(
         bundleParser: VMBundleParser,
         fileSystem: CurieCommon.FileSystem,
-        virtualMachineDelegate: VirtualMachineDelegate,
         console: Console
     ) {
         self.bundleParser = bundleParser
         self.fileSystem = fileSystem
         self.console = console
-        self.virtualMachineDelegate = virtualMachineDelegate
     }
 
     func createVM(with bundle: VMBundle, spec: VMSpec) async throws {
@@ -65,9 +62,6 @@ final class DefaultVMConfigurator: VMConfigurator {
 
         let config = try bundleParser.readConfig(from: bundle)
         let vm = try VZVirtualMachine(configuration: makeConfiguration(bundle: bundle, config: config))
-
-        vm.delegate = virtualMachineDelegate
-
         return VM(
             vm: vm,
             config: config,
@@ -176,8 +170,8 @@ final class DefaultVMConfigurator: VMConfigurator {
         try fileSystem.move(from: sourcePath, to: bundle.config)
     }
 
-    private func createState(bundle _: VMBundle, reference _: ImageReference) throws {
-//        try bundleParser.writeState(state, toBundle: bundle)
+    private func createState(bundle: VMBundle, reference: ImageReference) throws {
+        try bundleParser.writeState(.init(id: reference.id), toBundle: bundle)
     }
 
     private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {

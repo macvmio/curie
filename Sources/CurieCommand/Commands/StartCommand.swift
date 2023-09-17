@@ -7,7 +7,7 @@ import TSCBasic
 struct StartCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: "start",
-        abstract: "Start a container modifying content of the referenced image."
+        abstract: "Start a container to modify the image."
     )
 
     @Argument(help: "Reference <repository>:<tag>.")

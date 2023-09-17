@@ -55,13 +55,15 @@ final class DefaultImageCache: ImageCache {
     func removeImage(_ reference: ImageReference) throws {
         let absolutePath = path(to: reference)
         try fileSystem.remove(at: absolutePath)
+        try removeEmptySubdirectories(of: persistentImagesAbsolutePath)
+        try removeEmptySubdirectories(of: ephemeralImagesAbsolutePath)
     }
 
     @discardableResult
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference {
         let sourceAbsolutePath = path(to: source)
         let targetId = ImageID.make()
-        let targetDescriptor = try target.descriptor()
+        let targetDescriptor = try target.imageDescriptor(source: source)
         let targetReference = ImageReference(id: targetId, descriptor: targetDescriptor, type: target.imageType())
         let targetAbsolutePath = path(to: targetReference)
         guard sourceAbsolutePath != targetAbsolutePath else {
@@ -76,12 +78,7 @@ final class DefaultImageCache: ImageCache {
         state.id = targetId
         try bundleParser.writeState(state, toBundle: bundle)
 
-        let reference = ImageReference(
-            id: targetId,
-            descriptor: targetDescriptor,
-            type: target.imageType()
-        )
-        return reference
+        return targetReference
     }
 
     func path(to reference: ImageReference) -> AbsolutePath {
@@ -106,6 +103,38 @@ final class DefaultImageCache: ImageCache {
             .appending(component: ".curie")
             .appending(component: "ephemeral-images")
     }
+
+    @discardableResult
+    private func removeEmptySubdirectories(of path: AbsolutePath) throws -> Bool {
+        let list = try fileSystem.list(at: path)
+
+        let directories = list.compactMap {
+            if case let .directory(directory) = $0 {
+                return path.appending(directory.path)
+            }
+            return nil
+        }
+
+        var empty = true
+        try directories.forEach { path in
+            empty = try empty && removeEmptySubdirectories(of: path)
+        }
+
+        let files = list.compactMap {
+            if case let .file(file) = $0 {
+                return file
+            }
+            return nil
+        }
+
+        guard files.isEmpty, empty else {
+            return false
+        }
+
+        try fileSystem.remove(at: path)
+
+        return true
+    }
 }
 
 private extension ImageDescriptor {
@@ -119,12 +148,15 @@ private extension ImageDescriptor {
 }
 
 private extension Target {
-    func descriptor() throws -> ImageDescriptor {
+    func imageDescriptor(source: ImageReference) throws -> ImageDescriptor {
         switch self {
-        case .ephemeral:
-            return try ImageDescriptor(reference: UUID().uuidString)
         case let .reference(reference):
             return try ImageDescriptor(reference: reference)
+        case .ephemeral:
+            return ImageDescriptor(
+                repository: "\(UUID().uuidString)/\(source.descriptor.repository)",
+                tag: source.descriptor.tag
+            )
         }
     }
 
