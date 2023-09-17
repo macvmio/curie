@@ -58,7 +58,7 @@ final class DefaultCreateInteractor: CreateInteractor {
     }
 
     func execute(with context: CreateInteractorContext) throws {
-        let reference = try imageCache.makeReference(context.reference)
+        let reference = try imageCache.makeImageReference(context.reference)
         let bundlePath = imageCache.path(to: reference)
         let bundle = VMBundle(path: bundlePath)
 

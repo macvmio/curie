@@ -47,7 +47,7 @@ public final class DefaultRunInteractor: RunInteractor {
     public func execute(with context: RunInteractorContext) throws {
         console.text("Run image \(context.reference)")
 
-        let sourceReference = try imageCache.findReference(context.reference)
+        let sourceReference = try imageCache.findImageReference(context.reference)
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .ephemeral)
 
         let bundle = VMBundle(path: imageCache.path(to: targetReference))
@@ -64,6 +64,6 @@ public final class DefaultRunInteractor: RunInteractor {
             }
             .store(in: &cancellables)
 
-        try imageRunner.run(vm: vm, noWindow: context.noWindow)
+        try imageRunner.run(vm: vm, bundle: bundle, noWindow: context.noWindow)
     }
 }

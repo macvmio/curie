@@ -21,6 +21,7 @@ public protocol InspectInteractor {
 final class DefaultInspectInteractor: InspectInteractor {
     private let imageCache: ImageCache
     private let bundleParser: VMBundleParser
+    private let aprClient: ARPClient
     private let console: Console
 
     private let jsonEncoder = {
@@ -33,19 +34,24 @@ final class DefaultInspectInteractor: InspectInteractor {
     init(
         imageCache: ImageCache,
         bundleParser: VMBundleParser,
+        aprClient: ARPClient,
         console: Console
     ) {
         self.imageCache = imageCache
         self.bundleParser = bundleParser
+        self.aprClient = aprClient
         self.console = console
     }
 
     func execute(with context: InspectInteractorContext) throws {
         let reference = try imageCache.findReference(context.reference)
         let bundle = VMBundle(path: imageCache.path(to: reference))
-        let config = try bundleParser.readConfig(from: bundle)
-        let state = try bundleParser.readState(from: bundle)
-        let item = InspectItem(config: config, state: state)
+        let info = try bundleParser.readInfo(from: bundle)
+        let arpa = try aprClient.executeARPA()
+        let macAddresses = Set(info.state.network.flatMap { $0.devices.map(\.value.MACAddress) } ?? [])
+        let filteredArpaRows = arpa.filter { macAddresses.contains($0.macAddress) }
+
+        let item = Item(info: info, arpa: filteredArpaRows)
 
         switch context.format {
         case .text:
@@ -57,15 +63,11 @@ final class DefaultInspectInteractor: InspectInteractor {
 
     // MARK: - Private
 
-    private func renderText(_ item: InspectItem) {
-        console.text("")
-        console.text(item.state.description)
-        console.text("")
-        console.text(item.config.description)
-        console.text("")
+    private func renderText(_ item: Item) {
+        console.text(item.description)
     }
 
-    private func renderJson(_ item: InspectItem) throws {
+    private func renderJson(_ item: Item) throws {
         let data = try jsonEncoder.encode(item)
         guard let string = String(data: data, encoding: .utf8) else {
             return
@@ -74,7 +76,39 @@ final class DefaultInspectInteractor: InspectInteractor {
     }
 }
 
-private struct InspectItem: Encodable {
-    let config: VMConfig
-    let state: VMState
+private struct Item: Codable {
+    var info: VMInfo
+    var arpa: [ARPARow]
+}
+
+extension Item: CustomStringConvertible {
+    var description: String {
+        """
+        \(info.description)
+        \(arpa.description)
+
+        """
+    }
+}
+
+extension [ARPARow] {
+    var description: String {
+        """
+        ARPA:
+        \(
+            enumerated()
+                .map { $1.description }
+                .joined(separator: "\n")
+        )
+        """
+    }
+}
+
+extension ARPARow: CustomStringConvertible {
+    var description: String {
+        """
+          macAddress: \(macAddress)
+          ip: \(ip)
+        """
+    }
 }

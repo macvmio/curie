@@ -1,6 +1,7 @@
 import CurieCommon
 import Foundation
 
+// swiftlint:disable function_body_length
 public final class CoreAssembly: Assembly {
     public init() {}
 
@@ -11,7 +12,6 @@ public final class CoreAssembly: Assembly {
 
     // MARK: - Private
 
-    // swiftlint:disable:next function_body_length
     private func assembleInteractors(_ registry: Registry) {
         registry.register(RunInteractor.self) { r in
             DefaultRunInteractor(
@@ -65,6 +65,7 @@ public final class CoreAssembly: Assembly {
             DefaultInspectInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 bundleParser: r.resolve(VMBundleParser.self),
+                aprClient: r.resolve(ARPClient.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -109,6 +110,7 @@ public final class CoreAssembly: Assembly {
             DefaultImageRunner(
                 windowAppLauncher: r.resolve(MacOSWindowAppLauncher.self),
                 imageCache: r.resolve(ImageCache.self),
+                bundleParser: r.resolve(VMBundleParser.self),
                 system: r.resolve(System.self),
                 console: r.resolve(Console.self)
             )
@@ -116,5 +118,12 @@ public final class CoreAssembly: Assembly {
         registry.register(WallClock.self) { _ in
             DefaultWallClock()
         }
+        registry.register(ARPClient.self) { r in
+            DefaultARPClient(
+                system: r.resolve(System.self)
+            )
+        }
     }
 }
+
+// swiftlint:enable function_body_length

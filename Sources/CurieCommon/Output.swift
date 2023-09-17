@@ -85,7 +85,7 @@ public final class CaptureOutput: Output {
 
     private let lock = NSLock()
 
-    init() {}
+    public init() {}
 
     public private(set) var captured: [(OutputStream, String)] = []
 

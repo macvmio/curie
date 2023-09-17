@@ -81,12 +81,15 @@ public struct VMConfig: Equatable, Codable {
         enum MACAddress: Equatable, Codable {
             case manual(MACAddress: String)
             case automatic
+            case synthesized
 
             init(from decoder: Decoder) throws {
                 let value = try decoder.singleValueContainer().decode(String.self)
                 switch value {
                 case "automatic":
                     self = .automatic
+                case "synthesized":
+                    self = .synthesized
                 default:
                     self = .manual(MACAddress: value)
                 }
@@ -97,6 +100,8 @@ public struct VMConfig: Equatable, Codable {
                 switch self {
                 case .automatic:
                     try container.encode("automatic")
+                case .synthesized:
+                    try container.encode("synthesized")
                 case let .manual(MACAddress: macAddress):
                     try container.encode(macAddress)
                 }
@@ -145,7 +150,7 @@ extension [VMConfig.NetworkConfig.Device] {
         let prefix = "      "
         return enumerated().map { index, value in
             """
-            \(prefix)index: \(index + 1)
+            \(prefix)index: \(index)
             \(prefix)macAddress: \(value.macAddress)
             \(prefix)mode: \(value.mode)
             """
