@@ -50,7 +50,10 @@ final class DefaultImageCache: ImageCache {
         let descriptor = try ImageDescriptor(reference: reference)
         let absolutePath = imagesAbsolutePath.appending(descriptor.relativePath())
         guard fileSystem.exists(at: absolutePath) else {
-            throw CoreError.generic("Cannot find the image")
+            guard let image = try listImages().first(where: { $0.reference.id.description == reference }) else {
+                throw CoreError.generic("Cannot find the image")
+            }
+            return image.reference
         }
         let bundle = VMBundle(path: absolutePath)
         let state = try bundleParser.readState(from: bundle)
