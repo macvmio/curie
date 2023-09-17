@@ -22,13 +22,23 @@ public protocol ListInteractor {
 
 final class DefaultListInteractor: ListInteractor {
     private let imageCache: ImageCache
+    private let wallClock: WallClock
     private let console: Console
+
+    private let dateFormatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
 
     init(
         imageCache: ImageCache,
+        wallClock: WallClock,
         console: Console
     ) {
         self.imageCache = imageCache
+        self.wallClock = wallClock
         self.console = console
     }
 
@@ -48,12 +58,13 @@ final class DefaultListInteractor: ListInteractor {
 
         let content = TableRenderer.Content(
             headers: [
-                "repository", "tag", context.listContainers ? "container id" : "image id", "size",
+                "repository", "tag", context.listContainers ? "container id" : "image id", "created", "size",
             ],
             values: images.map { [
                 $0.reference.descriptor.repository,
                 $0.reference.descriptor.tag ?? "<none>",
                 $0.reference.id.description,
+                dateFormatter.localizedString(for: $0.createAt, relativeTo: wallClock.now()),
                 $0.size.description,
             ] }
         )

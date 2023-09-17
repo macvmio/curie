@@ -14,10 +14,16 @@ protocol VMBundleParser {
 
 final class DefaultVMBundleParser: VMBundleParser {
     private let fileSystem: CurieCommon.FileSystem
-    private let jsonDecoder = JSONDecoder()
+    private let jsonDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
+
     private let jsonEncoder = {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
+        encoder.dateEncodingStrategy = .iso8601
         return encoder
     }()
 

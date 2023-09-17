@@ -18,15 +18,18 @@ protocol VMConfigurator {
 final class DefaultVMConfigurator: VMConfigurator {
     private let bundleParser: VMBundleParser
     private let fileSystem: CurieCommon.FileSystem
+    private let wallClock: WallClock
     private let console: Console
 
     init(
         bundleParser: VMBundleParser,
         fileSystem: CurieCommon.FileSystem,
+        wallClock: WallClock,
         console: Console
     ) {
         self.bundleParser = bundleParser
         self.fileSystem = fileSystem
+        self.wallClock = wallClock
         self.console = console
     }
 
@@ -171,7 +174,10 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     private func createState(bundle: VMBundle, reference: ImageReference) throws {
-        try bundleParser.writeState(.init(id: reference.id), toBundle: bundle)
+        try bundleParser.writeState(.init(
+            id: reference.id,
+            createdAt: wallClock.now()
+        ), toBundle: bundle)
     }
 
     private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {

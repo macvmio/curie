@@ -9,6 +9,7 @@ enum Target {
 
 struct ImageItem: Equatable {
     var reference: ImageReference
+    var createAt: Date
     var size: MemorySize
 }
 
@@ -27,11 +28,18 @@ protocol ImageCache {
 
 final class DefaultImageCache: ImageCache {
     let bundleParser: VMBundleParser
+    let wallClock: WallClock
     let system: System
     let fileSystem: CurieCommon.FileSystem
 
-    init(bundleParser: VMBundleParser, system: System, fileSystem: CurieCommon.FileSystem) {
+    init(
+        bundleParser: VMBundleParser,
+        wallClock: WallClock,
+        system: System,
+        fileSystem: CurieCommon.FileSystem
+    ) {
         self.bundleParser = bundleParser
+        self.wallClock = wallClock
         self.system = system
         self.fileSystem = fileSystem
     }
@@ -87,6 +95,7 @@ final class DefaultImageCache: ImageCache {
         let bundle = VMBundle(path: targetAbsolutePath)
         var state = try bundleParser.readState(from: bundle)
         state.id = targetId
+        state.createdAt = wallClock.now()
         try bundleParser.writeState(state, toBundle: bundle)
 
         return targetReference
@@ -112,8 +121,11 @@ final class DefaultImageCache: ImageCache {
 
     private func items(from references: [ImageReference]) throws -> [ImageItem] {
         let items = try references.map {
-            try ImageItem(
+            let bundle = VMBundle(path: path(to: $0))
+            let state = try bundleParser.readState(from: bundle)
+            return try ImageItem(
                 reference: $0,
+                createAt: state.createdAt,
                 size: fileSystem.directorySize(at: path(to: $0))
             )
         }
@@ -190,6 +202,10 @@ final class DefaultImageCache: ImageCache {
     @discardableResult
     private func removeEmptySubdirectories(of path: AbsolutePath) throws -> Bool {
         let list = try fileSystem.list(at: path)
+
+        guard fileSystem.exists(at: path) else {
+            return true
+        }
 
         let directories = list.compactMap {
             if case let .directory(directory) = $0 {
