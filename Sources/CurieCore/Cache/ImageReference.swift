@@ -2,8 +2,8 @@ import CurieCommon
 import Foundation
 
 enum ImageType {
-    case ephemeral
-    case persistent
+    case container
+    case image
 }
 
 struct ImageDescriptor: Equatable {

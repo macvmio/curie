@@ -136,6 +136,10 @@
             argument = "ls"
             isEnabled = "NO">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "ls -c"
+            isEnabled = "NO">
+         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction

@@ -7,9 +7,11 @@ public struct ListInteractorContext {
         case json
     }
 
+    public let listContainers: Bool
     public let format: Format
 
-    public init(format: Format) {
+    public init(listContainers: Bool, format: Format) {
+        self.listContainers = listContainers
         self.format = format
     }
 }
@@ -31,11 +33,14 @@ final class DefaultListInteractor: ListInteractor {
     }
 
     func execute(with context: ListInteractorContext) throws {
-        let images = try imageCache.listImages().sorted {
+        let items = try context.listContainers
+            ? imageCache.listContainers()
+            : imageCache.listImages()
+        let images = items.sorted {
             if $0.reference.descriptor.repository == $1.reference.descriptor.repository {
-                return $0.reference.descriptor.tag ?? "" > $1.reference.descriptor.tag ?? ""
+                return $0.reference.descriptor.tag ?? "" < $1.reference.descriptor.tag ?? ""
             } else {
-                return $0.reference.descriptor.repository > $1.reference.descriptor.repository
+                return $0.reference.descriptor.repository < $1.reference.descriptor.repository
             }
         }
 
@@ -43,7 +48,7 @@ final class DefaultListInteractor: ListInteractor {
 
         let content = TableRenderer.Content(
             headers: [
-                "repository", "tag", "image id",
+                "repository", "tag", context.listContainers ? "container id" : "image id",
             ],
             values: images.map { [
                 $0.reference.descriptor.repository,

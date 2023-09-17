@@ -10,6 +10,12 @@ struct ListCommand: Command {
         abstract: "List images."
     )
 
+    @Flag(
+        name: .shortAndLong,
+        help: "List containers."
+    )
+    var containers: Bool = false
+
     @Option(
         name: .shortAndLong,
         help: "Format \"text\" or \"json\" (\"text\" by default).",
@@ -28,6 +34,7 @@ struct ListCommand: Command {
 
         func execute(command: ListCommand) throws {
             try interactor.execute(with: .init(
+                listContainers: command.containers,
                 format: parseFormat(command)
             ))
         }
