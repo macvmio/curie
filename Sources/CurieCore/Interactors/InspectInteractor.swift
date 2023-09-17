@@ -84,22 +84,25 @@ private struct Item: Codable {
 extension Item: CustomStringConvertible {
     var description: String {
         """
-        \(info.description)
-        \(arpa.description)
-
+        \(info.description)\(arpa.description)
         """
     }
 }
 
 extension [ARPARow] {
     var description: String {
-        """
+        guard !isEmpty else {
+            return ""
+        }
+        return """
+
         ARPA:
         \(
             enumerated()
                 .map { $1.description }
                 .joined(separator: "\n")
         )
+
         """
     }
 }
