@@ -19,6 +19,8 @@ final class VM: NSObject {
     private let console: Console
     private let _events = PassthroughSubject<Event, Never>()
 
+    private var sourceSignals: [DispatchSourceSignal] = []
+
     init(
         vm: VZVirtualMachine,
         config: VMConfig,
@@ -83,6 +85,10 @@ final class VM: NSObject {
 
     public var virtualMachine: VZVirtualMachine {
         vm
+    }
+
+    func addSourceSignal(_ sourceSignal: DispatchSourceSignal) {
+        sourceSignals.append(sourceSignal)
     }
 }
 

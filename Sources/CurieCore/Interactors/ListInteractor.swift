@@ -48,12 +48,13 @@ final class DefaultListInteractor: ListInteractor {
 
         let content = TableRenderer.Content(
             headers: [
-                "repository", "tag", context.listContainers ? "container id" : "image id",
+                "repository", "tag", context.listContainers ? "container id" : "image id", "size",
             ],
             values: images.map { [
                 $0.reference.descriptor.repository,
                 $0.reference.descriptor.tag ?? "<none>",
                 $0.reference.id.description,
+                $0.size.description,
             ] }
         )
 

@@ -9,6 +9,7 @@ enum Target {
 
 struct ImageItem: Equatable {
     var reference: ImageReference
+    var size: MemorySize
 }
 
 protocol ImageCache {
@@ -54,18 +55,12 @@ final class DefaultImageCache: ImageCache {
 
     func listImages() throws -> [ImageItem] {
         let references = try listImages(at: imagesAbsolutePath, basePath: imagesAbsolutePath, type: .image)
-        let items = references.map {
-            ImageItem(reference: $0)
-        }
-        return items
+        return try items(from: references)
     }
 
     func listContainers() throws -> [ImageItem] {
         let references = try listImages(at: containersAbsolutePath, basePath: containersAbsolutePath, type: .container)
-        let items = references.map {
-            ImageItem(reference: $0)
-        }
-        return items
+        return try items(from: references)
     }
 
     func removeImage(_ reference: ImageReference) throws {
@@ -115,6 +110,16 @@ final class DefaultImageCache: ImageCache {
 
     // MARK: - Private
 
+    private func items(from references: [ImageReference]) throws -> [ImageItem] {
+        let items = try references.map {
+            try ImageItem(
+                reference: $0,
+                size: fileSystem.directorySize(at: path(to: $0))
+            )
+        }
+        return items
+    }
+
     private func storeAbsolutePath(_ type: ImageType) -> AbsolutePath {
         switch type {
         case .container:
@@ -147,7 +152,7 @@ final class DefaultImageCache: ImageCache {
         }
         let bundle = VMBundle(path: absolutePath)
         let state = try bundleParser.readState(from: bundle)
-        return ImageReference(id: state.id, descriptor: descriptor, type: .image)
+        return ImageReference(id: state.id, descriptor: descriptor, type: type)
     }
 
     private func listImages(at path: AbsolutePath, basePath: AbsolutePath, type: ImageType) throws -> [ImageReference] {
