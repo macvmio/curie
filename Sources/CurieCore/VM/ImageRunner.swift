@@ -30,18 +30,18 @@ final class DefaultImageRunner: ImageRunner {
         vm.start(completionHandler: { [console] result in
             switch result {
             case .success:
-                console.text("The VM started")
+                console.text("Container started")
             case let .failure(error):
-                console.error("Failed to start the VM. \(error)")
+                console.error("Failed to start container. \(error)")
             }
         })
 
         // Launch interface
         if noWindow {
-            console.text("Launch the VM without a window")
+            console.text("Launch container without a window")
             launchConsole(with: vm)
         } else {
-            console.text("Launch the VM in a window")
+            console.text("Launch container in a window")
             launchWindow(with: vm)
         }
     }

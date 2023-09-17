@@ -58,7 +58,7 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     func loadVM(with bundle: VMBundle) throws -> VM {
-        console.text("Load VM")
+        console.text("Load image")
 
         let config = try bundleParser.readConfig(from: bundle)
         let vm = try VZVirtualMachine(configuration: makeConfiguration(bundle: bundle, config: config))

@@ -125,7 +125,7 @@ public struct VMConfig: Equatable, Codable {
 extension VMConfig {
     func asString() -> String {
         """
-        MacOS VM Config:
+        MacOS image config:
           name: \(name)
           cpuCount: \(cpuCount)
           memorySize: \(memorySize)

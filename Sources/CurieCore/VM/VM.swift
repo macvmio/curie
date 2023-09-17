@@ -36,17 +36,17 @@ final class VM: NSObject {
     }
 
     public func start(completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        console.text("Will start VM")
+        console.text("Will start container")
         vm.start(completionHandler: completionHandler)
     }
 
     public func pause(completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        console.text("Will pause VM")
+        console.text("Will pause container")
         vm.pause(completionHandler: completionHandler)
     }
 
     public func resume(completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        console.text("Will resume VM")
+        console.text("Will resume container")
         vm.resume(completionHandler: completionHandler)
     }
 
@@ -56,7 +56,7 @@ final class VM: NSObject {
             return
         }
 
-        console.text("Will stop VM")
+        console.text("Will stop container")
         // swiftlint:disable:next identifier_name
         vm.stop { [_events] error in
             if let error {
@@ -70,14 +70,14 @@ final class VM: NSObject {
     }
 
     public func exit(exit: @escaping (Int32) -> Never) {
-        console.text("Will exit VM")
+        console.text("Will exit container")
         stop { [console] result in
             switch result {
             case .success:
-                console.text("Stopped the VM")
+                console.text("Stopped container")
                 exit(0)
             case let .failure(error):
-                console.error("Failed to stop the VM, \(error)")
+                console.error("Failed to stop container, \(error)")
                 exit(1)
             }
         }
@@ -94,13 +94,13 @@ final class VM: NSObject {
 
 extension VM: VZVirtualMachineDelegate {
     func virtualMachine(_: VZVirtualMachine, didStopWithError error: Error) {
-        console.error("VM stopped with error. \(error)")
+        console.error("Container stopped with error. \(error)")
         _events.send(.imageStopFailed)
         Darwin.exit(1)
     }
 
     func guestDidStop(_: VZVirtualMachine) {
-        console.text("Guest did stop VM")
+        console.text("Guest did stop container")
         _events.send(.imageDidStop)
         Darwin.exit(0)
     }
