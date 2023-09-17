@@ -7,9 +7,14 @@ enum Target {
     case ephemeral
 }
 
+struct ImageItem: Equatable {
+    var reference: ImageReference
+}
+
 protocol ImageCache {
     func makeReference(_ reference: String) throws -> ImageReference
     func findReference(_ reference: String) throws -> ImageReference
+    func listImages() throws -> [ImageItem]
     func removeImage(_ reference: ImageReference) throws
 
     @discardableResult
@@ -31,7 +36,7 @@ final class DefaultImageCache: ImageCache {
     func makeReference(_ reference: String) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
         let relativePath = RelativePath(reference)
-        let absolutePath = persistentImagesAbsolutePath.appending(relativePath)
+        let absolutePath = imagesAbsolutePath.appending(relativePath)
         guard !fileSystem.exists(at: absolutePath) else {
             throw CoreError
                 .generic(
@@ -43,7 +48,7 @@ final class DefaultImageCache: ImageCache {
 
     func findReference(_ reference: String) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
-        let absolutePath = persistentImagesAbsolutePath.appending(descriptor.relativePath())
+        let absolutePath = imagesAbsolutePath.appending(descriptor.relativePath())
         guard fileSystem.exists(at: absolutePath) else {
             throw CoreError.generic("Cannot find the image")
         }
@@ -52,10 +57,18 @@ final class DefaultImageCache: ImageCache {
         return ImageReference(id: state.id, descriptor: descriptor, type: .persistent)
     }
 
+    func listImages() throws -> [ImageItem] {
+        let references = try listImages(at: imagesAbsolutePath, basePath: imagesAbsolutePath)
+        let items = references.map {
+            ImageItem(reference: $0)
+        }
+        return items
+    }
+
     func removeImage(_ reference: ImageReference) throws {
         let absolutePath = path(to: reference)
         try fileSystem.remove(at: absolutePath)
-        try removeEmptySubdirectories(of: persistentImagesAbsolutePath)
+        try removeEmptySubdirectories(of: imagesAbsolutePath)
         try removeEmptySubdirectories(of: ephemeralImagesAbsolutePath)
     }
 
@@ -86,13 +99,13 @@ final class DefaultImageCache: ImageCache {
         case .ephemeral:
             return ephemeralImagesAbsolutePath.appending(reference.descriptor.relativePath())
         case .persistent:
-            return persistentImagesAbsolutePath.appending(reference.descriptor.relativePath())
+            return imagesAbsolutePath.appending(reference.descriptor.relativePath())
         }
     }
 
     // MARK: - Private
 
-    private var persistentImagesAbsolutePath: AbsolutePath {
+    private var imagesAbsolutePath: AbsolutePath {
         fileSystem.homeDirectory
             .appending(component: ".curie")
             .appending(component: "images")
@@ -102,6 +115,34 @@ final class DefaultImageCache: ImageCache {
         fileSystem.homeDirectory
             .appending(component: ".curie")
             .appending(component: "ephemeral-images")
+    }
+
+    private func listImages(at path: AbsolutePath, basePath: AbsolutePath) throws -> [ImageReference] {
+        var result: [ImageReference] = []
+
+        let list = try fileSystem.list(at: path)
+
+        let directories = Set(list.compactMap {
+            if case let .directory(directory) = $0 {
+                return path.appending(directory.path)
+            }
+            return nil
+        })
+
+        let images = Set(directories.filter { bundleParser.canParseConfig(at: VMBundle(path: $0).config) })
+        let paths = images.map { $0.relative(to: basePath) }
+        let references = try paths.map { try findReference($0.pathString) }
+
+        result.append(contentsOf: references)
+
+        let subdirectories = directories.subtracting(images)
+
+        try subdirectories.forEach {
+            let references = try listImages(at: $0, basePath: basePath)
+            result.append(contentsOf: references)
+        }
+
+        return result
     }
 
     @discardableResult

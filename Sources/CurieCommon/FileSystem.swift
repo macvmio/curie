@@ -1,12 +1,12 @@
 import Foundation
 import TSCBasic
 
-public enum FileSystemItem {
-    public struct File {
+public enum FileSystemItem: Hashable {
+    public struct File: Hashable {
         public let path: RelativePath
     }
 
-    public struct Directory {
+    public struct Directory: Hashable {
         public let path: RelativePath
     }
 
