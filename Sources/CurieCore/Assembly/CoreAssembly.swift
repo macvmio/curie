@@ -44,6 +44,7 @@ public final class CoreAssembly: Assembly {
         registry.register(ListInteractor.self) { r in
             DefaultListInteractor(
                 imageCache: r.resolve(ImageCache.self),
+                wallClock: r.resolve(WallClock.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -71,6 +72,7 @@ public final class CoreAssembly: Assembly {
             DefaultVMConfigurator(
                 bundleParser: r.resolve(VMBundleParser.self),
                 fileSystem: r.resolve(FileSystem.self),
+                wallClock: r.resolve(WallClock.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -90,6 +92,7 @@ public final class CoreAssembly: Assembly {
         registry.register(ImageCache.self) { r in
             DefaultImageCache(
                 bundleParser: r.resolve(VMBundleParser.self),
+                wallClock: r.resolve(WallClock.self),
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self)
             )
@@ -101,6 +104,9 @@ public final class CoreAssembly: Assembly {
                 system: r.resolve(System.self),
                 console: r.resolve(Console.self)
             )
+        }
+        registry.register(WallClock.self) { _ in
+            DefaultWallClock()
         }
     }
 }
