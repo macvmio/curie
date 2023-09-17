@@ -1,3 +1,4 @@
+import Combine
 import CurieCommon
 import Foundation
 import TSCBasic
@@ -22,20 +23,22 @@ public protocol RunInteractor {
 
 public final class DefaultRunInteractor: RunInteractor {
     private let configurator: VMConfigurator
-    private let windowAppLauncher: MacOSWindowAppLauncher
+    private let imageRunner: ImageRunner
     private let imageCache: ImageCache
     private let system: System
     private let console: Console
 
+    private var cancellables = Set<AnyCancellable>()
+
     init(
         configurator: VMConfigurator,
-        windowAppLauncher: MacOSWindowAppLauncher,
+        imageRunner: ImageRunner,
         imageCache: ImageCache,
         system: System,
         console: Console
     ) {
         self.configurator = configurator
-        self.windowAppLauncher = windowAppLauncher
+        self.imageRunner = imageRunner
         self.imageCache = imageCache
         self.system = system
         self.console = console
@@ -44,42 +47,23 @@ public final class DefaultRunInteractor: RunInteractor {
     public func execute(with context: RunInteractorContext) throws {
         console.text("Run image \(context.reference)")
 
-        let reference = try imageCache.findReference(context.reference)
+        let sourceReference = try imageCache.findReference(context.reference)
+        let targetReference = try imageCache.cloneImage(source: sourceReference, target: .ephemeral)
 
-        let bundle = VMBundle(path: imageCache.path(to: reference))
+        let bundle = VMBundle(path: imageCache.path(to: targetReference))
         let vm = try configurator.loadVM(with: bundle)
 
-        console.text(vm.config.asString())
-
-        // Automatically start the vm
-        vm.start(completionHandler: { [console] result in
-            switch result {
-            case .success:
-                console.text("The VM started")
-            case let .failure(error):
-                console.error("Failed to start the VM. \(error)")
+        vm.events
+            .filter { $0 == .imageDidStop || $0 == .imageStopFailed }
+            .sink { [imageCache, console] _ in
+                do {
+                    try imageCache.removeImage(targetReference)
+                } catch {
+                    console.error(error.localizedDescription)
+                }
             }
-        })
+            .store(in: &cancellables)
 
-        // Launch interface
-        if context.noWindow {
-            console.text("Launch the VM without a window")
-            launchConsole(with: vm)
-        } else {
-            console.text("Launch the VM in a window")
-            launchWindow(with: vm)
-        }
-    }
-
-    private func launchConsole(with vm: VM) {
-        withExtendedLifetime(vm) { _ in
-            system.keepAliveWithSIGINTEventHandler { exit in
-                vm.exit(exit: exit)
-            }
-        }
-    }
-
-    private func launchWindow(with vm: VM) {
-        windowAppLauncher.launchWindow(with: vm)
+        try imageRunner.run(vm: vm, noWindow: context.noWindow)
     }
 }

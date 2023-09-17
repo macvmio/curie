@@ -30,7 +30,7 @@ final class DefaultCloneInteractor: CloneInteractor {
     func execute(with context: CloneInteractorContext) throws {
         let source = try imageCache.findReference(context.sourceReference)
 
-        try imageCache.cloneImage(source: source, target: context.targetReference)
+        try imageCache.cloneImage(source: source, target: .reference(context.targetReference))
 
         console.text("Image has been cloned")
     }

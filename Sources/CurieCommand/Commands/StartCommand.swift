@@ -4,10 +4,10 @@ import CurieCore
 import Foundation
 import TSCBasic
 
-struct RunCommand: Command {
+struct StartCommand: Command {
     static let configuration: CommandConfiguration = .init(
-        commandName: "run",
-        abstract: "Start an ephemeral container."
+        commandName: "start",
+        abstract: "Start a container to modify the image."
     )
 
     @Argument(help: "Reference <repository>:<tag>.")
@@ -17,15 +17,15 @@ struct RunCommand: Command {
     var noWindow: Bool = false
 
     final class Executor: CommandExecutor {
-        private let interactor: RunInteractor
+        private let interactor: StartInteractor
         private let console: Console
 
-        init(interactor: RunInteractor, console: Console) {
+        init(interactor: StartInteractor, console: Console) {
             self.interactor = interactor
             self.console = console
         }
 
-        func execute(command: RunCommand) throws {
+        func execute(command: StartCommand) throws {
             try interactor.execute(with: .init(
                 reference: command.reference,
                 noWindow: command.noWindow
@@ -37,7 +37,7 @@ struct RunCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(RunInteractor.self),
+                    interactor: r.resolve(StartInteractor.self),
                     console: r.resolve(Console.self)
                 )
             }

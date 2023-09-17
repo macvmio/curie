@@ -9,6 +9,7 @@ private enum Setup {
         (CloneCommand.self, CloneCommand.Assembly()),
         (RemoveCommand.self, RemoveCommand.Assembly()),
         (RunCommand.self, RunCommand.Assembly()),
+        (StartCommand.self, StartCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
 }

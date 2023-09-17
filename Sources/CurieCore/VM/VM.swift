@@ -1,12 +1,23 @@
+import Combine
 import CurieCommon
 import Foundation
 import Virtualization
 
-final class VM {
+final class VM: NSObject {
+    enum Event: Equatable {
+        case imageDidStop
+        case imageStopFailed
+    }
+
+    public var events: AnyPublisher<Event, Never> {
+        _events.eraseToAnyPublisher()
+    }
+
     let config: VMConfig
 
     private let vm: VZVirtualMachine
     private let console: Console
+    private let _events = PassthroughSubject<Event, Never>()
 
     init(
         vm: VZVirtualMachine,
@@ -16,6 +27,10 @@ final class VM {
         self.vm = vm
         self.config = config
         self.console = console
+
+        super.init()
+
+        vm.delegate = self
     }
 
     public func start(completionHandler: @escaping (Result<Void, Error>) -> Void) {
@@ -40,10 +55,13 @@ final class VM {
         }
 
         console.text("Will stop VM")
-        vm.stop { error in
+        // swiftlint:disable:next identifier_name
+        vm.stop { [_events] error in
             if let error {
+                _events.send(.imageStopFailed)
                 completionHandler(.failure(error))
             } else {
+                _events.send(.imageDidStop)
                 completionHandler(.success(()))
             }
         }
@@ -65,5 +83,19 @@ final class VM {
 
     public var virtualMachine: VZVirtualMachine {
         vm
+    }
+}
+
+extension VM: VZVirtualMachineDelegate {
+    func virtualMachine(_: VZVirtualMachine, didStopWithError error: Error) {
+        console.error("VM stopped with error. \(error)")
+        _events.send(.imageStopFailed)
+        Darwin.exit(1)
+    }
+
+    func guestDidStop(_: VZVirtualMachine) {
+        console.text("Guest did stop VM")
+        _events.send(.imageDidStop)
+        Darwin.exit(0)
     }
 }
