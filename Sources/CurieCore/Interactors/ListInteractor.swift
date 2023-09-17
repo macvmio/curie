@@ -49,10 +49,13 @@ final class DefaultListInteractor: ListInteractor {
         let images = items.sorted { $0.createAt > $1.createAt }
 
         let rendered = TableRenderer()
-
         let content = TableRenderer.Content(
             headers: [
-                "repository", "tag", context.listContainers ? "container id" : "image id", "created", "size",
+                "repository",
+                "tag",
+                context.listContainers ? "container id" : "image id",
+                "created",
+                "size",
             ],
             values: images.map { [
                 $0.reference.descriptor.repository,
@@ -62,9 +65,7 @@ final class DefaultListInteractor: ListInteractor {
                 $0.size.description,
             ] }
         )
-
         let config = TableRenderer.Config(format: context.format.rendererFormat())
-
         let text = rendered.render(content: content, config: config)
 
         console.text(text)
