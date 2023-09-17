@@ -55,6 +55,11 @@ final class DefaultImageRunner: ImageRunner {
     }
 
     private func launchWindow(with vm: VM) {
+        let sourceSignal = system.SIGINTEventHandler { exit in
+            vm.exit(exit: exit)
+        }
+        vm.addSourceSignal(sourceSignal)
+
         windowAppLauncher.launchWindow(with: vm)
     }
 }

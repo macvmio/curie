@@ -20,6 +20,10 @@ public enum OutputType {
 }
 
 public protocol System {
+    func SIGINTEventHandler(
+        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+    ) -> DispatchSourceSignal
+
     func keepAliveWithSIGINTEventHandler(
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     )
@@ -37,6 +41,12 @@ public protocol System {
 final class DefaultSystem: System {
     private let environment = ProcessInfo.processInfo.environment
 
+    func SIGINTEventHandler(
+        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+    ) -> DispatchSourceSignal {
+        makeSIGINTSourceSignal(signalHandler: signalHandler)
+    }
+
     func keepAliveWithSIGINTEventHandler(
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     ) {
@@ -50,13 +60,7 @@ final class DefaultSystem: System {
         cancellable: Cancellable,
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     ) {
-        signal(SIGINT, SIG_IGN)
-        let signalSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
-        signalSource.setEventHandler {
-            signalHandler(exit)
-        }
-        signalSource.resume()
-
+        let signalSource = makeSIGINTSourceSignal(signalHandler: signalHandler)
         withExtendedLifetime(signalSource) {
             while !cancellable.isCancelled() {
                 RunLoop.main.run(until: .now + 1)
@@ -82,6 +86,19 @@ final class DefaultSystem: System {
             throw CoreError.generic(error.localizedDescription)
         }
         try result.throwIfErrored()
+    }
+
+    // MARK: - Private
+
+    private func makeSIGINTSourceSignal(signalHandler: @escaping (@escaping (Int32) -> Never) -> Void)
+        -> DispatchSourceSignal {
+        signal(SIGINT, SIG_IGN)
+        let sourceSignal = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
+        sourceSignal.setEventHandler {
+            signalHandler(exit)
+        }
+        sourceSignal.resume()
+        return sourceSignal
     }
 }
 
