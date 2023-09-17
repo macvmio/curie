@@ -10,7 +10,7 @@ struct CreateCommand: Command {
         abstract: "Create image."
     )
 
-    @Argument(help: "Reference <repository>:<tag>.")
+    @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
     @Option(

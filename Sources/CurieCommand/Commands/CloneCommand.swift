@@ -10,10 +10,10 @@ struct CloneCommand: Command {
         abstract: "Clone image."
     )
 
-    @Argument(help: "Source reference <repository>:<tag>.")
+    @Argument(help: "Source reference \(CurieCore.Constants.referenceFormat).")
     var sourceReference: String
 
-    @Argument(help: "Target reference <repository>:<tag>.")
+    @Argument(help: "Target reference \(CurieCore.Constants.referenceFormat).")
     var targetReference: String
 
     final class Executor: CommandExecutor {
