@@ -10,7 +10,7 @@ struct StartCommand: Command {
         abstract: "Start a container to modify the image."
     )
 
-    @Argument(help: "Reference <repository>:<tag>.")
+    @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
     @Flag(help: "Do not create Window.")

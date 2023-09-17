@@ -51,7 +51,8 @@ final class DefaultImageCache: ImageCache {
         guard !fileSystem.exists(at: absolutePath) else {
             throw CoreError
                 .generic(
-                    "Cannot create empty reference, image with given reference (<repository>:<tag>) already exists"
+                    "Cannot create empty reference, image with given reference (\(CurieCore.Constants.referenceFormat))"
+                        + " already exists"
                 )
         }
         return ImageReference(id: ImageID.make(), descriptor: descriptor, type: .image)

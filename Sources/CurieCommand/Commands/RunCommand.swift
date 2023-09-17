@@ -10,7 +10,7 @@ struct RunCommand: Command {
         abstract: "Start an ephemeral container."
     )
 
-    @Argument(help: "Reference <repository>:<tag>.")
+    @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
     @Flag(help: "Do not create Window.")

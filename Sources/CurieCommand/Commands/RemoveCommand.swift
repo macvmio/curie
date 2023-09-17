@@ -10,7 +10,7 @@ struct RemoveCommand: Command {
         abstract: "Remove image."
     )
 
-    @Argument(help: "Reference <repository>:<tag>.")
+    @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
     final class Executor: CommandExecutor {

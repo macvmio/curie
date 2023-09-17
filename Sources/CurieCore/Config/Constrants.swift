@@ -4,6 +4,7 @@ import TSCBasic
 
 public enum Constants {
     public static let defaultDiskSize = MemorySize(bytes: 128 * 1024 * 1024 * 1024)
+    public static let referenceFormat = "<repository>[:<tag>]"
 
     static let defaultConfig = VMConfig(
         name: "Anonymous VM",
