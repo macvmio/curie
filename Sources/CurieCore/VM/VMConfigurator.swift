@@ -235,7 +235,10 @@ final class DefaultVMConfigurator: VMConfigurator {
 
     private func generateMACAddress() -> String {
         (0 ..< 6)
-            .map { _ in UInt8.random(in: UInt8.min ..< UInt8.max) }
+            .map { i in
+                let value = UInt8.random(in: UInt8.min ..< UInt8.max)
+                return i == 0 ? value & 2 : value
+            }
             .map { String(format: "%02X", $0) }
             .map { $0.lowercased() }
             .joined(separator: ":")
