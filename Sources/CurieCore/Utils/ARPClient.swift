@@ -1,13 +1,13 @@
 import CurieCommon
 import Foundation
 
-struct ARPARow: Equatable, Codable {
+struct ARPItem: Equatable, Codable {
     let ip: String
     let macAddress: String
 }
 
 protocol ARPClient {
-    func executeARPA() throws -> [ARPARow]
+    func executeARPQuery() throws -> [ARPItem]
 }
 
 final class DefaultARPClient: ARPClient {
@@ -17,21 +17,21 @@ final class DefaultARPClient: ARPClient {
         self.system = system
     }
 
-    func executeARPA() throws -> [ARPARow] {
+    func executeARPQuery() throws -> [ARPItem] {
         let captureOutput = CaptureOutput()
-        try system.execute(["arp", "-a"], output: .custom(captureOutput))
+        try system.execute(["arp", "-an"], output: .custom(captureOutput))
 
         let tokens = captureOutput.outputString
             .split(separator: "\n")
             .map { $0.split(separator: " ") }
 
-        let items: [ARPARow] = tokens
+        let items: [ARPItem] = tokens
             .filter { $0.count >= 4 }
             .compactMap {
                 guard let macAddress = parseMAC(raw: $0[3]) else {
                     return nil
                 }
-                return ARPARow(
+                return ARPItem(
                     ip: parseIP(raw: $0[1]),
                     macAddress: macAddress
                 )

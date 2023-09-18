@@ -47,11 +47,11 @@ final class DefaultInspectInteractor: InspectInteractor {
         let reference = try imageCache.findReference(context.reference)
         let bundle = VMBundle(path: imageCache.path(to: reference))
         let info = try bundleParser.readInfo(from: bundle)
-        let arpa = try aprClient.executeARPA()
+        let arpItems = try aprClient.executeARPQuery()
         let macAddresses = Set(info.state.network.flatMap { $0.devices.map(\.value.MACAddress) } ?? [])
-        let filteredArpaRows = arpa.filter { macAddresses.contains($0.macAddress) }
+        let filteredArpaRows = arpItems.filter { macAddresses.contains($0.macAddress) }
 
-        let item = Item(info: info, arpa: filteredArpaRows)
+        let item = Item(info: info, arp: filteredArpaRows)
 
         switch context.format {
         case .text:
@@ -78,25 +78,25 @@ final class DefaultInspectInteractor: InspectInteractor {
 
 private struct Item: Codable {
     var info: VMInfo
-    var arpa: [ARPARow]
+    var arp: [ARPItem]
 }
 
 extension Item: CustomStringConvertible {
     var description: String {
         """
-        \(info.description)\(arpa.description)
+        \(info.description)\(arp.description)
         """
     }
 }
 
-extension [ARPARow] {
+extension [ARPItem] {
     var description: String {
         guard !isEmpty else {
             return ""
         }
         return """
 
-        ARPA:
+        ARP:
         \(
             enumerated()
                 .map { $1.description }
@@ -107,7 +107,7 @@ extension [ARPARow] {
     }
 }
 
-extension ARPARow: CustomStringConvertible {
+extension ARPItem: CustomStringConvertible {
     var description: String {
         """
           macAddress: \(macAddress)
