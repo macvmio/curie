@@ -223,11 +223,11 @@ final class DefaultImageCache: ImageCache {
 
     @discardableResult
     private func removeEmptySubdirectories(of path: AbsolutePath) throws -> Bool {
-        let list = try fileSystem.list(at: path)
-
         guard fileSystem.exists(at: path) else {
             return true
         }
+
+        let list = try fileSystem.list(at: path)
 
         let directories = list.compactMap {
             if case let .directory(directory) = $0 {

@@ -16,16 +16,13 @@ struct ImageDescriptor: Equatable {
     }
 
     init(reference: String) throws {
-        let split = reference.split(separator: ":")
-        if split.count == 1 {
-            self = .init(repository: String(split[0]), tag: nil)
-            return
+        if let index = reference.lastIndex(of: ":") {
+            let repository = String(reference.prefix(upTo: index))
+            let tag = String(reference.suffix(from: reference.index(after: index)))
+            self = .init(repository: repository, tag: !tag.isEmpty ? tag : nil)
+        } else {
+            self = .init(repository: reference, tag: nil)
         }
-        if split.count == 2 {
-            self = .init(repository: String(split[0]), tag: String(split[1]))
-            return
-        }
-        throw CoreError.generic("Invalid reference '\(reference)'")
     }
 }
 
