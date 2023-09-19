@@ -31,7 +31,7 @@ final class DefaultARPClientTests: XCTestCase {
         """
 
         // When
-        let rows = try subject.executeARPA()
+        let rows = try subject.executeARPQuery()
 
         // Then
         XCTAssertEqual(
