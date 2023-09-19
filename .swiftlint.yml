@@ -23,6 +23,7 @@ identifier_name:
     - GB
     - id
     - ip
+    - i
 
 type_name:
   excluded:
