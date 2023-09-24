@@ -34,7 +34,7 @@ public final class MockFileSystem: CurieCommon.FileSystem {
         fatalError("Not implemented yet")
     }
 
-    public func copy(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws {
+    public func copy(from _: AbsolutePath, to _: AbsolutePath) throws {
         fatalError("Not implemented yet")
     }
 

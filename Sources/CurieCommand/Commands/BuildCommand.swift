@@ -4,9 +4,9 @@ import CurieCore
 import Foundation
 import TSCBasic
 
-struct CreateCommand: Command {
+struct BuildCommand: Command {
     static let configuration: CommandConfiguration = .init(
-        commandName: "create",
+        commandName: "build",
         abstract: "Create image."
     )
 
@@ -35,15 +35,15 @@ struct CreateCommand: Command {
     var configPath: String?
 
     final class Executor: CommandExecutor {
-        private let interactor: CreateInteractor
+        private let interactor: BuildInteractor
         private let console: Console
 
-        init(interactor: CreateInteractor, console: Console) {
+        init(interactor: BuildInteractor, console: Console) {
             self.interactor = interactor
             self.console = console
         }
 
-        func execute(command: CreateCommand) throws {
+        func execute(command: BuildCommand) throws {
             try interactor.execute(with: .init(
                 source: command.source,
                 reference: command.reference,
@@ -57,7 +57,7 @@ struct CreateCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(CreateInteractor.self),
+                    interactor: r.resolve(BuildInteractor.self),
                     console: r.resolve(Console.self)
                 )
             }
@@ -65,8 +65,8 @@ struct CreateCommand: Command {
     }
 }
 
-private extension CreateCommand {
-    var source: CreateInteractorContext.Source {
+private extension BuildCommand {
+    var source: BuildInteractorContext.Source {
         if let ipswPath {
             return .ipsw(path: ipswPath)
         }
