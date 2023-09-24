@@ -31,8 +31,8 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
-        registry.register(CreateInteractor.self) { r in
-            DefaultCreateInteractor(
+        registry.register(BuildInteractor.self) { r in
+            DefaultBuildInteractor(
                 downloader: r.resolve(RestoreImageDownloader.self),
                 configurator: r.resolve(VMConfigurator.self),
                 installer: r.resolve(VMInstaller.self),

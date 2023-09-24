@@ -2,7 +2,7 @@ import CurieCommon
 import Foundation
 import TSCBasic
 
-public struct CreateInteractorContext {
+public struct BuildInteractorContext {
     public enum Source {
         case latest
         case ipsw(path: String)
@@ -26,11 +26,11 @@ public struct CreateInteractorContext {
     }
 }
 
-public protocol CreateInteractor {
-    func execute(with context: CreateInteractorContext) throws
+public protocol BuildInteractor {
+    func execute(with context: BuildInteractorContext) throws
 }
 
-final class DefaultCreateInteractor: CreateInteractor {
+final class DefaultBuildInteractor: BuildInteractor {
     private let downloader: RestoreImageDownloader
     private let configurator: VMConfigurator
     private let installer: VMInstaller
@@ -57,7 +57,7 @@ final class DefaultCreateInteractor: CreateInteractor {
         self.console = console
     }
 
-    func execute(with context: CreateInteractorContext) throws {
+    func execute(with context: BuildInteractorContext) throws {
         let reference = try imageCache.makeImageReference(context.reference)
         let bundlePath = imageCache.path(to: reference)
         let bundle = VMBundle(path: bundlePath)
@@ -66,7 +66,7 @@ final class DefaultCreateInteractor: CreateInteractor {
         case .latest:
             console.error("Downloading the latest restore image is not yet supported")
         case let .ipsw(path: path):
-            try createVM(
+            try createImage(
                 reference: reference,
                 bundle: bundle,
                 context: context,
@@ -77,10 +77,10 @@ final class DefaultCreateInteractor: CreateInteractor {
 
     // MARK: - Private
 
-    private func createVM(
+    private func createImage(
         reference: ImageReference,
         bundle: VMBundle,
-        context: CreateInteractorContext,
+        context: BuildInteractorContext,
         restoreImagePath: String
     ) throws {
         let cancellable = StateCancellable()
@@ -117,7 +117,7 @@ final class DefaultCreateInteractor: CreateInteractor {
         })
     }
 
-    private func prepareDiskSize(context: CreateInteractorContext) throws -> MemorySize {
+    private func prepareDiskSize(context: BuildInteractorContext) throws -> MemorySize {
         guard let diskSize = context.diskSize else {
             return Constants.defaultDiskSize
         }
@@ -127,7 +127,7 @@ final class DefaultCreateInteractor: CreateInteractor {
         return diskSize
     }
 
-    private func prepareConfigPath(context: CreateInteractorContext) throws -> AbsolutePath? {
+    private func prepareConfigPath(context: BuildInteractorContext) throws -> AbsolutePath? {
         guard let path = context.configPath else {
             return nil
         }
