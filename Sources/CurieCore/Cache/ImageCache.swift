@@ -102,9 +102,8 @@ final class DefaultImageCache: ImageCache {
         guard sourceAbsolutePath != targetAbsolutePath else {
             throw CoreError.generic("Cannot clone, target reference is the same as source")
         }
-
-        try fileSystem.createDirectory(at: targetAbsolutePath)
-        try system.execute(["cp", "-c", "-r", "\(sourceAbsolutePath.pathString)/", targetAbsolutePath.pathString])
+        try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
+        try fileSystem.copy(from: sourceAbsolutePath, to: targetAbsolutePath)
 
         let bundle = VMBundle(path: targetAbsolutePath)
         var state = try bundleParser.readState(from: bundle)

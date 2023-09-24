@@ -23,6 +23,8 @@ public protocol FileSystem {
 
     func move(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws
 
+    func copy(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws
+
     func remove(at path: AbsolutePath) throws
 
     func list(at path: AbsolutePath) throws -> [FileSystemItem]
@@ -67,6 +69,10 @@ final class DefaultFileSystem: FileSystem {
 
     func move(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws {
         try fileManager.moveItem(at: fromPath.asURL, to: toPath.asURL)
+    }
+
+    func copy(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws {
+        try fileManager.copyItem(at: fromPath.asURL, to: toPath.asURL)
     }
 
     func remove(at path: AbsolutePath) throws {
