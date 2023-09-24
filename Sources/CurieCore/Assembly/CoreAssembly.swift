@@ -42,8 +42,8 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
-        registry.register(ListInteractor.self) { r in
-            DefaultListInteractor(
+        registry.register(ImagesInteractor.self) { r in
+            DefaultImagesInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 wallClock: r.resolve(WallClock.self),
                 console: r.resolve(Console.self)
@@ -79,6 +79,13 @@ public final class CoreAssembly: Assembly {
             DefaultCommitInteractor(
                 configurator: r.resolve(VMConfigurator.self),
                 imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
+        registry.register(PsInteractor.self) { r in
+            DefaultPsInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                wallClock: r.resolve(WallClock.self),
                 console: r.resolve(Console.self)
             )
         }

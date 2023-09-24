@@ -7,7 +7,7 @@ import TSCBasic
 struct InspectCommand: Command, HasFormatOption {
     static let configuration: CommandConfiguration = .init(
         commandName: "inspect",
-        abstract: "Show image details."
+        abstract: "Show details of an image or a container."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")

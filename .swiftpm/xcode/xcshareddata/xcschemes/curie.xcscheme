@@ -137,6 +137,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "commit 4cae0c87469e marcin/test:3.0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "ls -c"
             isEnabled = "NO">
          </CommandLineArgument>

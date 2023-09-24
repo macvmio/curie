@@ -7,7 +7,7 @@ import TSCBasic
 struct CloneCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: "clone",
-        abstract: "Clone image."
+        abstract: "Clone an image."
     )
 
     @Argument(help: "Source reference \(CurieCore.Constants.referenceFormat).")
