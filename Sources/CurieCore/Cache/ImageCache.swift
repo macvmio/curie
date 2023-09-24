@@ -173,7 +173,7 @@ final class DefaultImageCache: ImageCache {
             switch type {
             case .container:
                 guard let image = try listContainers().first(where: { $0.reference.id.description == reference }) else {
-                    throw CoreError.generic("Cannot find the image")
+                    throw CoreError.generic("Cannot find the container")
                 }
                 return image.reference
             case .image:

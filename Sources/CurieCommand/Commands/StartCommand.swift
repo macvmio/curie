@@ -7,7 +7,7 @@ import TSCBasic
 struct StartCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: "start",
-        abstract: "Start a container to modify the image."
+        abstract: "Start a stopped container."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")

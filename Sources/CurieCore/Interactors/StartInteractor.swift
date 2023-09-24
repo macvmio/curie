@@ -44,24 +44,12 @@ public final class DefaultStartInteractor: StartInteractor {
     }
 
     public func execute(with context: StartInteractorContext) throws {
-        console.text("Start image \(context.reference)")
+        console.text("Start \(context.reference) container")
 
-        let sourceReference = try imageCache.findImageReference(context.reference)
-        let targetReference = try imageCache.cloneImage(source: sourceReference, target: .ephemeral)
+        let sourceReference = try imageCache.findContainerReference(context.reference)
 
-        let bundle = VMBundle(path: imageCache.path(to: targetReference))
+        let bundle = VMBundle(path: imageCache.path(to: sourceReference))
         let vm = try configurator.loadVM(with: bundle)
-
-        vm.events
-            .filter { $0 == .imageDidStop || $0 == .imageStopFailed }
-            .sink { [imageCache, console] _ in
-                do {
-                    try imageCache.moveImage(source: targetReference, target: sourceReference)
-                } catch {
-                    console.error(error.localizedDescription)
-                }
-            }
-            .store(in: &cancellables)
 
         try imageRunner.run(vm: vm, bundle: bundle, noWindow: context.noWindow)
     }
