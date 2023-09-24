@@ -11,7 +11,6 @@ private enum Setup {
         (InspectCommand.self, InspectCommand.Assembly()),
         (CloneCommand.self, CloneCommand.Assembly()),
         (RemoveCommand.self, RemoveCommand.Assembly()),
-        (RunCommand.self, RunCommand.Assembly()),
         (StartCommand.self, StartCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]

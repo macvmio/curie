@@ -13,15 +13,6 @@ public final class CoreAssembly: Assembly {
     // MARK: - Private
 
     private func assembleInteractors(_ registry: Registry) {
-        registry.register(RunInteractor.self) { r in
-            DefaultRunInteractor(
-                configurator: r.resolve(VMConfigurator.self),
-                imageRunner: r.resolve(ImageRunner.self),
-                imageCache: r.resolve(ImageCache.self),
-                system: r.resolve(System.self),
-                console: r.resolve(Console.self)
-            )
-        }
         registry.register(StartInteractor.self) { r in
             DefaultStartInteractor(
                 configurator: r.resolve(VMConfigurator.self),
