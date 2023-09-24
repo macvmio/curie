@@ -7,7 +7,7 @@ import TSCBasic
 struct BuildCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: "build",
-        abstract: "Create image."
+        abstract: "Build an image from image restore file (or download latest version from Apple server)."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
