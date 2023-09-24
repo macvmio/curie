@@ -26,22 +26,22 @@ It allows users to run and manage isolated environments, making it easier to dev
 
 ### Commands
 
-#### Create image
+#### Build image
 
 ```sh
-curie create myteam/myimage/test-image:1.0 -i ~/Download/RestoreImage.ipsw -d "60 GB" 
+curie build myteam/myimage/test-image:1.0 -i ~/Download/RestoreImage.ipsw -d "60 GB" 
 ```
 
 #### Remove image
 
 ```sh
-curie rm myteam/myimage/test-image:1.0
+curie rmi myteam/myimage/test-image:1.0
 ```
 
 #### List images
 
 ```sh
-curie ls
+curie images
 
 # Example output
 
@@ -53,39 +53,48 @@ myteam/myimage/ci/test     2.1     7d5347edc7ca     7 hours ago     60.03 GB
 The command has also `--format` (`-f`) parameter which allows to output JSON.
 
 ```sh
-curie ls --format=json
+curie images -f json
 ```
 
 Example output:
 ```json
 [
-  [
-    "myteam\/myimage\/ci\/test",
-    "2.3",
-    "9bf95fe0f7f0",
-    "2 hours ago",
-    "60.03 GB"
-  ],
-  [
-    "myteam\/myimage\/ci\/test",
-    "2.1",
-    "7d5347edc7ca",
-    "8 hours ago",
-    "60.03 GB"
-  ]
+  {
+    "created" : "36 minutes ago",
+    "image_id" : "a5abe5c92583",
+    "repository" : "myteam\/myimage\/ci\/test",
+    "size" : "60.03 GB",
+    "tag" : "2.4"
+  },
+  {
+    "created" : "4 days ago",
+    "image_id" : "4b72a86471ef",
+    "repository" : "myteam\/myimage\/ci\/test",
+    "size" : "60.03 GB",
+    "tag" : "2.3"
+  },
+  {
+    "created" : "1 week ago",
+    "image_id" : "7d5347edc7ca",
+    "repository" : "myteam\/myimage\/ci\/test",
+    "size" : "60.03 GB",
+    "tag" : "2.1"
+  }
 ]
 ```
 
 #### List containers
 
 ```sh
-curie ls -c
+curie ps
 
 # Example output
 
 REPOSITORY                               TAG     CONTAINER ID     CREATED            SIZE
 @db4392107c77/myteam/myimage/ci/test     2.3     db4392107c77     15 minutes ago     60.03 GB
 ```
+
+The command has also `--format` (`-f`) parameter which allows to output JSON.
 
 #### Clone image
 
@@ -101,12 +110,18 @@ The container will be deleted after it is closed.
 curie run myteam/myimage/test-image:1.0
 ```
 
-#### Run container and apply changes to image
+#### Run create container
+
+```sh
+curie create myteam/myimage/test-image:1.0
+```
+
+#### Run container
 
 All changes that are made in the container will be applied to the image once the container is closed.
 
 ```sh
-curie start myteam/myimage/test-image:1.0
+curie start @7984867efb71/myteam/myimage/ci/test
 ```
 
 #### Inspect image or container
