@@ -1,8 +1,6 @@
 import Combine
 import CurieCommon
 import Foundation
-import TSCBasic
-import Virtualization
 
 public struct CreateInteractorContext {
     public var reference: String
