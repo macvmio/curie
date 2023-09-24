@@ -1,21 +1,19 @@
 import CurieCommon
 import Foundation
 
-public struct ListInteractorContext {
-    public let listContainers: Bool
+public struct PsInteractorContext {
     public let format: OutputFormat
 
-    public init(listContainers: Bool, format: OutputFormat) {
-        self.listContainers = listContainers
+    public init(format: OutputFormat) {
         self.format = format
     }
 }
 
-public protocol ListInteractor {
-    func execute(with context: ListInteractorContext) throws
+public protocol PsInteractor {
+    func execute(with context: PsInteractorContext) throws
 }
 
-final class DefaultListInteractor: ListInteractor {
+final class DefaultPsInteractor: PsInteractor {
     private let imageCache: ImageCache
     private let wallClock: WallClock
     private let console: Console
@@ -37,25 +35,23 @@ final class DefaultListInteractor: ListInteractor {
         self.console = console
     }
 
-    func execute(with context: ListInteractorContext) throws {
-        let items = try context.listContainers
-            ? imageCache.listContainers()
-            : imageCache.listImages()
+    func execute(with context: PsInteractorContext) throws {
+        let items = try imageCache.listContainers()
         let images = items.sorted { $0.createAt > $1.createAt }
 
         let rendered = TableRenderer()
         let content = TableRenderer.Content(
             headers: [
+                "container id",
                 "repository",
                 "tag",
-                context.listContainers ? "container id" : "image id",
                 "created",
                 "size",
             ],
             values: images.map { [
+                $0.reference.id.description,
                 $0.reference.descriptor.repository,
                 $0.reference.descriptor.tag ?? "<none>",
-                $0.reference.id.description,
                 dateFormatter.localizedString(for: $0.createAt, relativeTo: wallClock.now()),
                 $0.size.description,
             ] }

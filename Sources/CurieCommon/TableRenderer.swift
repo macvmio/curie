@@ -27,7 +27,7 @@ public final class TableRenderer {
 
     private let jsonEncoder = {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         return encoder
     }()
 
@@ -45,7 +45,17 @@ public final class TableRenderer {
     // MARK: - Private
 
     private func renderJson(content: Content, config _: Config) -> String {
-        guard let data = try? jsonEncoder.encode(content.rows) else {
+        let rawData = content.rows.reduce(into: [[String: String]]()) { acc, val in
+            let dictionary = Dictionary(val.enumerated().map { (
+                content.headers[$0].replacingOccurrences(of: " ", with: "_"),
+                $1
+            ) }) { first, _ in
+                first
+            }
+            acc.append(dictionary)
+        }
+
+        guard let data = try? jsonEncoder.encode(rawData) else {
             return ""
         }
         return String(data: data, encoding: .utf8) ?? ""
