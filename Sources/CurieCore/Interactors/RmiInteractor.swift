@@ -1,7 +1,7 @@
 import CurieCommon
 import Foundation
 
-public struct RemoveInteractorContext {
+public struct RmiInteractorContext {
     public var reference: String
 
     public init(reference: String) {
@@ -9,11 +9,11 @@ public struct RemoveInteractorContext {
     }
 }
 
-public protocol RemoveInteractor {
-    func execute(with context: RemoveInteractorContext) throws
+public protocol RmiInteractor {
+    func execute(with context: RmiInteractorContext) throws
 }
 
-final class DefaultRemoveInteractor: RemoveInteractor {
+final class DefaultRmiInteractor: RmiInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
@@ -25,7 +25,7 @@ final class DefaultRemoveInteractor: RemoveInteractor {
         self.console = console
     }
 
-    func execute(with context: RemoveInteractorContext) throws {
+    func execute(with context: RmiInteractorContext) throws {
         let reference = try imageCache.findImageReference(context.reference)
 
         try imageCache.removeImage(reference)
