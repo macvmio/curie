@@ -4,25 +4,25 @@ import CurieCore
 import Foundation
 import TSCBasic
 
-struct RemoveCommand: Command {
+struct RmiCommand: Command {
     static let configuration: CommandConfiguration = .init(
-        commandName: "rm",
-        abstract: "Remove an image or a container."
+        commandName: "rmi",
+        abstract: "Remove an image."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
     final class Executor: CommandExecutor {
-        private let interactor: RemoveInteractor
+        private let interactor: RmiInteractor
         private let console: Console
 
-        init(interactor: RemoveInteractor, console: Console) {
+        init(interactor: RmiInteractor, console: Console) {
             self.interactor = interactor
             self.console = console
         }
 
-        func execute(command: RemoveCommand) throws {
+        func execute(command: RmiCommand) throws {
             try interactor.execute(with: .init(
                 reference: command.reference
             ))
@@ -33,7 +33,7 @@ struct RemoveCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(RemoveInteractor.self),
+                    interactor: r.resolve(RmiInteractor.self),
                     console: r.resolve(Console.self)
                 )
             }

@@ -49,8 +49,14 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
-        registry.register(RemoveInteractor.self) { r in
-            DefaultRemoveInteractor(
+        registry.register(RmInteractor.self) { r in
+            DefaultRmInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
+        registry.register(RmiInteractor.self) { r in
+            DefaultRmiInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 console: r.resolve(Console.self)
             )
