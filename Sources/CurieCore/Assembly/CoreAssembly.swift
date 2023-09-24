@@ -75,6 +75,13 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(CommitInteractor.self) { r in
+            DefaultCommitInteractor(
+                configurator: r.resolve(VMConfigurator.self),
+                imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
