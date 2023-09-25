@@ -58,7 +58,7 @@ private extension ImageReference {
     func asImageReference() -> ImageReference {
         ImageReference(
             id: id,
-            descriptor: .init(repository: descriptor.repository, tag: descriptor.tag),
+            descriptor: .init(repository: String(descriptor.repository.dropFirst(14)), tag: descriptor.tag),
             type: .image
         )
     }
