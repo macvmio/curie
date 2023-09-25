@@ -34,8 +34,6 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     func createVM(with bundle: VMBundle, spec: VMSpec) async throws {
-        console.text("Create VM")
-
         guard !fileSystem.exists(at: bundle.path) else {
             throw CoreError.generic("Failed to create new VM at path '\(bundle.path)', bundle already exists")
         }
@@ -46,8 +44,8 @@ final class DefaultVMConfigurator: VMConfigurator {
         // Create config file
         try createConfig(bundle: bundle, sourcePath: spec.configPath)
 
-        // Create state file
-        try createState(bundle: bundle, reference: spec.reference)
+        // Create metadata file
+        try createMetadata(bundle: bundle, reference: spec.reference)
 
         // Create disk image
         try createDiskImage(
@@ -61,13 +59,13 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     func loadVM(with bundle: VMBundle) throws -> VM {
-        console.text("Load image")
-
         let config = try bundleParser.readConfig(from: bundle)
+        let metadata = try bundleParser.readMetadata(from: bundle)
         let vm = try VZVirtualMachine(configuration: makeConfiguration(bundle: bundle, config: config))
         return VM(
             vm: vm,
             config: config,
+            metadata: metadata,
             console: console
         )
     }
@@ -126,12 +124,12 @@ final class DefaultVMConfigurator: VMConfigurator {
             case .automatic:
                 break
             case .synthesized:
-                var state = try bundleParser.readState(from: bundle)
+                var metadata = try bundleParser.readMetadata(from: bundle)
                 let generatedMACAddress = generateMACAddress()
-                var network = state.network ?? VMState.Network()
+                var network = metadata.network ?? VMMetadata.Network()
                 network.devices[index] = .init(MACAddress: generatedMACAddress)
-                state.network = network
-                try bundleParser.writeState(state, toBundle: bundle)
+                metadata.network = network
+                try bundleParser.writeMetadata(metadata, toBundle: bundle)
 
                 guard let macAddress = VZMACAddress(string: generatedMACAddress) else {
                     throw CoreError.generic("Invalid MAC Address '\(generatedMACAddress)'")
@@ -188,8 +186,8 @@ final class DefaultVMConfigurator: VMConfigurator {
         try fileSystem.move(from: sourcePath, to: bundle.config)
     }
 
-    private func createState(bundle: VMBundle, reference: ImageReference) throws {
-        try bundleParser.writeState(.init(
+    private func createMetadata(bundle: VMBundle, reference: ImageReference) throws {
+        try bundleParser.writeMetadata(.init(
             id: reference.id,
             createdAt: wallClock.now()
         ), toBundle: bundle)

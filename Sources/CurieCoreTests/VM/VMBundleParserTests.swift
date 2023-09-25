@@ -37,7 +37,6 @@ final class DefaultVMBundleParserTests: XCTestCase {
                 "pixelsPerInch" : 100,
                 "height" : 480
               },
-              "name" : "Test",
               "memorySize" : {
                 "bytes" : 1073741824
               }
@@ -50,7 +49,6 @@ final class DefaultVMBundleParserTests: XCTestCase {
 
         // Then
         XCTAssertEqual(config, .init(
-            name: "test",
             cpuCount: 8,
             memorySize: .init(bytes: 1024 * 1024 * 1024),
             display: .init(width: 640, height: 480, pixelsPerInch: 100),

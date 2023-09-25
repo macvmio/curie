@@ -8,8 +8,9 @@ protocol VMBundleParser {
     func readConfig(from bundle: VMBundle) throws -> VMConfig
     func writeConfig(_ config: VMConfig, toBundle bundle: VMBundle) throws
     func canParseConfig(at path: AbsolutePath) -> Bool
-    func readState(from bundle: VMBundle) throws -> VMState
-    func writeState(_ state: VMState, toBundle bundle: VMBundle) throws
+    func readMetadata(from bundle: VMBundle) throws -> VMMetadata
+    func writeMetadata(_ metadata: VMMetadata, toBundle bundle: VMBundle) throws
+    func updateMetadata(bundle: VMBundle, closure: (inout VMMetadata) throws -> Void) throws
     func readInfo(from bundle: VMBundle) throws -> VMInfo
 }
 
@@ -50,7 +51,6 @@ final class DefaultVMBundleParser: VMBundleParser {
         let data = try fileSystem.read(from: bundle.config)
         let partialConfig = try jsonDecoder.decode(VMPartialConfig.self, from: data)
         let config = VMConfig(
-            name: bundle.name,
             cpuCount: prepareCPUCount(config: partialConfig),
             memorySize: prepareMemorySize(config: partialConfig),
             display: prepareDisplay(config: partialConfig),
@@ -74,21 +74,27 @@ final class DefaultVMBundleParser: VMBundleParser {
         }
     }
 
-    func readState(from bundle: VMBundle) throws -> VMState {
-        let data = try fileSystem.read(from: bundle.state)
-        let state = try jsonDecoder.decode(VMState.self, from: data)
+    func readMetadata(from bundle: VMBundle) throws -> VMMetadata {
+        let data = try fileSystem.read(from: bundle.metadata)
+        let state = try jsonDecoder.decode(VMMetadata.self, from: data)
         return state
     }
 
-    func writeState(_ state: VMState, toBundle bundle: VMBundle) throws {
-        let data = try jsonEncoder.encode(state)
-        try fileSystem.write(data: data, to: bundle.state)
+    func writeMetadata(_ metadata: VMMetadata, toBundle bundle: VMBundle) throws {
+        let data = try jsonEncoder.encode(metadata)
+        try fileSystem.write(data: data, to: bundle.metadata)
+    }
+
+    func updateMetadata(bundle: VMBundle, closure: (inout VMMetadata) throws -> Void) throws {
+        var metadata = try readMetadata(from: bundle)
+        try closure(&metadata)
+        try writeMetadata(metadata, toBundle: bundle)
     }
 
     func readInfo(from bundle: VMBundle) throws -> VMInfo {
         let config = try readConfig(from: bundle)
-        let state = try readState(from: bundle)
-        return VMInfo(config: config, state: state)
+        let metadata = try readMetadata(from: bundle)
+        return VMInfo(config: config, metadata: metadata)
     }
 
     // MARK: - Private

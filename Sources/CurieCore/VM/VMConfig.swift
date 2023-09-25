@@ -120,7 +120,6 @@ public struct VMConfig: Equatable, Codable {
         var devices: [Device]
     }
 
-    var name: String
     var cpuCount: Int
     var memorySize: MemorySize
     var display: DisplayConfig
@@ -131,7 +130,6 @@ extension VMConfig: CustomStringConvertible {
     public var description: String {
         """
         Config:
-          name: \(name)
           cpuCount: \(cpuCount)
           memorySize: \(memorySize)
           display:

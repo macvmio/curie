@@ -35,8 +35,12 @@ public struct VMBundle {
         path("config.json")
     }
 
-    public var state: AbsolutePath {
-        path("state.json")
+    public var metadata: AbsolutePath {
+        path("metadata.json")
+    }
+
+    public var container: AbsolutePath {
+        path("container.json")
     }
 
     // MARK: - Private

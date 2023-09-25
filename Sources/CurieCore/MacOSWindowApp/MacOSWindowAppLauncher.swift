@@ -22,7 +22,7 @@ private struct MacOSWindowApp: App {
     private var appDelegate: MacOSWindowAppDelegate
 
     var body: some Scene {
-        WindowGroup(MacOSWindowApp.vm.config.name) {
+        WindowGroup(MacOSWindowApp.vm.metadata.name ?? MacOSWindowApp.vm.metadata.id.description) {
             Group {
                 MacOSWindowAppViewView(vm: MacOSWindowApp.vm).onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false

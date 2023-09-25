@@ -13,6 +13,13 @@ struct CreateCommand: Command {
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
+    @Option(
+        name: .shortAndLong,
+        help: "Assign a name to the container.",
+        completion: .default
+    )
+    var name: String?
+
     final class Executor: CommandExecutor {
         private let interactor: CreateInteractor
         private let console: Console
@@ -24,7 +31,8 @@ struct CreateCommand: Command {
 
         func execute(command: CreateCommand) throws {
             try interactor.execute(with: .init(
-                reference: command.reference
+                reference: command.reference,
+                name: command.name
             ))
         }
     }

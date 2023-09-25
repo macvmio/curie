@@ -34,7 +34,7 @@ final class DefaultImageRunner: ImageRunner {
         vm.start(completionHandler: { [console] result in
             switch result {
             case .success:
-                console.text("Container \(info.state.id.description) started")
+                console.text("Container \(info.metadata.id.description) started")
             case let .failure(error):
                 console.error("Failed to start container. \(error)")
             }

@@ -131,8 +131,9 @@ curie inspect myteam/myimage/ci/test:2.3
 
 # Example output
 
-State:
+Metadata:
   id: 9bf95fe0f7f0
+  name: <none>
   createdAt: 2023-09-17T18:22:58Z
   network:
     devices:

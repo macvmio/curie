@@ -48,7 +48,7 @@ public final class DefaultRunInteractor: RunInteractor {
         console.text("Run image \(context.reference)")
 
         let sourceReference = try imageCache.findImageReference(context.reference)
-        let targetReference = try imageCache.cloneImage(source: sourceReference, target: .ephemeral)
+        let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
         let bundle = VMBundle(path: imageCache.path(to: targetReference))
         let vm = try configurator.loadVM(with: bundle)
