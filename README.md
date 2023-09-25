@@ -111,7 +111,7 @@ curie ps
 # Example output
 
 CONTAINER ID     REPOSITORY                               TAG     CREATED           SIZE
-7984867efb71     myteam/myimage/ci/test     2.1     3 minutes ago     60.03 GB
+7984867efb71     @7984867efb71/myteam/myimage/ci/test     2.1     3 minutes ago     60.03 GB
 ```
 
 The command has also `--format` (`-f`) parameter which allows to output JSON.
@@ -121,17 +121,13 @@ The command has also `--format` (`-f`) parameter which allows to output JSON.
 All changes that are made in the container will be applied to the image once the container is closed.
 
 ```sh
-curie start myteam/myimage/ci/test
+curie start @7984867efb71/myteam/myimage/ci/test
 ```
 
 #### Inspect an image or a container
 
 ```sh
 curie inspect myteam/myimage/ci/test:2.3
-
-# or
-
-curie inspect 904183fe6271 # Using [<IMAGE ID> | <CONTAINER ID>]
 
 # Example output
 
