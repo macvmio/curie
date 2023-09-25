@@ -47,6 +47,7 @@ final class DefaultPsInteractor: PsInteractor {
                 "tag",
                 "created",
                 "size",
+                "name",
             ],
             values: images.map { [
                 $0.reference.id.description,
@@ -54,6 +55,7 @@ final class DefaultPsInteractor: PsInteractor {
                 $0.reference.descriptor.tag ?? "<none>",
                 dateFormatter.localizedString(for: $0.createAt, relativeTo: wallClock.now()),
                 $0.size.description,
+                $0.name ?? "<none>",
             ] }
         )
         let config = TableRenderer.Config(format: context.format.rendererFormat())

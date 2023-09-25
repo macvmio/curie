@@ -48,7 +48,7 @@ final class DefaultInspectInteractor: InspectInteractor {
         let bundle = VMBundle(path: imageCache.path(to: reference))
         let info = try bundleParser.readInfo(from: bundle)
         let arpItems = try aprClient.executeARPQuery()
-        let macAddresses = Set(info.state.network.flatMap { $0.devices.map(\.value.MACAddress) } ?? [])
+        let macAddresses = Set(info.metadata.network.flatMap { $0.devices.map(\.value.MACAddress) } ?? [])
         let filteredArpaRows = arpItems.filter { macAddresses.contains($0.macAddress) }
 
         let item = Item(info: info, arp: filteredArpaRows)

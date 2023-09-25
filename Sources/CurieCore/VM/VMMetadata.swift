@@ -1,6 +1,6 @@
 import Foundation
 
-struct VMState: Equatable, Codable {
+struct VMMetadata: Equatable, Codable {
     struct NetworkDevice: Equatable, Codable {
         let MACAddress: String
     }
@@ -10,15 +10,17 @@ struct VMState: Equatable, Codable {
     }
 
     var id: ImageID
+    var name: String?
     var createdAt: Date
     var network: Network?
 }
 
-extension VMState: CustomStringConvertible {
+extension VMMetadata: CustomStringConvertible {
     public var description: String {
         """
-        State:
+        Metadata:
           id: \(id.description)
+          name: \(name ?? "<none>")
           createdAt: \(dateFormatter.string(from: createdAt))
           network:
             devices:
@@ -31,7 +33,7 @@ extension VMState: CustomStringConvertible {
     }
 }
 
-extension [Int: VMState.NetworkDevice] {
+extension [Int: VMMetadata.NetworkDevice] {
     var description: String {
         let prefix = "      "
         return sorted { $0.key < $1.key }.map { index, value in

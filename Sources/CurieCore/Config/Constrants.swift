@@ -7,7 +7,6 @@ public enum Constants {
     public static let referenceFormat = "<repository>[:<tag>]"
 
     static let defaultConfig = VMConfig(
-        name: "Anonymous VM",
         cpuCount: 4,
         memorySize: .init(bytes: 4 * 1024 * 1024 * 1024),
         display: .init(width: 1920, height: 1080, pixelsPerInch: 80),

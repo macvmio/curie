@@ -4,13 +4,14 @@ import TSCBasic
 
 enum Target {
     case reference(String)
-    case ephemeral
+    case newReference
 }
 
 struct ImageItem: Equatable {
     var reference: ImageReference
     var createAt: Date
     var size: MemorySize
+    var name: String?
 }
 
 protocol ImageCache {
@@ -106,10 +107,10 @@ final class DefaultImageCache: ImageCache {
         try fileSystem.copy(from: sourceAbsolutePath, to: targetAbsolutePath)
 
         let bundle = VMBundle(path: targetAbsolutePath)
-        var state = try bundleParser.readState(from: bundle)
-        state.id = targetId
-        state.createdAt = wallClock.now()
-        try bundleParser.writeState(state, toBundle: bundle)
+        try bundleParser.updateMetadata(bundle: bundle) { metadata in
+            metadata.id = targetId
+            metadata.createdAt = wallClock.now()
+        }
 
         return targetReference
     }
@@ -135,11 +136,12 @@ final class DefaultImageCache: ImageCache {
     private func items(from references: [ImageReference]) throws -> [ImageItem] {
         let items = try references.map {
             let bundle = VMBundle(path: path(to: $0))
-            let state = try bundleParser.readState(from: bundle)
+            let metadata = try bundleParser.readMetadata(from: bundle)
             return try ImageItem(
                 reference: $0,
-                createAt: state.createdAt,
-                size: fileSystem.directorySize(at: path(to: $0))
+                createAt: metadata.createdAt,
+                size: fileSystem.directorySize(at: path(to: $0)),
+                name: metadata.name
             )
         }
         return items
@@ -184,8 +186,8 @@ final class DefaultImageCache: ImageCache {
             }
         }
         let bundle = VMBundle(path: absolutePath)
-        let state = try bundleParser.readState(from: bundle)
-        return ImageReference(id: state.id, descriptor: descriptor, type: type)
+        let metadata = try bundleParser.readMetadata(from: bundle)
+        return ImageReference(id: metadata.id, descriptor: descriptor, type: type)
     }
 
     private func listImages(at path: AbsolutePath, basePath: AbsolutePath, type: ImageType) throws -> [ImageReference] {
@@ -272,7 +274,7 @@ private extension Target {
         switch self {
         case let .reference(reference):
             return try ImageDescriptor(reference: reference)
-        case .ephemeral:
+        case .newReference:
             return ImageDescriptor(
                 repository: "@\(imageId.description)/\(source.descriptor.repository)",
                 tag: source.descriptor.tag
@@ -284,7 +286,7 @@ private extension Target {
         switch self {
         case .reference:
             return .image
-        case .ephemeral:
+        case .newReference:
             return .container
         }
     }

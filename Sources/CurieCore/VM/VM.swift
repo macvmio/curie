@@ -14,6 +14,7 @@ final class VM: NSObject {
     }
 
     let config: VMConfig
+    let metadata: VMMetadata
 
     private let vm: VZVirtualMachine
     private let console: Console
@@ -24,10 +25,12 @@ final class VM: NSObject {
     init(
         vm: VZVirtualMachine,
         config: VMConfig,
+        metadata: VMMetadata,
         console: Console
     ) {
         self.vm = vm
         self.config = config
+        self.metadata = metadata
         self.console = console
 
         super.init()

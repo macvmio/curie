@@ -78,6 +78,7 @@ public final class CoreAssembly: Assembly {
         registry.register(CreateInteractor.self) { r in
             DefaultCreateInteractor(
                 imageCache: r.resolve(ImageCache.self),
+                bundleParser: r.resolve(VMBundleParser.self),
                 console: r.resolve(Console.self)
             )
         }

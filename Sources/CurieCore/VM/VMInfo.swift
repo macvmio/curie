@@ -2,14 +2,14 @@ import Foundation
 
 struct VMInfo: Codable {
     let config: VMConfig
-    let state: VMState
+    let metadata: VMMetadata
 }
 
 extension VMInfo: CustomStringConvertible {
     var description: String {
         """
 
-        \(state.description)
+        \(metadata.description)
 
         \(config.description)
 
