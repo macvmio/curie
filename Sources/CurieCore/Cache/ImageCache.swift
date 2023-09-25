@@ -268,13 +268,13 @@ private extension ImageDescriptor {
 }
 
 private extension Target {
-    func imageDescriptor(source: ImageReference, imageId: ImageID) throws -> ImageDescriptor {
+    func imageDescriptor(source: ImageReference, imageId _: ImageID) throws -> ImageDescriptor {
         switch self {
         case let .reference(reference):
             return try ImageDescriptor(reference: reference)
         case .ephemeral:
             return ImageDescriptor(
-                repository: "@\(imageId.description)/\(source.descriptor.repository)",
+                repository: source.descriptor.repository,
                 tag: source.descriptor.tag
             )
         }
