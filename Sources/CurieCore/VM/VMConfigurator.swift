@@ -125,15 +125,12 @@ final class DefaultVMConfigurator: VMConfigurator {
                 break
             case .synthesized:
                 var metadata = try bundleParser.readMetadata(from: bundle)
-                let generatedMACAddress = generateMACAddress()
+                let macAddress = VZMACAddress.randomLocallyAdministered()
                 var network = metadata.network ?? VMMetadata.Network()
-                network.devices[index] = .init(MACAddress: generatedMACAddress)
+                network.devices[index] = .init(MACAddress: macAddress.string)
                 metadata.network = network
                 try bundleParser.writeMetadata(metadata, toBundle: bundle)
 
-                guard let macAddress = VZMACAddress(string: generatedMACAddress) else {
-                    throw CoreError.generic("Invalid MAC Address '\(generatedMACAddress)'")
-                }
                 networkDevice.macAddress = macAddress
             case let .manual(MACAddress: string):
                 guard let macAddress = VZMACAddress(string: string) else {
@@ -229,16 +226,5 @@ final class DefaultVMConfigurator: VMConfigurator {
 
         try fileSystem.write(data: configuration.hardwareModel.dataRepresentation, to: bundle.hardwareModel)
         try fileSystem.write(data: configuration.machineIdentifier.dataRepresentation, to: bundle.machineIdentifier)
-    }
-
-    private func generateMACAddress() -> String {
-        (0 ..< 6)
-            .map { i in
-                let value = UInt8.random(in: UInt8.min ..< UInt8.max)
-                return i == 0 ? value | 2 : value
-            }
-            .map { String(format: "%02X", $0) }
-            .map { $0.lowercased() }
-            .joined(separator: ":")
     }
 }
