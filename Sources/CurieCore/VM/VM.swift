@@ -3,6 +3,11 @@ import CurieCommon
 import Foundation
 import Virtualization
 
+struct VMStartOptions {
+    var startUpFromMacOSRecovery: Bool
+    var noWindow: Bool
+}
+
 final class VM: NSObject {
     enum Event: Equatable {
         case imageDidStop
@@ -38,9 +43,17 @@ final class VM: NSObject {
         vm.delegate = self
     }
 
-    public func start(completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    public func start(options: VMStartOptions, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         console.text("Will start container")
-        vm.start(completionHandler: completionHandler)
+        let startOptions = VZMacOSVirtualMachineStartOptions()
+        startOptions.startUpFromMacOSRecovery = options.startUpFromMacOSRecovery
+        vm.start(options: startOptions) { error in
+            if let error {
+                completionHandler(.failure(error))
+            } else {
+                completionHandler(.success(()))
+            }
+        }
     }
 
     public func pause(completionHandler: @escaping (Result<Void, Error>) -> Void) {
