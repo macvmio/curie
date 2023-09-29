@@ -7,13 +7,16 @@ import Virtualization
 public struct RunInteractorContext {
     public var reference: String
     public var noWindow: Bool
+    public var recoveryMode: Bool
 
     public init(
         reference: String,
-        noWindow: Bool
+        noWindow: Bool,
+        recoveryMode: Bool
     ) {
         self.reference = reference
         self.noWindow = noWindow
+        self.recoveryMode = recoveryMode
     }
 }
 
@@ -52,6 +55,10 @@ public final class DefaultRunInteractor: RunInteractor {
 
         let bundle = VMBundle(path: imageCache.path(to: targetReference))
         let vm = try configurator.loadVM(with: bundle)
+        let options = VMStartOptions(
+            startUpFromMacOSRecovery: context.recoveryMode,
+            noWindow: context.noWindow
+        )
 
         vm.events
             .filter { $0 == .imageDidStop || $0 == .imageStopFailed }
@@ -64,6 +71,6 @@ public final class DefaultRunInteractor: RunInteractor {
             }
             .store(in: &cancellables)
 
-        try imageRunner.run(vm: vm, bundle: bundle, noWindow: context.noWindow)
+        try imageRunner.run(vm: vm, bundle: bundle, options: options)
     }
 }

@@ -16,6 +16,9 @@ struct RunCommand: Command {
     @Flag(help: "Do not create Window.")
     var noWindow: Bool = false
 
+    @Flag(help: "Start in recovery mode.")
+    var recoveryMode: Bool = false
+
     final class Executor: CommandExecutor {
         private let interactor: RunInteractor
         private let console: Console
@@ -28,7 +31,8 @@ struct RunCommand: Command {
         func execute(command: RunCommand) throws {
             try interactor.execute(with: .init(
                 reference: command.reference,
-                noWindow: command.noWindow
+                noWindow: command.noWindow,
+                recoveryMode: command.recoveryMode
             ))
         }
     }

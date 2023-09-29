@@ -2,7 +2,7 @@ import CurieCommon
 import Foundation
 
 protocol ImageRunner {
-    func run(vm: VM, bundle: VMBundle, noWindow: Bool) throws
+    func run(vm: VM, bundle: VMBundle, options: VMStartOptions) throws
 }
 
 final class DefaultImageRunner: ImageRunner {
@@ -26,22 +26,22 @@ final class DefaultImageRunner: ImageRunner {
         self.console = console
     }
 
-    func run(vm: VM, bundle: VMBundle, noWindow: Bool) throws {
+    func run(vm: VM, bundle: VMBundle, options: VMStartOptions) throws {
         let info = try bundleParser.readInfo(from: bundle)
         console.text(info.description)
 
         // Automatically start the vm
-        vm.start(completionHandler: { [console] result in
+        vm.start(options: options) { [console] result in
             switch result {
             case .success:
                 console.text("Container \(info.metadata.id.description) started")
             case let .failure(error):
                 console.error("Failed to start container. \(error)")
             }
-        })
+        }
 
         // Launch interface
-        if noWindow {
+        if options.noWindow {
             console.text("Launch container without a window")
             launchConsole(with: vm)
         } else {
