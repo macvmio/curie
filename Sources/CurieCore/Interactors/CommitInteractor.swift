@@ -41,13 +41,6 @@ public final class DefaultCommitInteractor: CommitInteractor {
             type: .image
         ) } ?? sourceReference.asImageReference()
 
-        let bundle = VMBundle(path: imageCache.path(to: targetReference))
-        let vm = try configurator.loadVM(with: bundle)
-
-        guard vm.virtualMachine.state == .stopped || vm.virtualMachine.state == .paused else {
-            throw CoreError.generic("Cammit failed, container is not stopped or paused")
-        }
-
         try imageCache.moveImage(source: sourceReference, target: targetReference)
 
         console.text("Image \(targetReference.id.description) has been saved")
