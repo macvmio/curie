@@ -119,10 +119,11 @@ final class DefaultImageCache: ImageCache {
         let sourceAbsolutePath = path(to: source)
         let targetAbsolutePath = path(to: target)
 
-        try removeImage(target)
+        if fileSystem.exists(at: targetAbsolutePath) {
+            try fileSystem.remove(at: targetAbsolutePath)
+        }
 
-        try fileSystem.createDirectory(at: targetAbsolutePath)
-        try system.execute(["mv", sourceAbsolutePath.pathString, targetAbsolutePath.parentDirectory.pathString])
+        try fileSystem.move(from: sourceAbsolutePath, to: targetAbsolutePath)
 
         try removeEmptySubdirectories(of: containersAbsolutePath)
     }
