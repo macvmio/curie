@@ -16,21 +16,21 @@ struct BuildCommand: Command {
     @Option(
         name: .shortAndLong,
         help: "Path to .ipsw file.",
-        completion: .directory
+        completion: .default
     )
-    var ipswPath: String?
+    var ipswPath: String
 
     @Option(
         name: .shortAndLong,
         help: "Disk size (default \(CurieCore.Constants.defaultDiskSize)).",
-        completion: .directory
+        completion: .default
     )
     var diskSize: String?
 
     @Option(
         name: .shortAndLong,
         help: "Path to config file.",
-        completion: .directory
+        completion: .default
     )
     var configPath: String?
 
@@ -45,7 +45,7 @@ struct BuildCommand: Command {
 
         func execute(command: BuildCommand) throws {
             try interactor.execute(with: .init(
-                source: command.source,
+                ipwsPath: command.ipswPath,
                 reference: command.reference,
                 diskSize: command.diskSize,
                 configPath: command.configPath
@@ -62,14 +62,5 @@ struct BuildCommand: Command {
                 )
             }
         }
-    }
-}
-
-private extension BuildCommand {
-    var source: BuildInteractorContext.Source {
-        if let ipswPath {
-            return .ipsw(path: ipswPath)
-        }
-        return .latest
     }
 }

@@ -3,23 +3,18 @@ import Foundation
 import TSCBasic
 
 public struct BuildInteractorContext {
-    public enum Source {
-        case latest
-        case ipsw(path: String)
-    }
-
-    var source: Source
+    var ipwsPath: String
     var reference: String
     var diskSize: String?
     var configPath: String?
 
     public init(
-        source: Source,
+        ipwsPath: String,
         reference: String,
         diskSize: String?,
         configPath: String?
     ) {
-        self.source = source
+        self.ipwsPath = ipwsPath
         self.reference = reference
         self.diskSize = diskSize
         self.configPath = configPath
@@ -62,17 +57,12 @@ final class DefaultBuildInteractor: BuildInteractor {
         let bundlePath = imageCache.path(to: reference)
         let bundle = VMBundle(path: bundlePath)
 
-        switch context.source {
-        case .latest:
-            console.error("Downloading the latest restore image is not yet supported")
-        case let .ipsw(path: path):
-            try createImage(
-                reference: reference,
-                bundle: bundle,
-                context: context,
-                restoreImagePath: path
-            )
-        }
+        try createImage(
+            reference: reference,
+            bundle: bundle,
+            context: context,
+            restoreImagePath: context.ipwsPath
+        )
     }
 
     // MARK: - Private
