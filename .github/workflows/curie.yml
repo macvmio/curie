@@ -17,7 +17,7 @@ permissions:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-13
+    runs-on: macos-13-arm64
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
@@ -27,7 +27,7 @@ jobs:
 
   build:
     name: Build
-    runs-on: macos-13
+    runs-on: macos-13-arm64
     steps:
     - uses: actions/checkout@v2
     - name: build
