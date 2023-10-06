@@ -96,6 +96,14 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(DownloadInteractor.self) { r in
+            DefaultDownloadInteractor(
+                downloader: r.resolve(RestoreImageDownloader.self),
+                fileSystem: r.resolve(FileSystem.self),
+                system: r.resolve(System.self),
+                console: r.resolve(Console.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
@@ -117,6 +125,7 @@ public final class CoreAssembly: Assembly {
         }
         registry.register(RestoreImageDownloader.self) { r in
             DefaultRestoreImageDownloader(
+                fileSystem: r.resolve(FileSystem.self),
                 console: r.resolve(Console.self)
             )
         }
