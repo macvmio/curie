@@ -26,6 +26,12 @@ It allows users to run and manage isolated environments, making it easier to dev
 
 ### Commands
 
+#### Download an image restore file
+
+```sh
+curie download -p ~/Download/RestoreImage.ipsw
+```
+
 #### Build an image
 
 ```sh
