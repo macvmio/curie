@@ -7,9 +7,10 @@ protocol RestoreImageDownloader {
     func download(to path: AbsolutePath, completion: @escaping (Int32) -> Never)
 }
 
-final class DefaultRestoreImageDownloader: RestoreImageDownloader {
+final class DefaultRestoreImageDownloader: NSObject, RestoreImageDownloader {
     private let fileSystem: CurieCommon.FileSystem
     private let console: Console
+    private let urlSession = URLSession.shared
 
     private var downloadObserver: NSKeyValueObservation?
 
@@ -40,8 +41,7 @@ final class DefaultRestoreImageDownloader: RestoreImageDownloader {
         path: AbsolutePath,
         completion: @escaping (Int32) -> Never
     ) {
-        let downloadTask = URLSession
-            .shared
+        let downloadTask = urlSession
             .downloadTask(with: restoreImage.url) { [fileSystem, console] localURL, _, error in
                 if let error {
                     console.error("Download failed - \(error.localizedDescription)")
@@ -69,7 +69,15 @@ final class DefaultRestoreImageDownloader: RestoreImageDownloader {
             .initial,
             .new,
         ]) { [console] _, change in
-            console.progress(prompt: "Downloading...", progress: change.newValue ?? 0.0)
+            let receivedSize = MemorySize(bytes: UInt64(downloadTask.countOfBytesReceived))
+            let expectedToReceivesize = MemorySize(bytes: UInt64(downloadTask.countOfBytesExpectedToReceive))
+            let progress = "\(receivedSize)/\(expectedToReceivesize)"
+            let suffix = "\(progress)"
+            console.progress(
+                prompt: "Downloading...",
+                progress: change.newValue ?? 0.0,
+                suffix: suffix
+            )
         }
         downloadTask.resume()
     }

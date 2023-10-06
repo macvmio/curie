@@ -29,13 +29,13 @@ It allows users to run and manage isolated environments, making it easier to dev
 #### Download an image restore file
 
 ```sh
-curie download -p ~/Download/RestoreImage.ipsw
+curie download -p ~/Downloads/RestoreImage.ipsw
 ```
 
 #### Build an image
 
 ```sh
-curie build myteam/myimage/test-image:1.0 -i ~/Download/RestoreImage.ipsw -d "60 GB" 
+curie build myteam/myimage/test-image:1.0 -i ~/Downloads/RestoreImage.ipsw -d "60 GB" 
 ```
 
 #### Remove an image

@@ -60,6 +60,10 @@ private final class TerminalTextConverter {
     private let darkGray: Style = .init("\u{001B}[90m", "\u{001B}[0m")
     private let white: Style = .init("\u{001B}[97m", "\u{001B}[0m")
 
+    // Functions
+    private let eraseFromCursorToEndOfLine: Style = .init("\u{001B}ESC[1K", "")
+    private let eraseStartOfLineToCursor: Style = .init("\u{001B}ESC[0K", "")
+
     func string(from richText: RichText) -> String {
         richText.tokens.reduce(into: "") { acc, token in
             let styles = [
@@ -112,6 +116,18 @@ private final class TerminalTextConverter {
             return darkGray
         case .white:
             return white
+        }
+    }
+
+    private func function(from attributes: RichText.Attributes) -> Style {
+        guard let function = attributes.function else {
+            return none
+        }
+        switch function {
+        case .eraseFromCursorToEndOfLine:
+            return eraseFromCursorToEndOfLine
+        case .eraseStartOfLineToCursor:
+            return eraseStartOfLineToCursor
         }
     }
 }
