@@ -7,7 +7,7 @@ import TSCBasic
 struct BuildCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: "build",
-        abstract: "Build an image from image restore file (or download latest version from Apple server)."
+        abstract: "Build an image from an image restore file."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
@@ -15,22 +15,19 @@ struct BuildCommand: Command {
 
     @Option(
         name: .shortAndLong,
-        help: "Path to .ipsw file.",
-        completion: .default
+        help: "Path to .ipsw file."
     )
     var ipswPath: String
 
     @Option(
         name: .shortAndLong,
-        help: "Disk size (default \(CurieCore.Constants.defaultDiskSize)).",
-        completion: .default
+        help: "Disk size (default \(CurieCore.Constants.defaultDiskSize))."
     )
     var diskSize: String?
 
     @Option(
         name: .shortAndLong,
-        help: "Path to config file.",
-        completion: .default
+        help: "Path to config file."
     )
     var configPath: String?
 

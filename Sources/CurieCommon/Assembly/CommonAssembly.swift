@@ -5,11 +5,7 @@ public final class CommonAssembly: Assembly {
 
     public func assemble(_ registry: Registry) {
         registry.register(Output.self) { _ in
-            #if DEBUG
-                return CombinedOutput(outputs: [StandardOutput.shared, CaptureOutput.tests])
-            #else
-                return StandardOutput.shared
-            #endif
+            StandardOutput.shared
         }
         registry.register(Console.self) { r in
             DefaultConsole(output: r.resolve(Output.self))

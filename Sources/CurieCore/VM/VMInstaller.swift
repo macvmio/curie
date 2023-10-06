@@ -19,8 +19,6 @@ final class DefaultVMInstaller: VMInstaller {
     }
 
     func install(vm: VM, restoreImagePath: AbsolutePath) async throws {
-        console.text("Install VM image")
-
         let installer = VZMacOSInstaller(
             virtualMachine: vm.virtualMachine,
             restoringFromImageAt: restoreImagePath.asURL
@@ -30,18 +28,19 @@ final class DefaultVMInstaller: VMInstaller {
             \.fractionCompleted,
             options: [.initial, .new]
         ) { [console] _, change in
-            console.text("Installing... \(Int(change.newValue! * 100))%")
+            console.progress(prompt: "Building...", progress: change.newValue ?? 0)
         }
 
         let result = await withCheckedContinuation { continuation in
-            installer.install { result in
+            installer.install { [console] result in
+                console.clear()
                 continuation.resume(returning: result)
             }
         }
 
         switch result {
         case .success:
-            console.text("Installed VM image")
+            console.text("Build completed")
             return
         case let .failure(error):
             throw CoreError

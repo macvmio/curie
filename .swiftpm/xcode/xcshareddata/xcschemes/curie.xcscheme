@@ -137,7 +137,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "commit e73c01960203 new/reference:3.0"
+            argument = "commit start a8302cc3e913"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

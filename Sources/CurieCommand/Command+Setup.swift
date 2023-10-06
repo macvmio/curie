@@ -9,6 +9,7 @@ private enum Setup {
         (CloneCommand.self, CloneCommand.Assembly()),
         (CreateCommand.self, CreateCommand.Assembly()),
         (CommitCommand.self, CommitCommand.Assembly()),
+        (DownloadCommand.self, DownloadCommand.Assembly()),
         (InspectCommand.self, InspectCommand.Assembly()),
         (ImagesCommand.self, ImagesCommand.Assembly()),
         (PsCommand.self, PsCommand.Assembly()),
