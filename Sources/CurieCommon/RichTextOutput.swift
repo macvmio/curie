@@ -65,12 +65,17 @@ private final class TerminalTextConverter {
     private let eraseFromCursorToEndOfLine: Style = .init("\u{001B}[0K", "")
     private let eraseStartOfLineToCursor: Style = .init("\u{001B}[1K", "")
 
+    // Modes
+    private let makeCursorInvisible: Style = .init("\u{001B}[?25l", "")
+    private let makeCursorVisible: Style = .init("\u{001B}[?25h", "")
+
     func string(from richText: RichText) -> String {
         richText.tokens.reduce(into: "") { acc, token in
             let styles = [
                 color(from: token.attributes),
                 style(from: token.attributes),
                 function(from: token.attributes),
+                mode(from: token.attributes),
             ]
             let string: String = styles.reduce(into: token.rawText) { acc, value in
                 acc = value.apply(on: acc)
@@ -132,6 +137,18 @@ private final class TerminalTextConverter {
             return eraseFromCursorToEndOfLine
         case .eraseStartOfLineToCursor:
             return eraseStartOfLineToCursor
+        }
+    }
+
+    private func mode(from attributes: RichText.Attributes) -> Style {
+        guard let mode = attributes.mode else {
+            return none
+        }
+        switch mode {
+        case .makeCursorInvisible:
+            return makeCursorInvisible
+        case .makeCursorVisible:
+            return makeCursorVisible
         }
     }
 }

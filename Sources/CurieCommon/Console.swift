@@ -31,7 +31,8 @@ public final class DefaultConsole: Console {
         }
         richTextOutput().write(.init(tokens: [
             .init(rawText: "\r", attributes: .none),
-            .init(rawText: "", attributes: .function(.eraseFromCursorToEndOfLine)),
+            .attributes(.function(.eraseFromCursorToEndOfLine)),
+            .attributes(.mode(.makeCursorVisible)),
         ]))
     }
 
@@ -49,7 +50,7 @@ public final class DefaultConsole: Console {
             let full = (0 ..< fullCount).map { _ in "=" }.joined()
             let empty = (0 ..< emptyCount).map { _ in " " }.joined()
             richTextOutput().write(.init(tokens: [
-                .init(rawText: "» ", attributes: .color(.blue)),
+                .attributes(.mode(.makeCursorInvisible)),
                 .init(rawText: prompt, attributes: .color(.blue)),
                 .init(rawText: " ", attributes: .none),
                 .init(rawText: "[", attributes: .color(.blue)),
@@ -63,7 +64,7 @@ public final class DefaultConsole: Console {
     private func makeSuffix(progress: Double?, suffix: String?) -> [RichText.Token] {
         [
             .init(rawText: "\(suffix ?? makePercentage(progress: progress))", attributes: .color(.lightGray)),
-            .init(rawText: "", attributes: .function(.eraseFromCursorToEndOfLine)),
+            .attributes(.function(.eraseFromCursorToEndOfLine)),
             .init(rawText: "\r", attributes: .none),
         ]
     }
