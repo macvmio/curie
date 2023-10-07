@@ -68,14 +68,15 @@ final class DefaultRestoreImageDownloader: NSObject, RestoreImageDownloader {
         downloadObserver = downloadTask.progress.observe(\.fractionCompleted, options: [
             .initial,
             .new,
-        ]) { [console] _, change in
+        ]) { [console] _, _ in
             let receivedSize = MemorySize(bytes: UInt64(downloadTask.countOfBytesReceived))
             let expectedToReceivesize = MemorySize(bytes: UInt64(downloadTask.countOfBytesExpectedToReceive))
-            let progress = "\(receivedSize)/\(expectedToReceivesize)"
-            let suffix = "\(progress)"
+            let progress = expectedToReceivesize
+                .bytes > 0 ? Double(receivedSize.bytes) / Double(expectedToReceivesize.bytes) : 0.0
+            let suffix = "\(receivedSize)/\(expectedToReceivesize)"
             console.progress(
-                prompt: "Downloading...",
-                progress: change.newValue ?? 0.0,
+                prompt: "Downloading",
+                progress: progress,
                 suffix: suffix
             )
         }

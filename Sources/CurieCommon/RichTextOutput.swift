@@ -55,20 +55,22 @@ private final class TerminalTextConverter {
     private let red: Style = .init("\u{001B}[31m", "\u{001B}[0m")
     private let green: Style = .init("\u{001B}[32m", "\u{001B}[0m")
     private let yellow: Style = .init("\u{001B}[33m", "\u{001B}[0m")
+    private let lightBlue: Style = .init("\u{001B}[94m", "\u{001B}[0m")
     private let blue: Style = .init("\u{001B}[34m", "\u{001B}[0m")
     private let lightGray: Style = .init("\u{001B}[37m", "\u{001B}[0m")
     private let darkGray: Style = .init("\u{001B}[90m", "\u{001B}[0m")
     private let white: Style = .init("\u{001B}[97m", "\u{001B}[0m")
 
     // Functions
-    private let eraseFromCursorToEndOfLine: Style = .init("\u{001B}ESC[1K", "")
-    private let eraseStartOfLineToCursor: Style = .init("\u{001B}ESC[0K", "")
+    private let eraseFromCursorToEndOfLine: Style = .init("\u{001B}[0K", "")
+    private let eraseStartOfLineToCursor: Style = .init("\u{001B}[1K", "")
 
     func string(from richText: RichText) -> String {
         richText.tokens.reduce(into: "") { acc, token in
             let styles = [
                 color(from: token.attributes),
                 style(from: token.attributes),
+                function(from: token.attributes),
             ]
             let string: String = styles.reduce(into: token.rawText) { acc, value in
                 acc = value.apply(on: acc)
@@ -108,6 +110,8 @@ private final class TerminalTextConverter {
             return green
         case .yellow:
             return yellow
+        case .lightBlue:
+            return lightBlue
         case .blue:
             return blue
         case .lightGray:

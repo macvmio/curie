@@ -13,6 +13,7 @@ public struct RichText: ExpressibleByStringLiteral {
         case red
         case green
         case yellow
+        case lightBlue
         case blue
         case lightGray
         case darkGray

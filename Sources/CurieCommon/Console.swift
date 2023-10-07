@@ -29,8 +29,10 @@ public final class DefaultConsole: Console {
         guard !output.redirected else {
             return
         }
-        let empty = (0 ..< 100).map { _ in " " }.joined()
-        output.write("\r\(empty)\r")
+        richTextOutput().write(.init(tokens: [
+            .init(rawText: "\r", attributes: .none),
+            .init(rawText: "", attributes: .function(.eraseFromCursorToEndOfLine)),
+        ]))
     }
 
     public func progress(prompt: String, progress: Double) {
@@ -47,11 +49,12 @@ public final class DefaultConsole: Console {
             let full = (0 ..< fullCount).map { _ in "=" }.joined()
             let empty = (0 ..< emptyCount).map { _ in " " }.joined()
             richTextOutput().write(.init(tokens: [
+                .init(rawText: "» ", attributes: .color(.blue)),
                 .init(rawText: prompt, attributes: .color(.blue)),
                 .init(rawText: " ", attributes: .none),
-                .init(rawText: "[", attributes: .color(.darkGray)),
-                .init(rawText: "\(full)>\(empty)", attributes: .color(.darkGray)),
-                .init(rawText: "]", attributes: .color(.darkGray)),
+                .init(rawText: "[", attributes: .color(.blue)),
+                .init(rawText: "\(full)>\(empty)", attributes: .color(.blue)),
+                .init(rawText: "]", attributes: .color(.blue)),
                 .init(rawText: " ", attributes: .none),
             ] + makeSuffix(progress: progress, suffix: suffix)))
         }

@@ -43,7 +43,8 @@ public final class DefaultDownloadInteractor: DownloadInteractor {
 
         downloader.download(to: path, completion: exit)
 
-        system.keepAliveWithSIGINTEventHandler { exit in
+        system.keepAliveWithSIGINTEventHandler { [console] exit in
+            console.text("Download has been cancelled")
             exit(0)
         }
     }
