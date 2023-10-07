@@ -28,7 +28,7 @@ final class DefaultVMInstaller: VMInstaller {
             \.fractionCompleted,
             options: [.initial, .new]
         ) { [console] _, change in
-            console.progress(prompt: "Building...", progress: change.newValue ?? 0)
+            console.progress(prompt: "Building", progress: change.newValue ?? 0)
         }
 
         let result = await withCheckedContinuation { continuation in

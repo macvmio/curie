@@ -13,47 +13,90 @@ public struct RichText: ExpressibleByStringLiteral {
         case red
         case green
         case yellow
+        case lightBlue
         case blue
         case lightGray
         case darkGray
         case white
     }
 
+    public enum Function {
+        case eraseFromCursorToEndOfLine
+        case eraseStartOfLineToCursor
+    }
+
+    public enum Mode {
+        case makeCursorInvisible
+        case makeCursorVisible
+    }
+
     public class Attributes {
         let style: Style?
         let color: Color?
+        let function: Function?
+        let mode: Mode?
 
         static let none = Attributes(
             style: nil,
-            color: nil
+            color: nil,
+            function: nil,
+            mode: nil
         )
 
         private init(
             style: Style?,
-            color: Color?
+            color: Color?,
+            function: Function?,
+            mode: Mode?
         ) {
             self.style = style
             self.color = color
+            self.function = function
+            self.mode = mode
         }
 
         static func style(_ style: Style) -> Attributes {
             Attributes(
                 style: style,
-                color: nil
+                color: nil,
+                function: nil,
+                mode: nil
             )
         }
 
         public static func color(_ color: Color) -> Attributes {
             Attributes(
                 style: nil,
-                color: color
+                color: color,
+                function: nil,
+                mode: nil
+            )
+        }
+
+        public static func function(_ function: Function) -> Attributes {
+            Attributes(
+                style: nil,
+                color: nil,
+                function: function,
+                mode: nil
+            )
+        }
+
+        public static func mode(_ mode: Mode) -> Attributes {
+            Attributes(
+                style: nil,
+                color: nil,
+                function: nil,
+                mode: mode
             )
         }
 
         public static func + (lhs: Attributes, rhs: Attributes) -> Attributes {
             Attributes(
                 style: rhs.style ?? lhs.style,
-                color: rhs.color ?? lhs.color
+                color: rhs.color ?? lhs.color,
+                function: rhs.function ?? lhs.function,
+                mode: rhs.mode ?? lhs.mode
             )
         }
     }
@@ -64,6 +107,10 @@ public struct RichText: ExpressibleByStringLiteral {
 
         static func plain(_ string: String) -> Token {
             Token(rawText: string, attributes: .none)
+        }
+
+        static func attributes(_ attributes: Attributes) -> Token {
+            Token(rawText: "", attributes: attributes)
         }
     }
 

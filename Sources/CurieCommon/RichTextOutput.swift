@@ -55,16 +55,27 @@ private final class TerminalTextConverter {
     private let red: Style = .init("\u{001B}[31m", "\u{001B}[0m")
     private let green: Style = .init("\u{001B}[32m", "\u{001B}[0m")
     private let yellow: Style = .init("\u{001B}[33m", "\u{001B}[0m")
+    private let lightBlue: Style = .init("\u{001B}[94m", "\u{001B}[0m")
     private let blue: Style = .init("\u{001B}[34m", "\u{001B}[0m")
     private let lightGray: Style = .init("\u{001B}[37m", "\u{001B}[0m")
     private let darkGray: Style = .init("\u{001B}[90m", "\u{001B}[0m")
     private let white: Style = .init("\u{001B}[97m", "\u{001B}[0m")
+
+    // Functions
+    private let eraseFromCursorToEndOfLine: Style = .init("\u{001B}[0K", "")
+    private let eraseStartOfLineToCursor: Style = .init("\u{001B}[1K", "")
+
+    // Modes
+    private let makeCursorInvisible: Style = .init("\u{001B}[?25l", "")
+    private let makeCursorVisible: Style = .init("\u{001B}[?25h", "")
 
     func string(from richText: RichText) -> String {
         richText.tokens.reduce(into: "") { acc, token in
             let styles = [
                 color(from: token.attributes),
                 style(from: token.attributes),
+                function(from: token.attributes),
+                mode(from: token.attributes),
             ]
             let string: String = styles.reduce(into: token.rawText) { acc, value in
                 acc = value.apply(on: acc)
@@ -104,6 +115,8 @@ private final class TerminalTextConverter {
             return green
         case .yellow:
             return yellow
+        case .lightBlue:
+            return lightBlue
         case .blue:
             return blue
         case .lightGray:
@@ -112,6 +125,30 @@ private final class TerminalTextConverter {
             return darkGray
         case .white:
             return white
+        }
+    }
+
+    private func function(from attributes: RichText.Attributes) -> Style {
+        guard let function = attributes.function else {
+            return none
+        }
+        switch function {
+        case .eraseFromCursorToEndOfLine:
+            return eraseFromCursorToEndOfLine
+        case .eraseStartOfLineToCursor:
+            return eraseStartOfLineToCursor
+        }
+    }
+
+    private func mode(from attributes: RichText.Attributes) -> Style {
+        guard let mode = attributes.mode else {
+            return none
+        }
+        switch mode {
+        case .makeCursorInvisible:
+            return makeCursorInvisible
+        case .makeCursorVisible:
+            return makeCursorVisible
         }
     }
 }
