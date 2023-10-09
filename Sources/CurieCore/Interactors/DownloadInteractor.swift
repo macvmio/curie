@@ -34,7 +34,7 @@ public final class DefaultDownloadInteractor: DownloadInteractor {
     }
 
     public func execute(with context: DownloadInteractorContext) throws {
-        guard let path = try? AbsolutePath(validating: context.path) else {
+        guard let path = try? fileSystem.absolutePath(from: context.path) else {
             throw CoreError.generic("Invalid path \"\(context.path)\"")
         }
         guard !fileSystem.exists(at: path) else {
