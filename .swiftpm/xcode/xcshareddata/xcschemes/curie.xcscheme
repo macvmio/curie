@@ -137,8 +137,12 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "commit start a8302cc3e913"
+            argument = "start 5a8afd768d6e --share-cwd"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "commit start a8302cc3e913"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "ls -c"

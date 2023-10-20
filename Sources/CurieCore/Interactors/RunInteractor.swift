@@ -6,17 +6,11 @@ import Virtualization
 
 public struct RunInteractorContext {
     public var reference: String
-    public var noWindow: Bool
-    public var recoveryMode: Bool
+    public var launch: LaunchParameters
 
-    public init(
-        reference: String,
-        noWindow: Bool,
-        recoveryMode: Bool
-    ) {
+    public init(reference: String, launch: LaunchParameters) {
         self.reference = reference
-        self.noWindow = noWindow
-        self.recoveryMode = recoveryMode
+        self.launch = launch
     }
 }
 
@@ -54,10 +48,11 @@ public final class DefaultRunInteractor: RunInteractor {
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
         let bundle = VMBundle(path: imageCache.path(to: targetReference))
-        let vm = try configurator.loadVM(with: bundle)
+        let overrideConfig = context.launch.partialConfig()
+        let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
-            startUpFromMacOSRecovery: context.recoveryMode,
-            noWindow: context.noWindow
+            startUpFromMacOSRecovery: context.launch.recoveryMode,
+            noWindow: context.launch.noWindow
         )
 
         vm.events

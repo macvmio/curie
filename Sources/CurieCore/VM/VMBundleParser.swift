@@ -6,6 +6,7 @@ import Virtualization
 protocol VMBundleParser {
     func readPlatformConfiguration(from bundle: VMBundle) throws -> VZMacPlatformConfiguration
     func readConfig(from bundle: VMBundle) throws -> VMConfig
+    func readConfig(from bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VMConfig
     func writeConfig(_ config: VMConfig, toBundle bundle: VMBundle) throws
     func canParseConfig(at path: AbsolutePath) -> Bool
     func readMetadata(from bundle: VMBundle) throws -> VMMetadata
@@ -54,7 +55,27 @@ final class DefaultVMBundleParser: VMBundleParser {
             cpuCount: prepareCPUCount(config: partialConfig),
             memorySize: prepareMemorySize(config: partialConfig),
             display: prepareDisplay(config: partialConfig),
-            network: prepareNetwork(config: partialConfig)
+            network: prepareNetwork(config: partialConfig),
+            sharedDirectory: prepareSharedDirectory(config: partialConfig)
+        )
+        return config
+    }
+
+    func readConfig(from bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VMConfig {
+        let data = try fileSystem.read(from: bundle.config)
+        let diskConfig = try jsonDecoder.decode(VMPartialConfig.self, from: data)
+        let partialConfig: VMPartialConfig
+        if let overrideConfig {
+            partialConfig = diskConfig.merge(config: overrideConfig)
+        } else {
+            partialConfig = diskConfig
+        }
+        let config = VMConfig(
+            cpuCount: prepareCPUCount(config: partialConfig),
+            memorySize: prepareMemorySize(config: partialConfig),
+            display: prepareDisplay(config: partialConfig),
+            network: prepareNetwork(config: partialConfig),
+            sharedDirectory: prepareSharedDirectory(config: partialConfig)
         )
         return config
     }
@@ -210,5 +231,9 @@ final class DefaultVMBundleParser: VMBundleParser {
 
     private func prepareNetwork(config: VMPartialConfig) -> VMConfig.NetworkConfig {
         config.network ?? defaultConfig.network
+    }
+
+    private func prepareSharedDirectory(config: VMPartialConfig) -> VMConfig.SharedDirectoryConfig {
+        config.sharedDirectory ?? defaultConfig.sharedDirectory
     }
 }

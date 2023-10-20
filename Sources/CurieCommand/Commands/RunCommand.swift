@@ -13,11 +13,14 @@ struct RunCommand: Command {
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
-    @Flag(help: "Do not create Window.")
+    @Flag(help: "Do not create window.")
     var noWindow: Bool = false
 
     @Flag(help: "Start in recovery mode.")
     var recoveryMode: Bool = false
+
+    @Flag(help: "Share current working directory with the guest.")
+    var shareCWD: Bool = false
 
     final class Executor: CommandExecutor {
         private let interactor: RunInteractor
@@ -29,11 +32,16 @@ struct RunCommand: Command {
         }
 
         func execute(command: RunCommand) throws {
-            try interactor.execute(with: .init(
-                reference: command.reference,
-                noWindow: command.noWindow,
-                recoveryMode: command.recoveryMode
-            ))
+            try interactor.execute(
+                with: .init(
+                    reference: command.reference,
+                    launch: .init(
+                        noWindow: command.noWindow,
+                        recoveryMode: command.recoveryMode,
+                        shareCurrentWorkingDirectory: command.shareCWD
+                    )
+                )
+            )
         }
     }
 

@@ -90,7 +90,7 @@ final class DefaultBuildInteractor: BuildInteractor {
                 ))
 
                 // Load VM
-                let vm = try configurator.loadVM(with: bundle)
+                let vm = try configurator.loadVM(with: bundle, overrideConfig: nil)
 
                 // Install VM image
                 try await installer.install(vm: vm, restoreImagePath: restoreImagePath)

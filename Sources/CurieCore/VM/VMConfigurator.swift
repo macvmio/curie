@@ -12,7 +12,7 @@ struct VMSpec {
 
 protocol VMConfigurator {
     func createVM(with bundle: VMBundle, spec: VMSpec) async throws
-    func loadVM(with bundle: VMBundle) throws -> VM
+    func loadVM(with bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VM
 }
 
 final class DefaultVMConfigurator: VMConfigurator {
@@ -58,8 +58,8 @@ final class DefaultVMConfigurator: VMConfigurator {
         try createPlatformConfiguration(bundle: bundle, restoreImage: restoreImage)
     }
 
-    func loadVM(with bundle: VMBundle) throws -> VM {
-        let config = try bundleParser.readConfig(from: bundle)
+    func loadVM(with bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VM {
+        let config = try bundleParser.readConfig(from: bundle, overrideConfig: overrideConfig)
         let metadata = try bundleParser.readMetadata(from: bundle)
         let vm = try VZVirtualMachine(configuration: makeConfiguration(bundle: bundle, config: config))
         return VM(
@@ -83,6 +83,7 @@ final class DefaultVMConfigurator: VMConfigurator {
         configuration.memorySize = config.memorySize.bytes
         configuration.graphicsDevices = prepareGraphicsDeviceConfigurations(config: config)
         configuration.storageDevices = try prepareStorageDeviceConfigurations(with: bundle)
+        configuration.directorySharingDevices = try prepareDirectorySharingDevices(config: config)
         configuration.networkDevices = try prepareNetworkDeviceConfigurations(with: bundle, config: config)
         configuration.pointingDevices = preparePointingDeviceConfigurations()
         configuration.keyboards = prepareKeyboardConfigurations()
@@ -112,6 +113,24 @@ final class DefaultVMConfigurator: VMConfigurator {
         -> [VZStorageDeviceConfiguration] {
         let diskImageAttachment = try VZDiskImageStorageDeviceAttachment(url: bundle.diskImage.asURL, readOnly: false)
         return [VZVirtioBlockDeviceConfiguration(attachment: diskImageAttachment)]
+    }
+
+    private func prepareDirectorySharingDevices(config: VMConfig) throws -> [VZDirectorySharingDeviceConfiguration] {
+        let configuration = VZVirtioFileSystemDeviceConfiguration(tag: "curie")
+
+        let directories = config.sharedDirectory.directories.map { directory in
+            switch directory {
+            case let .currentWorkingDirectory(options):
+                let currentWorkingDirectoryURL = fileSystem.currentWorkingDirectory.asURL
+                let sharedDirectory = VZSharedDirectory(url: currentWorkingDirectoryURL, readOnly: options.readOnly)
+                return (options.name, sharedDirectory)
+            }
+        }
+        let directoriesDictionary = Dictionary(directories, uniquingKeysWith: { first, _ in first })
+        let share = VZMultipleDirectoryShare(directories: directoriesDictionary)
+
+        configuration.share = share
+        return [configuration]
     }
 
     private func prepareNetworkDeviceConfigurations(
