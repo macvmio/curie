@@ -46,7 +46,7 @@ public final class DefaultStartInteractor: StartInteractor {
         let sourceReference = try imageCache.findContainerReference(context.reference)
 
         let bundle = VMBundle(path: imageCache.path(to: sourceReference))
-        let overrideConfig = context.launch.partialConfig()
+        let overrideConfig = try context.launch.partialConfig()
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
             startUpFromMacOSRecovery: context.launch.recoveryMode,

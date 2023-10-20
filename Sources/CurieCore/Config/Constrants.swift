@@ -9,7 +9,7 @@ public enum Constants {
     static let defaultConfig = VMConfig(
         cpuCount: 4,
         memorySize: .init(bytes: 4 * 1024 * 1024 * 1024),
-        display: .init(width: 1920, height: 1080, pixelsPerInch: 80),
+        display: .init(width: 1920, height: 1080, pixelsPerInch: 144),
         network: .init(devices: [
             .init(macAddress: .automatic, mode: .NAT),
         ]),

@@ -153,7 +153,7 @@ Config:
   display:
     width: 1920px
     height: 1080px
-    pixelsPerInch: 80
+    pixelsPerInch: 144
   network:
     devices:
       index: 0
@@ -182,8 +182,8 @@ Example:
   },
   "display" : {
     "width" : 1920,
-    "pixelsPerInch" : 80,
-    "height" : 1080
+    "height" : 1080,
+    "pixelsPerInch" : 144
   },
   "sharedDirectory": {
     "directories": [
