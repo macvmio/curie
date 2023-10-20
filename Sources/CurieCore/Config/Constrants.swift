@@ -12,6 +12,7 @@ public enum Constants {
         display: .init(width: 1920, height: 1080, pixelsPerInch: 80),
         network: .init(devices: [
             .init(macAddress: .automatic, mode: .NAT),
-        ])
+        ]),
+        sharedDirectory: .init(directories: [])
     )
 }

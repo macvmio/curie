@@ -36,6 +36,9 @@ extension VMMetadata: CustomStringConvertible {
 extension [Int: VMMetadata.NetworkDevice] {
     var description: String {
         let prefix = "      "
+        guard !isEmpty else {
+            return "\(prefix)N/A"
+        }
         return sorted { $0.key < $1.key }.map { index, value in
             """
             \(prefix)index: \(index)

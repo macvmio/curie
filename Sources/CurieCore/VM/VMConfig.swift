@@ -14,6 +14,23 @@ public struct VMPartialConfig: Equatable, Codable {
     var memorySize: VMConfig.MemoryConfig?
     var display: DisplayPartialConfig?
     var network: VMConfig.NetworkConfig?
+    var sharedDirectory: VMConfig.SharedDirectoryConfig?
+
+    func merge(config: VMPartialConfig) -> VMPartialConfig {
+        let network = VMConfig.NetworkConfig(devices: (config.network?.devices ?? []) + (network?.devices ?? []))
+        let sharedDirectory: VMConfig.SharedDirectoryConfig = .init(
+            directories:
+            (config.sharedDirectory?.directories ?? []) + (sharedDirectory?.directories ?? [])
+        )
+
+        return .init(
+            cpuCount: config.cpuCount ?? cpuCount,
+            memorySize: config.memorySize ?? memorySize,
+            display: config.display ?? display,
+            network: network,
+            sharedDirectory: sharedDirectory
+        )
+    }
 }
 
 public struct VMConfig: Equatable, Codable {
@@ -120,10 +137,29 @@ public struct VMConfig: Equatable, Codable {
         var devices: [Device]
     }
 
+    struct SharedDirectoryConfig: Equatable, Codable {
+        struct CurrentWorkingDirectoryOptions: Equatable, Codable {
+            let name: String
+            let readOnly: Bool
+
+            init(name: String = "cwd", readOnly _: Bool = false) {
+                self.name = name
+                readOnly = false
+            }
+        }
+
+        enum Directory: Equatable, Codable {
+            case currentWorkingDirectory(options: CurrentWorkingDirectoryOptions)
+        }
+
+        var directories: [Directory]
+    }
+
     var cpuCount: Int
     var memorySize: MemorySize
     var display: DisplayConfig
     var network: NetworkConfig
+    var sharedDirectory: SharedDirectoryConfig
 }
 
 extension VMConfig: CustomStringConvertible {
@@ -139,6 +175,9 @@ extension VMConfig: CustomStringConvertible {
           network:
             devices:
         \(network.devices.description)
+          sharedDirectory:
+            directories:
+        \(sharedDirectory.directories.description)
         """
     }
 }
@@ -146,12 +185,34 @@ extension VMConfig: CustomStringConvertible {
 extension [VMConfig.NetworkConfig.Device] {
     var description: String {
         let prefix = "      "
+        guard !isEmpty else {
+            return "\(prefix)N/A"
+        }
         return enumerated().map { index, value in
             """
             \(prefix)index: \(index)
             \(prefix)macAddress: \(value.macAddress)
             \(prefix)mode: \(value.mode)
             """
+        }.joined(separator: "\n\n")
+    }
+}
+
+extension [VMConfig.SharedDirectoryConfig.Directory] {
+    var description: String {
+        let prefix = "      "
+        guard !isEmpty else {
+            return "\(prefix)N/A"
+        }
+        return enumerated().map { _, value in
+            switch value {
+            case let .currentWorkingDirectory(options: options):
+                """
+                \(prefix)type: currentWorkingDirectory
+                \(prefix)name: \(options.name)
+                \(prefix)readOnly: \(options.readOnly)
+                """
+            }
         }.joined(separator: "\n\n")
     }
 }

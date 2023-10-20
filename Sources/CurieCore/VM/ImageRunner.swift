@@ -27,7 +27,10 @@ final class DefaultImageRunner: ImageRunner {
     }
 
     func run(vm: VM, bundle: VMBundle, options: VMStartOptions) throws {
-        let info = try bundleParser.readInfo(from: bundle)
+        let info = try VMInfo(
+            config: vm.config,
+            metadata: bundleParser.readMetadata(from: bundle)
+        )
         console.text(info.description)
 
         // Automatically start the vm

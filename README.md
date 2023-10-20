@@ -185,6 +185,18 @@ Example:
     "pixelsPerInch" : 80,
     "height" : 1080
   },
+  "sharedDirectory": {
+    "directories": [
+      {
+        "currentWorkingDirectory": {
+          "options": {
+            "name": "cwd",
+            "readOnly": false
+          }
+        }
+      }
+    ]
+  },
   "name" : "Test VM",
   "memorySize" : "8 GB"
 }
@@ -217,6 +229,17 @@ Currently we only support `NAT` interfaces. Each interface can have MAC address 
 * `"automatic"` - Virtualization Framework will transparently assign new MAC address
 * `"synthesized"` - Curie will automatically generate unique MAC address per `run` or `start` operation (both MAC and IP address can be found using `curie inspect` command)
 * e.g. `"6e:7e:67:0c:93:65"` - manual MAC address
+
+### Shared directories
+
+Currently we only support `currentWorkingDirectory` as such the host will share the current working directory with the guest. Once launched, the guest will be able to mount the directory.
+
+```sh
+# mounting the shared directory
+
+mkdir -p shared # you can pick up different name
+mount -t virtiofs curie shared
+```
 
 ## Development
 
