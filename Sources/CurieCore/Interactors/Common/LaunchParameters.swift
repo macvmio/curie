@@ -37,8 +37,8 @@ public struct LaunchParameters {
             throw CoreError.generic("Failed to identify the main screen")
         }
         return .init(
-            width: Int(frame.frame.width),
-            height: Int(frame.frame.height),
+            width: Int(frame.frame.width * frame.backingScaleFactor),
+            height: Int(frame.frame.height * frame.backingScaleFactor),
             pixelsPerInch: Int(frame.dpi.width)
         )
     }
