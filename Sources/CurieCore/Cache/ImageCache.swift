@@ -7,6 +7,11 @@ enum Target {
     case newReference
 }
 
+enum ExportMode {
+    case normal
+    case compressed
+}
+
 struct ImageItem: Equatable {
     var reference: ImageReference
     var createAt: Date
@@ -27,6 +32,8 @@ protocol ImageCache {
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference
     func moveImage(source: ImageReference, target: ImageReference) throws
     func path(to reference: ImageReference) -> AbsolutePath
+
+    func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws
 }
 
 final class DefaultImageCache: ImageCache {
@@ -130,6 +137,26 @@ final class DefaultImageCache: ImageCache {
 
     func path(to reference: ImageReference) -> AbsolutePath {
         storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
+    }
+
+    func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws {
+        let sourceAbsolutePath = path(to: source)
+
+        switch mode {
+        case .normal:
+            let targetAbsolutePath = try fileSystem.absolutePath(from: destinationPath)
+            if fileSystem.exists(at: targetAbsolutePath) {
+                guard try fileSystem.list(at: targetAbsolutePath).isEmpty else {
+                    throw CoreError.generic("Failed to export image, directory at \(targetAbsolutePath) isn't empty")
+                }
+            }
+            if !fileSystem.exists(at: targetAbsolutePath.parentDirectory) {
+                try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
+            }
+            try fileSystem.copy(from: sourceAbsolutePath, to: targetAbsolutePath)
+        case .compressed:
+            throw CoreError.generic("Compression not supported yet")
+        }
     }
 
     // MARK: - Private
