@@ -13,14 +13,17 @@ struct StartCommand: Command {
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
-    @Flag(help: "Do not create window.")
+    @Flag(name: .shortAndLong, help: "Do not create window.")
     var noWindow: Bool = false
 
-    @Flag(help: "Start in recovery mode.")
+    @Flag(name: .shortAndLong, help: "Start in recovery mode.")
     var recoveryMode: Bool = false
 
-    @Flag(help: "Share current working directory with the guest.")
+    @Flag(name: .shortAndLong, help: "Share current working directory with the guest.")
     var shareCWD: Bool = false
+
+    @Flag(name: .shortAndLong, help: "Use main screen resolution.")
+    var mainScreenResolution: Bool = false
 
     final class Executor: CommandExecutor {
         private let interactor: StartInteractor
@@ -37,6 +40,7 @@ struct StartCommand: Command {
                     reference: command.reference,
                     launch: .init(
                         noWindow: command.noWindow,
+                        mainScreenResolution: command.mainScreenResolution,
                         recoveryMode: command.recoveryMode,
                         shareCurrentWorkingDirectory: command.shareCWD
                     )

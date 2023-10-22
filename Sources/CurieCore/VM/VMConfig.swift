@@ -87,7 +87,7 @@ public struct VMConfig: Equatable, Codable {
 
         static let minWidth = 640
         static let minHeight = 480
-        static let minPixelsPerInch = 80
+        static let minPixelsPerInch = 72
 
         var width: Int
         var height: Int
