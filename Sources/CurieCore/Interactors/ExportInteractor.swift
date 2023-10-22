@@ -32,10 +32,14 @@ public final class DefaultExportInteractor: ExportInteractor {
     public func execute(with context: ExportInteractorContext) throws {
         let reference = try imageCache.findImageReference(context.reference)
 
+        if context.compress {
+            console.text("Compressing... (might take several minutes)")
+        }
+
         try imageCache.exportImage(
             source: reference,
             destinationPath: context.path,
-            mode: .normal
+            mode: context.compress ? .compress : .raw
         )
 
         console.text("Image has been exported")

@@ -50,7 +50,15 @@ public final class MockFileSystem: CurieCommon.FileSystem {
         fatalError("Not implemented yet")
     }
 
-    public func executable(at _: TSCBasic.AbsolutePath) -> Bool {
+    public func isExecutable(at _: TSCBasic.AbsolutePath) -> Bool {
+        fatalError("Not implemented yet")
+    }
+
+    public func isFile(at _: TSCBasic.AbsolutePath) -> Bool {
+        fatalError("Not implemented yet")
+    }
+
+    public func isDirectory(at _: TSCBasic.AbsolutePath) -> Bool {
         fatalError("Not implemented yet")
     }
 

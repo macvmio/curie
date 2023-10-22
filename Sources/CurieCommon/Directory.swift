@@ -20,7 +20,7 @@ public final class TemporaryDirectory: Directory {
     private let fileManager = FileManager.default
 
     init() throws {
-        let path = try determineTempDirectory(nil).appending(RelativePath("ipalint.XXXXXX"))
+        let path = try determineTempDirectory(nil).appending(RelativePath("curie.XXXXXX"))
 
         // Convert path to a C style string terminating with null char to be an valid input
         // to mkdtemp method. The XXXXXX in this string will be replaced by a random string

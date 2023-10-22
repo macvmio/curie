@@ -110,6 +110,12 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(ImportInteractor.self) { r in
+            DefaultImportInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
