@@ -31,7 +31,11 @@ public protocol FileSystem {
 
     func createDirectory(at path: AbsolutePath) throws
 
-    func executable(at path: AbsolutePath) -> Bool
+    func isExecutable(at path: AbsolutePath) -> Bool
+
+    func isFile(at path: AbsolutePath) -> Bool
+
+    func isDirectory(at path: AbsolutePath) -> Bool
 
     func makeTemporaryDirectory() throws -> TemporaryDirectory
 
@@ -98,8 +102,20 @@ final class DefaultFileSystem: FileSystem {
         try fileManager.createDirectory(at: path.asURL, withIntermediateDirectories: true)
     }
 
-    func executable(at path: AbsolutePath) -> Bool {
+    func isExecutable(at path: AbsolutePath) -> Bool {
         fileManager.isExecutableFile(atPath: path.pathString)
+    }
+
+    func isFile(at path: AbsolutePath) -> Bool {
+        var directory: ObjCBool = false
+        let exists = fileManager.fileExists(atPath: path.pathString, isDirectory: &directory)
+        return exists && !directory.boolValue
+    }
+
+    func isDirectory(at path: AbsolutePath) -> Bool {
+        var directory: ObjCBool = false
+        let exists = fileManager.fileExists(atPath: path.pathString, isDirectory: &directory)
+        return exists && directory.boolValue
     }
 
     func makeTemporaryDirectory() throws -> TemporaryDirectory {

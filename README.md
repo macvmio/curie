@@ -95,6 +95,21 @@ Example output:
 curie clone myteam/myimage/test-image:1.0 myteam/myimage/test-image:1.1
 ```
 
+#### Export an image
+
+```sh
+curie export a8302cc3e913 -p test-image-2.4.zip -c
+
+# or without compression
+curie export a8302cc3e913 -p test-image-2.4
+```
+
+#### Import an image
+
+```sh
+curie import myteam/myimage/test-image:2.4 -p test-image-2.4.zip
+```
+
 #### Start an ephemeral container
 
 The container will be deleted after it is closed.

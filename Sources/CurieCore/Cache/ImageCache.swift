@@ -7,6 +7,11 @@ enum Target {
     case newReference
 }
 
+enum ExportMode {
+    case raw
+    case compress
+}
+
 struct ImageItem: Equatable {
     var reference: ImageReference
     var createAt: Date
@@ -27,6 +32,9 @@ protocol ImageCache {
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference
     func moveImage(source: ImageReference, target: ImageReference) throws
     func path(to reference: ImageReference) -> AbsolutePath
+
+    func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws
+    func importImage(sourcePath: String, reference: String) throws
 }
 
 final class DefaultImageCache: ImageCache {
@@ -130,6 +138,68 @@ final class DefaultImageCache: ImageCache {
 
     func path(to reference: ImageReference) -> AbsolutePath {
         storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
+    }
+
+    func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws {
+        let sourceAbsolutePath = path(to: source)
+        let targetAbsolutePath = try fileSystem.absolutePath(from: destinationPath)
+        if fileSystem.exists(at: targetAbsolutePath) {
+            guard try fileSystem.list(at: targetAbsolutePath).isEmpty else {
+                throw CoreError.generic("Failed to export image, directory at \(targetAbsolutePath) isn't empty")
+            }
+        }
+
+        if !fileSystem.exists(at: targetAbsolutePath.parentDirectory) {
+            try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
+        }
+
+        switch mode {
+        case .raw:
+            try fileSystem.copy(from: sourceAbsolutePath, to: targetAbsolutePath)
+        case .compress:
+            try system.execute(
+                ["zip", "-rjq", targetAbsolutePath.pathString, sourceAbsolutePath.pathString, "-x", ".DS_Store"]
+            )
+        }
+    }
+
+    func importImage(sourcePath: String, reference: String) throws {
+        defer {
+            _ = try? removeEmptySubdirectories(of: imagesAbsolutePath)
+        }
+
+        let sourceAbsolutePath = try fileSystem.absolutePath(from: sourcePath)
+
+        guard fileSystem.exists(at: sourceAbsolutePath) else {
+            throw CoreError.generic("Failed to import image, exported image at \(sourcePath) does not exist")
+        }
+
+        let targetReference = try makeImageReference(reference)
+        let targetAbsolutePath = path(to: targetReference)
+
+        try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
+
+        let sourceImageAbsolutePath: AbsolutePath
+        let temporaryDirectory = try fileSystem.makeTemporaryDirectory()
+
+        if fileSystem.isFile(at: sourceAbsolutePath) {
+            try system.execute(
+                ["unzip", "-q", sourceAbsolutePath.pathString, "-d", temporaryDirectory.path.pathString]
+            )
+            sourceImageAbsolutePath = temporaryDirectory.path
+        } else {
+            sourceImageAbsolutePath = sourceAbsolutePath
+        }
+
+        let bundle = VMBundle(path: sourceImageAbsolutePath)
+        let metadata = try bundleParser.readMetadata(from: bundle)
+        let existingImage = try listImages().first { $0.reference.id == metadata.id }
+        guard existingImage == nil else {
+            throw CoreError
+                .generic("Failed to import image, image with \(metadata.id) identifier already exists")
+        }
+
+        try fileSystem.copy(from: sourceImageAbsolutePath, to: targetAbsolutePath)
     }
 
     // MARK: - Private
