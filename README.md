@@ -247,13 +247,33 @@ Currently we only support `NAT` interfaces. Each interface can have MAC address 
 
 ### Shared directories
 
-Currently we only support `currentWorkingDirectory` as such the host will share the current working directory with the guest. Once launched, the guest will be able to mount the directory.
+#### Sharing current working directory
+
+Use `-s, --share-cwd` to share current working directory with the guest OS.
+
+#### Mounting shared directories
+
+A shared directory is automatically mounted via `/Volumes/My Shared Files` unless "automount" is disable via `config.json`, e.g.
+
+```json
+{
+  "sharedDirectory" : {
+    "directories" : [],
+    "automount" : false
+  }
+}
+```
+
+If `automount` is set to `false`, the volume `curie` will need to be mounted manually, e.g.
 
 ```sh
-# mounting the shared directory
-
+# mounting shared directory
 mkdir -p shared # you can pick up different name
 mount -t virtiofs curie shared
+
+# or
+mkdir -p shared
+mount_virtiofs curie shared
 ```
 
 ## Development
