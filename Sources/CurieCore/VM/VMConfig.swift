@@ -142,14 +142,27 @@ public struct VMConfig: Equatable, Codable {
             let name: String
             let readOnly: Bool
 
-            init(name: String = "cwd", readOnly _: Bool = false) {
+            init(name: String = "cwd", readOnly: Bool = false) {
                 self.name = name
-                readOnly = false
+                self.readOnly = readOnly
+            }
+        }
+
+        struct DirectoryOptions: Equatable, Codable {
+            let path: String
+            let name: String
+            let readOnly: Bool
+
+            init(path: String, name: String, readOnly: Bool = false) {
+                self.path = path
+                self.name = name
+                self.readOnly = readOnly
             }
         }
 
         enum Directory: Equatable, Codable {
             case currentWorkingDirectory(options: CurrentWorkingDirectoryOptions)
+            case directory(options: DirectoryOptions)
         }
 
         var automount: Bool?
@@ -211,6 +224,13 @@ extension [VMConfig.SharedDirectoryConfig.Directory] {
             case let .currentWorkingDirectory(options: options):
                 """
                 \(prefix)type: currentWorkingDirectory
+                \(prefix)name: \(options.name)
+                \(prefix)readOnly: \(options.readOnly)
+                """
+            case let .directory(options: options):
+                """
+                \(prefix)type: directory
+                \(prefix)path: \(options.path)
                 \(prefix)name: \(options.name)
                 \(prefix)readOnly: \(options.readOnly)
                 """

@@ -247,11 +247,34 @@ Currently we only support `NAT` interfaces. Each interface can have MAC address 
 
 ### Shared directories
 
-#### Sharing current working directory
+#### Share current working directory
 
 Use `-s, --share-cwd` to share current working directory with the guest OS.
 
-#### Mounting shared directories
+#### Share an arbitrary directory
+
+Add the directory descriptor to `config.json`, e.g.
+
+```json
+{
+ "sharedDirectory" : {
+    "directories" : [
+      {
+        "directory": {
+          "options": {
+            "path": "/Users/marcin/shared-directory",
+            "name": "shared-directory",
+            "readOnly": false
+          }
+        }
+      }
+    ],
+    "automount" : true
+  }
+}
+```
+
+#### Mount shared directories
 
 A shared directory is automatically mounted via `/Volumes/My Shared Files` unless "automount" is disable via `config.json`, e.g.
 
