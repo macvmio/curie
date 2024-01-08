@@ -127,6 +127,10 @@ final class DefaultVMConfigurator: VMConfigurator {
                 let currentWorkingDirectoryURL = fileSystem.currentWorkingDirectory.asURL
                 let sharedDirectory = VZSharedDirectory(url: currentWorkingDirectoryURL, readOnly: options.readOnly)
                 return (options.name, sharedDirectory)
+            case let .directory(options):
+                let url = URL(fileURLWithPath: options.path)
+                let sharedDirectory = VZSharedDirectory(url: url, readOnly: options.readOnly)
+                return (options.name, sharedDirectory)
             }
         }
         let directoriesDictionary = Dictionary(directories, uniquingKeysWith: { first, _ in first })
