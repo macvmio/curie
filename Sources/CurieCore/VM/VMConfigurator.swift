@@ -116,7 +116,10 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     private func prepareDirectorySharingDevices(config: VMConfig) throws -> [VZDirectorySharingDeviceConfiguration] {
-        let configuration = VZVirtioFileSystemDeviceConfiguration(tag: "curie")
+        let automount = config.sharedDirectory.automount ?? true
+        let configuration = VZVirtioFileSystemDeviceConfiguration(
+            tag: automount ? VZVirtioFileSystemDeviceConfiguration.macOSGuestAutomountTag : "curie"
+        )
 
         let directories = config.sharedDirectory.directories.map { directory in
             switch directory {

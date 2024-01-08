@@ -19,8 +19,8 @@ public struct VMPartialConfig: Equatable, Codable {
     func merge(config: VMPartialConfig) -> VMPartialConfig {
         let network = VMConfig.NetworkConfig(devices: (config.network?.devices ?? []) + (network?.devices ?? []))
         let sharedDirectory: VMConfig.SharedDirectoryConfig = .init(
-            directories:
-            (config.sharedDirectory?.directories ?? []) + (sharedDirectory?.directories ?? [])
+            automount: config.sharedDirectory?.automount ?? sharedDirectory?.automount,
+            directories: (config.sharedDirectory?.directories ?? []) + (sharedDirectory?.directories ?? [])
         )
 
         return .init(
@@ -152,6 +152,7 @@ public struct VMConfig: Equatable, Codable {
             case currentWorkingDirectory(options: CurrentWorkingDirectoryOptions)
         }
 
+        var automount: Bool?
         var directories: [Directory]
     }
 
@@ -176,6 +177,7 @@ extension VMConfig: CustomStringConvertible {
             devices:
         \(network.devices.description)
           sharedDirectory:
+            automount: \(sharedDirectory.automount?.description ?? "undefined")
             directories:
         \(sharedDirectory.directories.description)
         """
