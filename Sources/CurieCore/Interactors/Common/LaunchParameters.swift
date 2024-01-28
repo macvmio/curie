@@ -26,7 +26,8 @@ public struct LaunchParameters {
     func partialConfig() throws -> VMPartialConfig {
         try .init(
             display: prepareDisplay(),
-            sharedDirectory: prepareSharedDirectory()
+            sharedDirectory: prepareSharedDirectory(),
+            shutdown: prepareShutdown()
         )
     }
 
@@ -54,6 +55,6 @@ public struct LaunchParameters {
     }
 
     private func prepareShutdown() -> VMConfig.ShutdownConfig? {
-        .init(behaviour: pauseOnExit ? .pause : .exit)
+        .init(behaviour: pauseOnExit ? .pause : .stop)
     }
 }

@@ -14,6 +14,6 @@ public enum Constants {
             .init(macAddress: .automatic, mode: .NAT),
         ]),
         sharedDirectory: .init(directories: []),
-        shutdown: .init(behaviour: .exit)
+        shutdown: .init(behaviour: .stop)
     )
 }

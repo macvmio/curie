@@ -10,6 +10,7 @@ final class DefaultImageRunner: ImageRunner {
     private let imageCache: ImageCache
     private let bundleParser: VMBundleParser
     private let system: System
+    private let fileSystem: FileSystem
     private let console: Console
 
     init(
@@ -17,12 +18,14 @@ final class DefaultImageRunner: ImageRunner {
         imageCache: ImageCache,
         bundleParser: VMBundleParser,
         system: System,
+        fileSystem: FileSystem,
         console: Console
     ) {
         self.windowAppLauncher = windowAppLauncher
         self.imageCache = imageCache
         self.bundleParser = bundleParser
         self.system = system
+        self.fileSystem = fileSystem
         self.console = console
     }
 
@@ -33,40 +36,51 @@ final class DefaultImageRunner: ImageRunner {
         )
         console.text(info.description)
 
-        // Automatically start the vm
-        vm.start(options: options) { [console] result in
-            switch result {
-            case .success:
-                console.text("Container \(info.metadata.id.description) started")
-            case let .failure(error):
-                console.error("Failed to start container. \(error)")
+        // Resume or start
+        if fileSystem.exists(at: bundle.machineState) {
+            vm.resume(machineStateURL: bundle.machineState.asURL) { [console] result in
+                switch result {
+                case .success:
+                    console.text("Container \(info.metadata.id.description) started")
+                case let .failure(error):
+                    console.error("Failed to start container. \(error)")
+                }
+            }
+        } else {
+            vm.start(options: options) { [console] result in
+                switch result {
+                case .success:
+                    console.text("Container \(info.metadata.id.description) started")
+                case let .failure(error):
+                    console.error("Failed to start container. \(error)")
+                }
             }
         }
 
         // Launch interface
         if options.noWindow {
             console.text("Launch container without a window")
-            launchConsole(with: vm)
+            launchConsole(with: vm, bundle: bundle)
         } else {
             console.text("Launch container in a window")
-            launchWindow(with: vm)
+            launchWindow(with: vm, bundle: bundle)
         }
     }
 
-    private func launchConsole(with vm: VM) {
+    private func launchConsole(with vm: VM, bundle: VMBundle) {
         withExtendedLifetime(vm) { _ in
             system.keepAliveWithSIGINTEventHandler { exit in
-                vm.exit(exit: exit)
+                vm.exit(machineStateURL: bundle.machineState.asURL, exit: exit)
             }
         }
     }
 
-    private func launchWindow(with vm: VM) {
+    private func launchWindow(with vm: VM, bundle: VMBundle) {
         let sourceSignal = system.SIGINTEventHandler { exit in
-            vm.exit(exit: exit)
+            vm.exit(machineStateURL: bundle.machineState.asURL, exit: exit)
         }
         vm.addSourceSignal(sourceSignal)
 
-        windowAppLauncher.launchWindow(with: vm)
+        windowAppLauncher.launchWindow(with: vm, bundle: bundle)
     }
 }

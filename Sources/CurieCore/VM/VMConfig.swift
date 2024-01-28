@@ -173,7 +173,7 @@ public struct VMConfig: Equatable, Codable {
 
     struct ShutdownConfig: Equatable, Codable {
         enum ShutdownBehaviour: Equatable, Codable {
-            case exit
+            case stop
             case pause
         }
 
@@ -256,7 +256,7 @@ extension [VMConfig.SharedDirectoryConfig.Directory] {
 extension VMConfig.ShutdownConfig.ShutdownBehaviour: CustomStringConvertible {
     var description: String {
         switch self {
-        case .exit:
+        case .stop:
             return "exit"
         case .pause:
             return "pause"

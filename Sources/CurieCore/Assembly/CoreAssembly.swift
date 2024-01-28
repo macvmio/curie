@@ -160,6 +160,7 @@ public final class CoreAssembly: Assembly {
                 imageCache: r.resolve(ImageCache.self),
                 bundleParser: r.resolve(VMBundleParser.self),
                 system: r.resolve(System.self),
+                fileSystem: r.resolve(FileSystem.self),
                 console: r.resolve(Console.self)
             )
         }
