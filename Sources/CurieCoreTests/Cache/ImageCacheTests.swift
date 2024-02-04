@@ -45,7 +45,7 @@ final class ImageCacheTests: XCTestCase {
         subject = nil
     }
 
-    func test_makeImageReference_onlyRepository() throws {
+    func testMakeImageReference_onlyRepository() throws {
         // When
         let result = try subject.makeImageReference(anyReference)
 
@@ -55,7 +55,7 @@ final class ImageCacheTests: XCTestCase {
         XCTAssertEqual(result.type, .image)
     }
 
-    func test_makeImageReference_repositoryAndTag() throws {
+    func testMakeImageReference_repositoryAndTag() throws {
         // When
         let result = try subject.makeImageReference("\(anyReference):\(anyTag)")
 
@@ -65,7 +65,7 @@ final class ImageCacheTests: XCTestCase {
         XCTAssertEqual(result.type, .image)
     }
 
-    func test_findReference_notFound() throws {
+    func testFindReference_notFound() throws {
         // When / Then
         XCTAssertThrowsError(try subject.findReference(anyReference)) { error in
             let coreError = error as? CoreError
@@ -73,7 +73,7 @@ final class ImageCacheTests: XCTestCase {
         }
     }
 
-    func test_findContainerReference_notFound() throws {
+    func testFindContainerReference_notFound() throws {
         // When / Then
         XCTAssertThrowsError(try subject.findContainerReference(anyReference)) { error in
             let coreError = error as? CoreError
@@ -81,7 +81,7 @@ final class ImageCacheTests: XCTestCase {
         }
     }
 
-    func test_findImageReference_notFound() throws {
+    func testFindImageReference_notFound() throws {
         // When / Then
         XCTAssertThrowsError(try subject.findImageReference(anyReference)) { error in
             let coreError = error as? CoreError
@@ -89,7 +89,7 @@ final class ImageCacheTests: XCTestCase {
         }
     }
 
-    func test_findImageReference_repositoryAndTag() throws {
+    func testFindImageReference_repositoryAndTag() throws {
         // Given
         try importAnyImage(reference: "test/image1:1.0")
         try importAnyImage(reference: "test/image1:1.2")
@@ -102,7 +102,7 @@ final class ImageCacheTests: XCTestCase {
         XCTAssertEqual(result.type, .image)
     }
 
-    func test_listImages_noImages() throws {
+    func testListImages_noImages() throws {
         // Given
         try importAnyImage(reference: "test/image1:1.0")
         try importAnyImage(reference: "test/image1:1.2")
@@ -135,17 +135,17 @@ final class ImageCacheTests: XCTestCase {
         ])
     }
 
-    func test_listImages_someImages() throws {
+    func testListImages_someImages() throws {
         // When / Then
         XCTAssertEqual(try subject.listImages(), [])
     }
 
-    func test_listContainers_noContainers() throws {
+    func testListContainers_noContainers() throws {
         // When / Then
         XCTAssertEqual(try subject.listContainers(), [])
     }
 
-    func test_importImage() throws {
+    func testLmportImage() throws {
         // Given
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
         let expectedBundlePath = environment.homeDirectory.appending(RelativePath(".curie/images/\(anyReference)"))
