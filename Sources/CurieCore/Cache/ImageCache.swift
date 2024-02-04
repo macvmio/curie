@@ -215,6 +215,7 @@ final class DefaultImageCache: ImageCache {
                 name: metadata.name
             )
         }
+        .sorted { $0.reference.id < $1.reference.id }
         return items
     }
 

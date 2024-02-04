@@ -73,6 +73,7 @@ public final class Fixtures {
     }
 
     private let fileManager = FileManager.default
+    private var lastImageId = 1
 
     public init() {}
 
@@ -129,9 +130,9 @@ public final class Fixtures {
               }
             }
           },
-          "id" : "a8302cc3e913",
+          "id" : "\(makeImageId())",
           "name" : "metadata-name",
-          "createdAt" : "2023-09-25T21:53:14Z"
+          "createdAt" : "0001-01-01T00:00:00Z"
         }
         """
     }
@@ -152,5 +153,11 @@ public final class Fixtures {
         } catch {
             throw CoreError.generic(error.localizedDescription)
         }
+    }
+
+    private func makeImageId() -> String {
+        let id = lastImageId
+        lastImageId += 1
+        return id.description
     }
 }

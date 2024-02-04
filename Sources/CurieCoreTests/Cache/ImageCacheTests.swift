@@ -20,6 +20,7 @@ final class ImageCacheTests: XCTestCase {
         fixtures = Fixtures()
         environment = try FileSystemEnvironment.make()
         wallClock = MockWallClock()
+        wallClock.mockNow = .distantPast
         fileSystem = DefaultFileSystem(config: .init(overrides: .init(
             currentWorkingDirectory: environment.currentWorkingDirectory,
             homeDirectory: environment.homeDirectory
@@ -88,7 +89,53 @@ final class ImageCacheTests: XCTestCase {
         }
     }
 
+    func test_findImageReference_repositoryAndTag() throws {
+        // Given
+        try importAnyImage(reference: "test/image1:1.0")
+        try importAnyImage(reference: "test/image1:1.2")
+
+        // When
+        let result = try subject.findImageReference("test/image1:1.2")
+
+        // Then
+        XCTAssertEqual(result.descriptor, .init(repository: "test/image1", tag: "1.2"))
+        XCTAssertEqual(result.type, .image)
+    }
+
     func test_listImages_noImages() throws {
+        // Given
+        try importAnyImage(reference: "test/image1:1.0")
+        try importAnyImage(reference: "test/image1:1.2")
+
+        // When
+        let results = try subject.listImages()
+
+        // Then
+        XCTAssertEqual(results, [
+            .init(
+                reference: .init(
+                    id: .init(rawValue: "1"),
+                    descriptor: .init(repository: "test/image1", tag: "1.0"),
+                    type: .image
+                ),
+                createAt: wallClock.now(),
+                size: .init(string: "543 B")!,
+                name: "metadata-name"
+            ),
+            .init(
+                reference: .init(
+                    id: .init(rawValue: "2"),
+                    descriptor: .init(repository: "test/image1", tag: "1.2"),
+                    type: .image
+                ),
+                createAt: wallClock.now(),
+                size: .init(string: "543 B")!,
+                name: "metadata-name"
+            ),
+        ])
+    }
+
+    func test_listImages_someImages() throws {
         // When / Then
         XCTAssertEqual(try subject.listImages(), [])
     }
@@ -131,6 +178,11 @@ final class ImageCacheTests: XCTestCase {
 
     private var anyTag: String {
         "1.0.0"
+    }
+
+    private func importAnyImage(reference: String) throws {
+        let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
+        try subject.importImage(sourcePath: bundle.path.pathString, reference: reference)
     }
 }
 

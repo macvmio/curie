@@ -13,7 +13,7 @@ struct ImageID: Hashable, CustomStringConvertible, Codable {
         rawValue = try container.decode(String.self)
     }
 
-    private init(rawValue: String) {
+    init(rawValue: String) {
         self.rawValue = rawValue
     }
 
@@ -32,5 +32,11 @@ struct ImageID: Hashable, CustomStringConvertible, Codable {
 
     var description: String {
         rawValue
+    }
+}
+
+extension ImageID: Comparable {
+    static func < (lhs: ImageID, rhs: ImageID) -> Bool {
+        lhs.rawValue < rhs.rawValue
     }
 }
