@@ -53,18 +53,30 @@ public protocol FileSystem {
 }
 
 final class DefaultFileSystem: FileSystem {
-    private let fileManager = FileManager.default
+    struct Config {
+        struct Overrides {
+            var currentWorkingDirectory: AbsolutePath?
+            var homeDirectory: AbsolutePath?
+        }
 
-    init() {}
+        var overrides: Overrides = .init()
+    }
+
+    private let fileManager = FileManager.default
+    private let config: Config
+
+    init(config: Config = .init()) {
+        self.config = config
+    }
 
     var currentWorkingDirectory: AbsolutePath {
         // swiftlint:disable:next force_try
-        try! AbsolutePath(validating: fileManager.currentDirectoryPath)
+        try! config.overrides.currentWorkingDirectory ?? AbsolutePath(validating: fileManager.currentDirectoryPath)
     }
 
     var homeDirectory: AbsolutePath {
         // swiftlint:disable:next force_try
-        try! AbsolutePath(validating: fileManager.homeDirectoryForCurrentUser.path())
+        try! config.overrides.homeDirectory ?? AbsolutePath(validating: fileManager.homeDirectoryForCurrentUser.path())
     }
 
     func exists(at path: AbsolutePath) -> Bool {

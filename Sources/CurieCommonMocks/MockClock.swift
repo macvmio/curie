@@ -1,5 +1,5 @@
-import Foundation
 import CurieCommon
+import Foundation
 
 public final class MockWallClock: WallClock {
     public var mockNow: Date = .now
