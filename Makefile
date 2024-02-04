@@ -9,6 +9,9 @@ env:
 build: env
 	xcrun swift build
 
+test:
+	xcrun swift test
+
 sign:
 	codesign --sign - --entitlements Resources/curie.entitlements --force .build/debug/curie
 
