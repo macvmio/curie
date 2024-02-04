@@ -97,6 +97,7 @@ final class DefaultFileSystem: FileSystem {
 
     func list(at path: AbsolutePath) throws -> [FileSystemItem] {
         try fileManager.contentsOfDirectory(atPath: path.pathString)
+            .sorted()
             .map { RelativePath($0) }
             .map {
                 let absolutePath = path.appending($0)
