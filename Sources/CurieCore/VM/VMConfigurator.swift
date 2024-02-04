@@ -88,6 +88,9 @@ final class DefaultVMConfigurator: VMConfigurator {
         configuration.pointingDevices = preparePointingDeviceConfigurations()
         configuration.keyboards = prepareKeyboardConfigurations()
         try configuration.validate()
+        if #available(macOS 14.0, *) {
+            try configuration.validateSaveRestoreSupport()
+        }
 
         return configuration
     }
