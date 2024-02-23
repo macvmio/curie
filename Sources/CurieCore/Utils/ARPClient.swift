@@ -19,7 +19,7 @@ final class DefaultARPClient: ARPClient {
 
     func executeARPQuery() throws -> [ARPItem] {
         let captureOutput = CaptureOutput()
-        try system.execute(["arp", "-an"], output: .custom(captureOutput))
+        try system.execute(["/usr/sbin/arp", "-an"], output: .custom(captureOutput))
 
         let tokens = captureOutput.outputString
             .split(separator: "\n")
