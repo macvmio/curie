@@ -103,6 +103,11 @@ final class ImageCacheTests: XCTestCase {
     }
 
     func testListImages_noImages() throws {
+        // When / Then
+        XCTAssertEqual(try subject.listImages(), [])
+    }
+
+    func testListImages_someImages() throws {
         // Given
         try importAnyImage(reference: "test/image1:1.0")
         try importAnyImage(reference: "test/image1:1.2")
@@ -135,14 +140,35 @@ final class ImageCacheTests: XCTestCase {
         ])
     }
 
-    func testListImages_someImages() throws {
-        // When / Then
-        XCTAssertEqual(try subject.listImages(), [])
-    }
-
     func testListContainers_noContainers() throws {
         // When / Then
         XCTAssertEqual(try subject.listContainers(), [])
+    }
+
+    func testListContainers_someContainers() throws {
+        // Given
+        try importAnyImage(reference: "test/image1:1.0")
+        try importAnyImage(reference: "test/image1:1.2")
+        let anyImage1 = try subject.findImageReference("test/image1:1.0")
+
+        try subject.moveImage(
+            source: anyImage1,
+            target: .init(id: .make(), descriptor: .init(reference: "test/container:1.0"), type: .container)
+        )
+
+        // Then
+        XCTAssertEqual(try subject.listContainers(), try [
+            .init(
+                reference: .init(
+                    id: .init(rawValue: "1"),
+                    descriptor: .init(reference: "test/container:1.0"),
+                    type: .container
+                ),
+                createAt: .distantPast,
+                size: .init(bytes: 543),
+                name: "metadata-name"
+            ),
+        ])
     }
 
     func testImportImage() throws {

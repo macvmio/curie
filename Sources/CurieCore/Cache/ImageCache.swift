@@ -131,6 +131,10 @@ final class DefaultImageCache: ImageCache {
             try fileSystem.remove(at: targetAbsolutePath)
         }
 
+        if !fileSystem.exists(at: targetAbsolutePath.parentDirectory) {
+            try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
+        }
+
         try fileSystem.move(from: sourceAbsolutePath, to: targetAbsolutePath)
 
         try removeEmptySubdirectories(of: containersAbsolutePath)
