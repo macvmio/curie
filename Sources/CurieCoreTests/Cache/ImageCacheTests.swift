@@ -145,13 +145,40 @@ final class ImageCacheTests: XCTestCase {
         XCTAssertEqual(try subject.listContainers(), [])
     }
 
-    func testLmportImage() throws {
+    func testImportImage() throws {
         // Given
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
         let expectedBundlePath = environment.homeDirectory.appending(RelativePath(".curie/images/\(anyReference)"))
 
         // When
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
+
+        // Then
+        let files = try fileSystem.list(at: expectedBundlePath)
+        XCTAssertEqual(files, [
+            .file(.init(path: .init("auxilary-storage.bin"))),
+            .file(.init(path: .init("config.json"))),
+            .file(.init(path: .init("disk.img"))),
+            .file(.init(path: .init("hardware-model.bin"))),
+            .file(.init(path: .init("machine-identifier.bin"))),
+            .file(.init(path: .init("metadata.json"))),
+        ])
+        XCTAssertBundlesEqual(bundle, path: expectedBundlePath)
+    }
+
+    func testExportImageRaw() throws {
+        // Given
+        let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
+        let expectedBundlePath = environment.currentWorkingDirectory.appending(RelativePath("test/export"))
+        try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
+        let imageReference = try subject.findImageReference(anyReference)
+
+        // When
+        try subject.exportImage(
+            source: imageReference,
+            destinationPath: expectedBundlePath.pathString,
+            mode: .raw
+        )
 
         // Then
         let files = try fileSystem.list(at: expectedBundlePath)
