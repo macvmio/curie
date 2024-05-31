@@ -7,14 +7,11 @@ protocol VMInstaller {
     func install(vm: VM, restoreImagePath: AbsolutePath) async throws
 }
 
-@MainActor
 final class DefaultVMInstaller: VMInstaller {
     private let console: Console
     private var observer: NSKeyValueObservation?
 
-    nonisolated init(
-        console: Console
-    ) {
+    init(console: Console) {
         self.console = console
     }
 
