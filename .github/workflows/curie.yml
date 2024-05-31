@@ -38,3 +38,17 @@ jobs:
           ${{ runner.os }}-spm-
     - name: build
       run: make build
+
+  test:
+    name: Test
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+    - name: test
+      run: make test
