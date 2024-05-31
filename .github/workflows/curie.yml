@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  DEVELOPER_DIR: "/Applications/Xcode_14.3.1.app/Contents/Developer"
+  DEVELOPER_DIR: "/Applications/Xcode_15.4.app/Contents/Developer"
 
 # Limit GITHUB_TOKEN permissions to read-only for repo contents
 # https://docs.github.com/en/actions/security-guides/automatic-token-authentication
@@ -17,7 +17,7 @@ permissions:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-13
+    runs-on: macos-14
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
@@ -25,19 +25,16 @@ jobs:
     - name: lint
       run: make lint
 
-  # Disabled: Unclear why github actions fail to import symbols from Virtualization 
-  #           framework.
-  # 
-  # build:
-  #   name: Build
-  #   runs-on: macos-13
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: actions/cache@v2
-  #     with:
-  #       path: .build
-  #       key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-  #       restore-keys: |
-  #         ${{ runner.os }}-spm-
-  #   - name: build
-  #     run: make build
+  build:
+    name: Build
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+    - name: build
+      run: make build
