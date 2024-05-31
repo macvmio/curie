@@ -171,6 +171,23 @@ final class ImageCacheTests: XCTestCase {
         ])
     }
 
+    func testPath() throws {
+        // Given
+        let expectedPath = environment.homeDirectory.appending(RelativePath(".curie/images/\(anyReference)"))
+
+        // When
+        let path = try subject.path(
+            to: .init(
+                id: .init(rawValue: "image-id"),
+                descriptor: .init(reference: anyReference),
+                type: .image
+            )
+        )
+
+        // Then
+        XCTAssertEqual(path, expectedPath)
+    }
+
     func testImportImage() throws {
         // Given
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
