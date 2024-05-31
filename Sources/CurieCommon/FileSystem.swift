@@ -54,6 +54,7 @@ public protocol FileSystem {
 
 final class DefaultFileSystem: FileSystem {
     struct Config {
+        // swiftlint:disable:next nesting
         struct Overrides {
             var currentWorkingDirectory: AbsolutePath?
             var homeDirectory: AbsolutePath?
