@@ -38,6 +38,14 @@ public final class DefaultContainer: Container {
         return instance
     }
 
+    // MARK: - Container
+
+    public func validate() {
+        factories.forEach {
+            _ = $0.value.resolve(with: self)
+        }
+    }
+
     // MARK: - Private
 
     private func resolveIfPossible<T>(_ type: T.Type) -> T? {

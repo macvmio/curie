@@ -90,3 +90,34 @@ public final class MockFileSystem: CurieCommon.FileSystem {
         try mockRead(path)
     }
 }
+
+public final class FileSystemEnvironment {
+    public let baseDirectory: TemporaryDirectory
+    public let currentWorkingDirectory: AbsolutePath
+    public let homeDirectory: AbsolutePath
+    public let fixtures: AbsolutePath
+
+    init(baseDirectory: TemporaryDirectory) {
+        self.baseDirectory = baseDirectory
+        currentWorkingDirectory = baseDirectory.path.appending(component: "currentWorkingDirectory")
+        homeDirectory = baseDirectory.path.appending(component: "homeDirectory")
+        fixtures = baseDirectory.path.appending(component: "fixtures")
+    }
+
+    public static func make() throws -> FileSystemEnvironment {
+        let baseDirectory = try TemporaryDirectory()
+        let environment = FileSystemEnvironment(baseDirectory: baseDirectory)
+
+        try environment.allDirectories().forEach {
+            try FileManager.default.createDirectory(atPath: $0.pathString, withIntermediateDirectories: true)
+        }
+
+        return environment
+    }
+
+    // MARK: - Private
+
+    private func allDirectories() -> [AbsolutePath] {
+        [currentWorkingDirectory, homeDirectory, fixtures]
+    }
+}

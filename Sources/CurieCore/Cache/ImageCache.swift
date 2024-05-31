@@ -131,6 +131,10 @@ final class DefaultImageCache: ImageCache {
             try fileSystem.remove(at: targetAbsolutePath)
         }
 
+        if !fileSystem.exists(at: targetAbsolutePath.parentDirectory) {
+            try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
+        }
+
         try fileSystem.move(from: sourceAbsolutePath, to: targetAbsolutePath)
 
         try removeEmptySubdirectories(of: containersAbsolutePath)
@@ -215,6 +219,7 @@ final class DefaultImageCache: ImageCache {
                 name: metadata.name
             )
         }
+        .sorted { $0.reference.id < $1.reference.id }
         return items
     }
 
