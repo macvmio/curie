@@ -68,6 +68,9 @@ private struct MacOSWindowAppViewView: NSViewRepresentable {
     func makeNSView(context _: Context) -> NSViewType {
         let machineView = VZVirtualMachineView()
         machineView.capturesSystemKeys = false
+        if #available(macOS 14.0, *) {
+            machineView.automaticallyReconfiguresDisplay = true
+        }
         return machineView
     }
 
