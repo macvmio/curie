@@ -79,7 +79,7 @@ final class VM: NSObject {
     }
 
     public func resume(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        console.text("Will resume container")
+        console.text("Will start paused container")
         if #available(macOS 14.0, *) {
             vm.restoreMachineStateFrom(url: machineStateURL) { [vm] error in
                 if let error {
@@ -89,7 +89,7 @@ final class VM: NSObject {
                 }
             }
         } else {
-            vm.resume(completionHandler: completionHandler)
+            completionHandler(.failure(CoreError.generic("TODO - FIXME")))
         }
     }
 

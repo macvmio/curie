@@ -36,14 +36,24 @@ final class DefaultImageRunner: ImageRunner {
         )
         console.text(info.description)
 
-        // Resume or start
         if fileSystem.exists(at: bundle.machineState) {
+            let deleteMachineStateFile = { [console, fileSystem] in
+                do {
+                    try fileSystem.remove(at: bundle.machineState)
+                } catch {
+                    console.error("Failed to delete machine state file of the container. \(error)")
+                    exit(1)
+                }
+            }
             vm.resume(machineStateURL: bundle.machineState.asURL) { [console] result in
                 switch result {
                 case .success:
                     console.text("Container \(info.metadata.id.description) started")
+                    deleteMachineStateFile()
                 case let .failure(error):
                     console.error("Failed to start container. \(error)")
+                    deleteMachineStateFile()
+                    exit(1)
                 }
             }
         } else {

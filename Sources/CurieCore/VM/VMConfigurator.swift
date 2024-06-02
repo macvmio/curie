@@ -181,7 +181,11 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     private func prepareKeyboardConfigurations() -> [VZKeyboardConfiguration] {
-        [VZUSBKeyboardConfiguration()]
+        if #available(macOS 14.0, *) {
+            [VZMacKeyboardConfiguration()]
+        } else {
+            [VZUSBKeyboardConfiguration()]
+        }
     }
 
     private func createDiskImage(atPath path: AbsolutePath, size: MemorySize) throws {
