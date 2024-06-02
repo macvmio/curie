@@ -7,23 +7,27 @@ public struct LaunchParameters {
     public var mainScreenResolution: Bool
     public var recoveryMode: Bool
     public var shareCurrentWorkingDirectory: Bool
+    public var pauseOnExit: Bool
 
     public init(
         noWindow: Bool,
         mainScreenResolution: Bool,
         recoveryMode: Bool,
-        shareCurrentWorkingDirectory: Bool
+        shareCurrentWorkingDirectory: Bool,
+        pauseOnExit: Bool
     ) {
         self.noWindow = noWindow
         self.mainScreenResolution = mainScreenResolution
         self.recoveryMode = recoveryMode
         self.shareCurrentWorkingDirectory = shareCurrentWorkingDirectory
+        self.pauseOnExit = pauseOnExit
     }
 
     func partialConfig() throws -> VMPartialConfig {
         try .init(
             display: prepareDisplay(),
-            sharedDirectory: prepareSharedDirectory()
+            sharedDirectory: prepareSharedDirectory(),
+            shutdown: prepareShutdown()
         )
     }
 
@@ -48,5 +52,9 @@ public struct LaunchParameters {
             return nil
         }
         return .init(directories: [.currentWorkingDirectory(options: .init())])
+    }
+
+    private func prepareShutdown() -> VMConfig.ShutdownConfig? {
+        .init(behaviour: pauseOnExit ? .pause : .stop)
     }
 }

@@ -88,6 +88,9 @@ final class DefaultVMConfigurator: VMConfigurator {
         configuration.pointingDevices = preparePointingDeviceConfigurations()
         configuration.keyboards = prepareKeyboardConfigurations()
         try configuration.validate()
+        if #available(macOS 14.0, *) {
+            try configuration.validateSaveRestoreSupport()
+        }
 
         return configuration
     }
@@ -148,8 +151,19 @@ final class DefaultVMConfigurator: VMConfigurator {
             let networkDevice = VZVirtioNetworkDeviceConfiguration()
             switch device.macAddress {
             case .automatic:
-                break
+                guard config.shutdown.behaviour != .pause else {
+                    throw CoreError
+                        .generic(
+                            "Failed to set up network device. Shutdown 'pause' behaviour requires 'manual' MAC address."
+                        )
+                }
             case .synthesized:
+                guard config.shutdown.behaviour != .pause else {
+                    throw CoreError
+                        .generic(
+                            "Failed to set up network device. Shutdown 'pause' behaviour requires 'manual' MAC address."
+                        )
+                }
                 var metadata = try bundleParser.readMetadata(from: bundle)
                 let macAddress = VZMACAddress.randomLocallyAdministered()
                 var network = metadata.network ?? VMMetadata.Network()
@@ -178,7 +192,11 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     private func prepareKeyboardConfigurations() -> [VZKeyboardConfiguration] {
-        [VZUSBKeyboardConfiguration()]
+        if #available(macOS 14.0, *) {
+            [VZMacKeyboardConfiguration()]
+        } else {
+            [VZUSBKeyboardConfiguration()]
+        }
     }
 
     private func createDiskImage(atPath path: AbsolutePath, size: MemorySize) throws {

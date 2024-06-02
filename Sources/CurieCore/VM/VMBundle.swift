@@ -43,6 +43,10 @@ public struct VMBundle {
         path("container.json")
     }
 
+    public var machineState: AbsolutePath {
+        path("machine-state.bin")
+    }
+
     // MARK: - Private
 
     private func path(_ filename: String) -> AbsolutePath {

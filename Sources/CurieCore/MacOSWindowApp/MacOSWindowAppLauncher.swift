@@ -5,18 +5,20 @@ import SwiftUI
 import Virtualization
 
 final class MacOSWindowAppLauncher {
-    func launchWindow(with vm: VM) {
+    func launchWindow(with vm: VM, bundle: VMBundle) {
         let app = NSApplication.shared
         app.setActivationPolicy(.regular)
         app.activate(ignoringOtherApps: true)
 
         MacOSWindowApp.vm = vm
+        MacOSWindowApp.bundle = bundle
         MacOSWindowApp.main()
     }
 }
 
 private struct MacOSWindowApp: App {
     static var vm: VM!
+    static var bundle: VMBundle!
 
     @NSApplicationDelegateAdaptor
     private var appDelegate: MacOSWindowAppDelegate
@@ -27,7 +29,7 @@ private struct MacOSWindowApp: App {
                 MacOSWindowAppViewView(vm: MacOSWindowApp.vm).onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false
                 }.onDisappear {
-                    MacOSWindowApp.vm.exit(exit: exit)
+                    MacOSWindowApp.vm.exit(machineStateURL: MacOSWindowApp.bundle.machineState.asURL, exit: exit)
                 }
             }.frame(
                 minWidth: CGFloat(VMConfig.DisplayConfig.minWidth),

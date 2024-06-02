@@ -51,13 +51,7 @@ final class DefaultVMBundleParser: VMBundleParser {
     func readConfig(from bundle: VMBundle) throws -> VMConfig {
         let data = try fileSystem.read(from: bundle.config)
         let partialConfig = try jsonDecoder.decode(VMPartialConfig.self, from: data)
-        let config = VMConfig(
-            cpuCount: prepareCPUCount(config: partialConfig),
-            memorySize: prepareMemorySize(config: partialConfig),
-            display: prepareDisplay(config: partialConfig),
-            network: prepareNetwork(config: partialConfig),
-            sharedDirectory: prepareSharedDirectory(config: partialConfig)
-        )
+        let config = prepareConfig(partialConfig: partialConfig)
         return config
     }
 
@@ -70,13 +64,7 @@ final class DefaultVMBundleParser: VMBundleParser {
         } else {
             partialConfig = diskConfig
         }
-        let config = VMConfig(
-            cpuCount: prepareCPUCount(config: partialConfig),
-            memorySize: prepareMemorySize(config: partialConfig),
-            display: prepareDisplay(config: partialConfig),
-            network: prepareNetwork(config: partialConfig),
-            sharedDirectory: prepareSharedDirectory(config: partialConfig)
-        )
+        let config = prepareConfig(partialConfig: partialConfig)
         return config
     }
 
@@ -167,6 +155,17 @@ final class DefaultVMBundleParser: VMBundleParser {
         }
     }
 
+    private func prepareConfig(partialConfig: VMPartialConfig) -> VMConfig {
+        VMConfig(
+            cpuCount: prepareCPUCount(config: partialConfig),
+            memorySize: prepareMemorySize(config: partialConfig),
+            display: prepareDisplay(config: partialConfig),
+            network: prepareNetwork(config: partialConfig),
+            sharedDirectory: prepareSharedDirectory(config: partialConfig),
+            shutdown: prepareShutdown(config: partialConfig)
+        )
+    }
+
     private func prepareCPUCount(config: VMPartialConfig) -> Int {
         let normalize: (Int) -> Int = { count in
             var result = count
@@ -235,5 +234,9 @@ final class DefaultVMBundleParser: VMBundleParser {
 
     private func prepareSharedDirectory(config: VMPartialConfig) -> VMConfig.SharedDirectoryConfig {
         config.sharedDirectory ?? defaultConfig.sharedDirectory
+    }
+
+    private func prepareShutdown(config: VMPartialConfig) -> VMConfig.ShutdownConfig {
+        config.shutdown ?? defaultConfig.shutdown
     }
 }

@@ -53,7 +53,8 @@ final class DefaultVMBundleParserTests: XCTestCase {
             memorySize: .init(bytes: 1024 * 1024 * 1024),
             display: .init(width: 640, height: 480, pixelsPerInch: 100),
             network: .init(devices: [.init(macAddress: .automatic, mode: .NAT)]),
-            sharedDirectory: .init(directories: [])
+            sharedDirectory: .init(directories: []),
+            shutdown: .init(behaviour: .stop)
         ))
     }
 

@@ -56,14 +56,41 @@ final class VM: NSObject {
         }
     }
 
-    public func pause(completionHandler: @escaping (Result<Void, Error>) -> Void) {
+    public func pause(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
         console.text("Will pause container")
-        vm.pause(completionHandler: completionHandler)
+        vm.pause { [vm] result in
+            switch result {
+            case .success:
+                if #available(macOS 14.0, *) {
+                    vm.saveMachineStateTo(url: machineStateURL) { error in
+                        if let error {
+                            completionHandler(.failure(error))
+                        } else {
+                            completionHandler(.success(()))
+                        }
+                    }
+                } else {
+                    completionHandler(.success(()))
+                }
+            case let .failure(error):
+                completionHandler(.failure(error))
+            }
+        }
     }
 
-    public func resume(completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        console.text("Will resume container")
-        vm.resume(completionHandler: completionHandler)
+    public func resume(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        console.text("Will start paused container")
+        if #available(macOS 14.0, *) {
+            vm.restoreMachineStateFrom(url: machineStateURL) { [vm] error in
+                if let error {
+                    completionHandler(.failure(error))
+                } else {
+                    vm.resume(completionHandler: completionHandler)
+                }
+            }
+        } else {
+            completionHandler(.failure(CoreError.generic("TODO - FIXME")))
+        }
     }
 
     public func stop(completionHandler: @escaping (Result<Void, Error>) -> Void) {
@@ -85,17 +112,23 @@ final class VM: NSObject {
         }
     }
 
-    public func exit(exit: @escaping (Int32) -> Never) {
+    public func exit(machineStateURL: URL, exit: @escaping (Int32) -> Never) {
         console.text("Will exit container")
-        stop { [console] result in
+        let completion = { [console, config] (result: Result<Void, Error>) in
             switch result {
             case .success:
-                console.text("Stopped container")
+                console.text("Did \(config.shutdown.behaviour.description) container")
                 exit(0)
             case let .failure(error):
-                console.error("Failed to stop container, \(error)")
+                console.error("Failed to \(config.shutdown.behaviour.description) container, \(error)")
                 exit(1)
             }
+        }
+        switch config.shutdown.behaviour {
+        case .stop:
+            stop(completionHandler: completion)
+        case .pause:
+            pause(machineStateURL: machineStateURL, completionHandler: completion)
         }
     }
 

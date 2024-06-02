@@ -13,6 +13,7 @@ public enum Constants {
         network: .init(devices: [
             .init(macAddress: .automatic, mode: .NAT),
         ]),
-        sharedDirectory: .init(directories: [])
+        sharedDirectory: .init(directories: []),
+        shutdown: .init(behaviour: .stop)
     )
 }

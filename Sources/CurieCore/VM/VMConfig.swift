@@ -15,6 +15,7 @@ public struct VMPartialConfig: Equatable, Codable {
     var display: DisplayPartialConfig?
     var network: VMConfig.NetworkConfig?
     var sharedDirectory: VMConfig.SharedDirectoryConfig?
+    var shutdown: VMConfig.ShutdownConfig?
 
     func merge(config: VMPartialConfig) -> VMPartialConfig {
         let network = VMConfig.NetworkConfig(devices: (config.network?.devices ?? []) + (network?.devices ?? []))
@@ -28,7 +29,8 @@ public struct VMPartialConfig: Equatable, Codable {
             memorySize: config.memorySize ?? memorySize,
             display: config.display ?? display,
             network: network,
-            sharedDirectory: sharedDirectory
+            sharedDirectory: sharedDirectory,
+            shutdown: config.shutdown ?? shutdown
         )
     }
 }
@@ -169,11 +171,21 @@ public struct VMConfig: Equatable, Codable {
         var directories: [Directory]
     }
 
+    struct ShutdownConfig: Equatable, Codable {
+        enum ShutdownBehaviour: Equatable, Codable {
+            case stop
+            case pause
+        }
+
+        var behaviour: ShutdownBehaviour
+    }
+
     var cpuCount: Int
     var memorySize: MemorySize
     var display: DisplayConfig
     var network: NetworkConfig
     var sharedDirectory: SharedDirectoryConfig
+    var shutdown: ShutdownConfig
 }
 
 extension VMConfig: CustomStringConvertible {
@@ -193,6 +205,8 @@ extension VMConfig: CustomStringConvertible {
             automount: \(sharedDirectory.automount?.description ?? "undefined")
             directories:
         \(sharedDirectory.directories.description)
+          shutdown:
+            behaviour: \(shutdown.behaviour.description)
         """
     }
 }
@@ -236,6 +250,17 @@ extension [VMConfig.SharedDirectoryConfig.Directory] {
                 """
             }
         }.joined(separator: "\n\n")
+    }
+}
+
+extension VMConfig.ShutdownConfig.ShutdownBehaviour: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .stop:
+            return "exit"
+        case .pause:
+            return "pause"
+        }
     }
 }
 

@@ -42,7 +42,8 @@ struct RunCommand: Command {
                         noWindow: command.noWindow,
                         mainScreenResolution: command.mainScreenResolution,
                         recoveryMode: command.recoveryMode,
-                        shareCurrentWorkingDirectory: command.shareCWD
+                        shareCurrentWorkingDirectory: command.shareCWD,
+                        pauseOnExit: false
                     )
                 )
             )
