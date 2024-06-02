@@ -151,8 +151,19 @@ final class DefaultVMConfigurator: VMConfigurator {
             let networkDevice = VZVirtioNetworkDeviceConfiguration()
             switch device.macAddress {
             case .automatic:
-                break
+                guard config.shutdown.behaviour != .pause else {
+                    throw CoreError
+                        .generic(
+                            "Failed to set up network device. Shutdown 'pause' behaviour requires 'manual' MAC address."
+                        )
+                }
             case .synthesized:
+                guard config.shutdown.behaviour != .pause else {
+                    throw CoreError
+                        .generic(
+                            "Failed to set up network device. Shutdown 'pause' behaviour requires 'manual' MAC address."
+                        )
+                }
                 var metadata = try bundleParser.readMetadata(from: bundle)
                 let macAddress = VZMACAddress.randomLocallyAdministered()
                 var network = metadata.network ?? VMMetadata.Network()
