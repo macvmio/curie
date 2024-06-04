@@ -18,7 +18,11 @@ sign:
 format:
 	swiftformat .
 
-autocorrect:s
+generate:
+    swift build -c release --product protoc-gen-swift
+	swift build -c release --product protoc-gen-grpc-swift
+
+autocorrect:
 	swiftlint autocorrect --quiet
 
 lint:

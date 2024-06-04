@@ -12,6 +12,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-tools-support-core", .upToNextMajor(from: "0.5.2")),
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.2.3")),
         .package(url: "https://github.com/grpc/grpc-swift", .upToNextMajor(from: "1.23.0")),
+        .package(url: "https://github.com/apple/swift-protobuf.git", .upToNextMajor(from: "1.26.0")),
     ],
     targets: [
         .executableTarget(
