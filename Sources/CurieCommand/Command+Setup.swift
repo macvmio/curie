@@ -1,6 +1,7 @@
 import ArgumentParser
 import CurieCommon
 import CurieCore
+import CurieCRI
 import Foundation
 
 private enum Setup {
@@ -30,6 +31,7 @@ extension Command {
             .assemble(commonAssemblies)
             .assemble(commandAssemblies)
             .assemble(coreAssemblies)
+            .assemble(criAssemblies)
             .resolver()
     }
 
@@ -48,6 +50,12 @@ extension Command {
     private var coreAssemblies: [Assembly] {
         [
             CoreAssembly(),
+        ]
+    }
+
+    private var criAssemblies: [Assembly] {
+        [
+            CRIAssembly(),
         ]
     }
 }
