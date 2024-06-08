@@ -18,6 +18,7 @@ private enum Setup {
         (RmCommand.self, RmCommand.Assembly()),
         (RmiCommand.self, RmiCommand.Assembly()),
         (RunCommand.self, RunCommand.Assembly()),
+        (ServeCommand.self, ServeCommand.Assembly()),
         (StartCommand.self, StartCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]

@@ -63,6 +63,7 @@ let package = Package(
         .target(
             name: "CurieCRI",
             dependencies: [
+                .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "GRPC", package: "grpc-swift"),
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
