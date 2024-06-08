@@ -26,6 +26,7 @@ let package = Package(
             name: "CurieCommand",
             dependencies: [
                 .target(name: "CurieCore"),
+                .target(name: "CurieCRI"),
                 .target(name: "CurieCommon"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
@@ -57,6 +58,14 @@ let package = Package(
             dependencies: [
                 .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+            ]
+        ),
+        .target(
+            name: "CurieCRI",
+            dependencies: [
+                .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+                .product(name: "GRPC", package: "grpc-swift"),
+                .product(name: "SwiftProtobuf", package: "swift-protobuf"),
             ]
         ),
     ]

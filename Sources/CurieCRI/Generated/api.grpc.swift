@@ -10,3925 +10,4127 @@ import NIO
 import NIOConcurrencyHelpers
 import SwiftProtobuf
 
-
 /// Runtime service defines the public APIs for remote container runtimes
 ///
 /// Usage: instantiate `Runtime_V1_RuntimeServiceClient`, then call methods of this protocol to make API calls.
-internal protocol Runtime_V1_RuntimeServiceClientProtocol: GRPCClient {
-  var serviceName: String { get }
-  var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_RuntimeServiceClientProtocol: GRPCClient {
+    var serviceName: String { get }
+    var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? { get }
 
-  func version(
-    _ request: Runtime_V1_VersionRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>
+    func version(
+        _ request: Runtime_V1_VersionRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>
 
-  func runPodSandbox(
-    _ request: Runtime_V1_RunPodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse>
+    func runPodSandbox(
+        _ request: Runtime_V1_RunPodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse>
 
-  func stopPodSandbox(
-    _ request: Runtime_V1_StopPodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse>
+    func stopPodSandbox(
+        _ request: Runtime_V1_StopPodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse>
 
-  func removePodSandbox(
-    _ request: Runtime_V1_RemovePodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse>
+    func removePodSandbox(
+        _ request: Runtime_V1_RemovePodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse>
 
-  func podSandboxStatus(
-    _ request: Runtime_V1_PodSandboxStatusRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse>
+    func podSandboxStatus(
+        _ request: Runtime_V1_PodSandboxStatusRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse>
 
-  func listPodSandbox(
-    _ request: Runtime_V1_ListPodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse>
+    func listPodSandbox(
+        _ request: Runtime_V1_ListPodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse>
 
-  func createContainer(
-    _ request: Runtime_V1_CreateContainerRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse>
+    func createContainer(
+        _ request: Runtime_V1_CreateContainerRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse>
 
-  func startContainer(
-    _ request: Runtime_V1_StartContainerRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse>
+    func startContainer(
+        _ request: Runtime_V1_StartContainerRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse>
 
-  func stopContainer(
-    _ request: Runtime_V1_StopContainerRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse>
+    func stopContainer(
+        _ request: Runtime_V1_StopContainerRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse>
 
-  func removeContainer(
-    _ request: Runtime_V1_RemoveContainerRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse>
+    func removeContainer(
+        _ request: Runtime_V1_RemoveContainerRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse>
 
-  func listContainers(
-    _ request: Runtime_V1_ListContainersRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse>
+    func listContainers(
+        _ request: Runtime_V1_ListContainersRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse>
 
-  func containerStatus(
-    _ request: Runtime_V1_ContainerStatusRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse>
+    func containerStatus(
+        _ request: Runtime_V1_ContainerStatusRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse>
 
-  func updateContainerResources(
-    _ request: Runtime_V1_UpdateContainerResourcesRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse>
+    func updateContainerResources(
+        _ request: Runtime_V1_UpdateContainerResourcesRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse>
 
-  func reopenContainerLog(
-    _ request: Runtime_V1_ReopenContainerLogRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse>
+    func reopenContainerLog(
+        _ request: Runtime_V1_ReopenContainerLogRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse>
 
-  func execSync(
-    _ request: Runtime_V1_ExecSyncRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>
+    func execSync(
+        _ request: Runtime_V1_ExecSyncRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>
 
-  func exec(
-    _ request: Runtime_V1_ExecRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>
+    func exec(
+        _ request: Runtime_V1_ExecRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>
 
-  func attach(
-    _ request: Runtime_V1_AttachRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>
+    func attach(
+        _ request: Runtime_V1_AttachRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>
 
-  func portForward(
-    _ request: Runtime_V1_PortForwardRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse>
+    func portForward(
+        _ request: Runtime_V1_PortForwardRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse>
 
-  func containerStats(
-    _ request: Runtime_V1_ContainerStatsRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse>
+    func containerStats(
+        _ request: Runtime_V1_ContainerStatsRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse>
 
-  func listContainerStats(
-    _ request: Runtime_V1_ListContainerStatsRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse>
+    func listContainerStats(
+        _ request: Runtime_V1_ListContainerStatsRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse>
 
-  func podSandboxStats(
-    _ request: Runtime_V1_PodSandboxStatsRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse>
+    func podSandboxStats(
+        _ request: Runtime_V1_PodSandboxStatsRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse>
 
-  func listPodSandboxStats(
-    _ request: Runtime_V1_ListPodSandboxStatsRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse>
+    func listPodSandboxStats(
+        _ request: Runtime_V1_ListPodSandboxStatsRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse>
 
-  func updateRuntimeConfig(
-    _ request: Runtime_V1_UpdateRuntimeConfigRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse>
+    func updateRuntimeConfig(
+        _ request: Runtime_V1_UpdateRuntimeConfigRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse>
 
-  func status(
-    _ request: Runtime_V1_StatusRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>
+    func status(
+        _ request: Runtime_V1_StatusRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>
 
-  func checkpointContainer(
-    _ request: Runtime_V1_CheckpointContainerRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse>
+    func checkpointContainer(
+        _ request: Runtime_V1_CheckpointContainerRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse>
 
-  func getContainerEvents(
-    _ request: Runtime_V1_GetEventsRequest,
-    callOptions: CallOptions?,
-    handler: @escaping (Runtime_V1_ContainerEventResponse) -> Void
-  ) -> ServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse>
+    func getContainerEvents(
+        _ request: Runtime_V1_GetEventsRequest,
+        callOptions: CallOptions?,
+        handler: @escaping (Runtime_V1_ContainerEventResponse) -> Void
+    ) -> ServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse>
 
-  func listMetricDescriptors(
-    _ request: Runtime_V1_ListMetricDescriptorsRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse>
+    func listMetricDescriptors(
+        _ request: Runtime_V1_ListMetricDescriptorsRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse>
 
-  func listPodSandboxMetrics(
-    _ request: Runtime_V1_ListPodSandboxMetricsRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse>
+    func listPodSandboxMetrics(
+        _ request: Runtime_V1_ListPodSandboxMetricsRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse>
 
-  func runtimeConfig(
-    _ request: Runtime_V1_RuntimeConfigRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse>
+    func runtimeConfig(
+        _ request: Runtime_V1_RuntimeConfigRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse>
 }
 
 extension Runtime_V1_RuntimeServiceClientProtocol {
-  internal var serviceName: String {
-    return "runtime.v1.RuntimeService"
-  }
+    var serviceName: String {
+        "runtime.v1.RuntimeService"
+    }
 
-  /// Version returns the runtime name, runtime version, and runtime API version.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to Version.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func version(
-    _ request: Runtime_V1_VersionRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.version.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeVersionInterceptors() ?? []
-    )
-  }
+    /// Version returns the runtime name, runtime version, and runtime API version.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to Version.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func version(
+        _ request: Runtime_V1_VersionRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.version.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeVersionInterceptors() ?? []
+        )
+    }
 
-  /// RunPodSandbox creates and starts a pod-level sandbox. Runtimes must ensure
-  /// the sandbox is in the ready state on success.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to RunPodSandbox.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func runPodSandbox(
-    _ request: Runtime_V1_RunPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRunPodSandboxInterceptors() ?? []
-    )
-  }
+    /// RunPodSandbox creates and starts a pod-level sandbox. Runtimes must ensure
+    /// the sandbox is in the ready state on success.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to RunPodSandbox.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func runPodSandbox(
+        _ request: Runtime_V1_RunPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRunPodSandboxInterceptors() ?? []
+        )
+    }
 
-  /// StopPodSandbox stops any running process that is part of the sandbox and
-  /// reclaims network resources (e.g., IP addresses) allocated to the sandbox.
-  /// If there are any running containers in the sandbox, they must be forcibly
-  /// terminated.
-  /// This call is idempotent, and must not return an error if all relevant
-  /// resources have already been reclaimed. kubelet will call StopPodSandbox
-  /// at least once before calling RemovePodSandbox. It will also attempt to
-  /// reclaim resources eagerly, as soon as a sandbox is not needed. Hence,
-  /// multiple StopPodSandbox calls are expected.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to StopPodSandbox.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func stopPodSandbox(
-    _ request: Runtime_V1_StopPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStopPodSandboxInterceptors() ?? []
-    )
-  }
+    /// StopPodSandbox stops any running process that is part of the sandbox and
+    /// reclaims network resources (e.g., IP addresses) allocated to the sandbox.
+    /// If there are any running containers in the sandbox, they must be forcibly
+    /// terminated.
+    /// This call is idempotent, and must not return an error if all relevant
+    /// resources have already been reclaimed. kubelet will call StopPodSandbox
+    /// at least once before calling RemovePodSandbox. It will also attempt to
+    /// reclaim resources eagerly, as soon as a sandbox is not needed. Hence,
+    /// multiple StopPodSandbox calls are expected.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to StopPodSandbox.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func stopPodSandbox(
+        _ request: Runtime_V1_StopPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStopPodSandboxInterceptors() ?? []
+        )
+    }
 
-  /// RemovePodSandbox removes the sandbox. If there are any running containers
-  /// in the sandbox, they must be forcibly terminated and removed.
-  /// This call is idempotent, and must not return an error if the sandbox has
-  /// already been removed.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to RemovePodSandbox.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func removePodSandbox(
-    _ request: Runtime_V1_RemovePodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemovePodSandboxInterceptors() ?? []
-    )
-  }
+    /// RemovePodSandbox removes the sandbox. If there are any running containers
+    /// in the sandbox, they must be forcibly terminated and removed.
+    /// This call is idempotent, and must not return an error if the sandbox has
+    /// already been removed.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to RemovePodSandbox.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func removePodSandbox(
+        _ request: Runtime_V1_RemovePodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemovePodSandboxInterceptors() ?? []
+        )
+    }
 
-  /// PodSandboxStatus returns the status of the PodSandbox. If the PodSandbox is not
-  /// present, returns an error.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to PodSandboxStatus.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func podSandboxStatus(
-    _ request: Runtime_V1_PodSandboxStatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePodSandboxStatusInterceptors() ?? []
-    )
-  }
+    /// PodSandboxStatus returns the status of the PodSandbox. If the PodSandbox is not
+    /// present, returns an error.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to PodSandboxStatus.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func podSandboxStatus(
+        _ request: Runtime_V1_PodSandboxStatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePodSandboxStatusInterceptors() ?? []
+        )
+    }
 
-  /// ListPodSandbox returns a list of PodSandboxes.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ListPodSandbox.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func listPodSandbox(
-    _ request: Runtime_V1_ListPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxInterceptors() ?? []
-    )
-  }
+    /// ListPodSandbox returns a list of PodSandboxes.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ListPodSandbox.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func listPodSandbox(
+        _ request: Runtime_V1_ListPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxInterceptors() ?? []
+        )
+    }
 
-  /// CreateContainer creates a new container in specified PodSandbox
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to CreateContainer.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func createContainer(
-    _ request: Runtime_V1_CreateContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeCreateContainerInterceptors() ?? []
-    )
-  }
+    /// CreateContainer creates a new container in specified PodSandbox
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to CreateContainer.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func createContainer(
+        _ request: Runtime_V1_CreateContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeCreateContainerInterceptors() ?? []
+        )
+    }
 
-  /// StartContainer starts the container.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to StartContainer.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func startContainer(
-    _ request: Runtime_V1_StartContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStartContainerInterceptors() ?? []
-    )
-  }
+    /// StartContainer starts the container.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to StartContainer.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func startContainer(
+        _ request: Runtime_V1_StartContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStartContainerInterceptors() ?? []
+        )
+    }
 
-  /// StopContainer stops a running container with a grace period (i.e., timeout).
-  /// This call is idempotent, and must not return an error if the container has
-  /// already been stopped.
-  /// The runtime must forcibly kill the container after the grace period is
-  /// reached.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to StopContainer.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func stopContainer(
-    _ request: Runtime_V1_StopContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStopContainerInterceptors() ?? []
-    )
-  }
+    /// StopContainer stops a running container with a grace period (i.e., timeout).
+    /// This call is idempotent, and must not return an error if the container has
+    /// already been stopped.
+    /// The runtime must forcibly kill the container after the grace period is
+    /// reached.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to StopContainer.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func stopContainer(
+        _ request: Runtime_V1_StopContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStopContainerInterceptors() ?? []
+        )
+    }
 
-  /// RemoveContainer removes the container. If the container is running, the
-  /// container must be forcibly removed.
-  /// This call is idempotent, and must not return an error if the container has
-  /// already been removed.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to RemoveContainer.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func removeContainer(
-    _ request: Runtime_V1_RemoveContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemoveContainerInterceptors() ?? []
-    )
-  }
+    /// RemoveContainer removes the container. If the container is running, the
+    /// container must be forcibly removed.
+    /// This call is idempotent, and must not return an error if the container has
+    /// already been removed.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to RemoveContainer.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func removeContainer(
+        _ request: Runtime_V1_RemoveContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemoveContainerInterceptors() ?? []
+        )
+    }
 
-  /// ListContainers lists all containers by filters.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ListContainers.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func listContainers(
-    _ request: Runtime_V1_ListContainersRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListContainersInterceptors() ?? []
-    )
-  }
+    /// ListContainers lists all containers by filters.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ListContainers.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func listContainers(
+        _ request: Runtime_V1_ListContainersRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListContainersInterceptors() ?? []
+        )
+    }
 
-  /// ContainerStatus returns status of the container. If the container is not
-  /// present, returns an error.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ContainerStatus.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func containerStatus(
-    _ request: Runtime_V1_ContainerStatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeContainerStatusInterceptors() ?? []
-    )
-  }
+    /// ContainerStatus returns status of the container. If the container is not
+    /// present, returns an error.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ContainerStatus.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func containerStatus(
+        _ request: Runtime_V1_ContainerStatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeContainerStatusInterceptors() ?? []
+        )
+    }
 
-  /// UpdateContainerResources updates ContainerConfig of the container synchronously.
-  /// If runtime fails to transactionally update the requested resources, an error is returned.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to UpdateContainerResources.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func updateContainerResources(
-    _ request: Runtime_V1_UpdateContainerResourcesRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeUpdateContainerResourcesInterceptors() ?? []
-    )
-  }
+    /// UpdateContainerResources updates ContainerConfig of the container synchronously.
+    /// If runtime fails to transactionally update the requested resources, an error is returned.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to UpdateContainerResources.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func updateContainerResources(
+        _ request: Runtime_V1_UpdateContainerResourcesRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeUpdateContainerResourcesInterceptors() ?? []
+        )
+    }
 
-  /// ReopenContainerLog asks runtime to reopen the stdout/stderr log file
-  /// for the container. This is often called after the log file has been
-  /// rotated. If the container is not running, container runtime can choose
-  /// to either create a new log file and return nil, or return an error.
-  /// Once it returns error, new container log file MUST NOT be created.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ReopenContainerLog.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func reopenContainerLog(
-    _ request: Runtime_V1_ReopenContainerLogRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeReopenContainerLogInterceptors() ?? []
-    )
-  }
+    /// ReopenContainerLog asks runtime to reopen the stdout/stderr log file
+    /// for the container. This is often called after the log file has been
+    /// rotated. If the container is not running, container runtime can choose
+    /// to either create a new log file and return nil, or return an error.
+    /// Once it returns error, new container log file MUST NOT be created.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ReopenContainerLog.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func reopenContainerLog(
+        _ request: Runtime_V1_ReopenContainerLogRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeReopenContainerLogInterceptors() ?? []
+        )
+    }
 
-  /// ExecSync runs a command in a container synchronously.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ExecSync.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func execSync(
-    _ request: Runtime_V1_ExecSyncRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeExecSyncInterceptors() ?? []
-    )
-  }
+    /// ExecSync runs a command in a container synchronously.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ExecSync.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func execSync(
+        _ request: Runtime_V1_ExecSyncRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeExecSyncInterceptors() ?? []
+        )
+    }
 
-  /// Exec prepares a streaming endpoint to execute a command in the container.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to Exec.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func exec(
-    _ request: Runtime_V1_ExecRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.exec.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeExecInterceptors() ?? []
-    )
-  }
+    /// Exec prepares a streaming endpoint to execute a command in the container.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to Exec.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func exec(
+        _ request: Runtime_V1_ExecRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.exec.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeExecInterceptors() ?? []
+        )
+    }
 
-  /// Attach prepares a streaming endpoint to attach to a running container.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to Attach.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func attach(
-    _ request: Runtime_V1_AttachRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.attach.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeAttachInterceptors() ?? []
-    )
-  }
+    /// Attach prepares a streaming endpoint to attach to a running container.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to Attach.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func attach(
+        _ request: Runtime_V1_AttachRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.attach.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeAttachInterceptors() ?? []
+        )
+    }
 
-  /// PortForward prepares a streaming endpoint to forward ports from a PodSandbox.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to PortForward.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func portForward(
-    _ request: Runtime_V1_PortForwardRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePortForwardInterceptors() ?? []
-    )
-  }
+    /// PortForward prepares a streaming endpoint to forward ports from a PodSandbox.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to PortForward.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func portForward(
+        _ request: Runtime_V1_PortForwardRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePortForwardInterceptors() ?? []
+        )
+    }
 
-  /// ContainerStats returns stats of the container. If the container does not
-  /// exist, the call returns an error.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ContainerStats.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func containerStats(
-    _ request: Runtime_V1_ContainerStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeContainerStatsInterceptors() ?? []
-    )
-  }
+    /// ContainerStats returns stats of the container. If the container does not
+    /// exist, the call returns an error.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ContainerStats.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func containerStats(
+        _ request: Runtime_V1_ContainerStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeContainerStatsInterceptors() ?? []
+        )
+    }
 
-  /// ListContainerStats returns stats of all running containers.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ListContainerStats.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func listContainerStats(
-    _ request: Runtime_V1_ListContainerStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListContainerStatsInterceptors() ?? []
-    )
-  }
+    /// ListContainerStats returns stats of all running containers.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ListContainerStats.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func listContainerStats(
+        _ request: Runtime_V1_ListContainerStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListContainerStatsInterceptors() ?? []
+        )
+    }
 
-  /// PodSandboxStats returns stats of the pod sandbox. If the pod sandbox does not
-  /// exist, the call returns an error.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to PodSandboxStats.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func podSandboxStats(
-    _ request: Runtime_V1_PodSandboxStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePodSandboxStatsInterceptors() ?? []
-    )
-  }
+    /// PodSandboxStats returns stats of the pod sandbox. If the pod sandbox does not
+    /// exist, the call returns an error.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to PodSandboxStats.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func podSandboxStats(
+        _ request: Runtime_V1_PodSandboxStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePodSandboxStatsInterceptors() ?? []
+        )
+    }
 
-  /// ListPodSandboxStats returns stats of the pod sandboxes matching a filter.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ListPodSandboxStats.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func listPodSandboxStats(
-    _ request: Runtime_V1_ListPodSandboxStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxStatsInterceptors() ?? []
-    )
-  }
+    /// ListPodSandboxStats returns stats of the pod sandboxes matching a filter.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ListPodSandboxStats.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func listPodSandboxStats(
+        _ request: Runtime_V1_ListPodSandboxStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxStatsInterceptors() ?? []
+        )
+    }
 
-  /// UpdateRuntimeConfig updates the runtime configuration based on the given request.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to UpdateRuntimeConfig.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func updateRuntimeConfig(
-    _ request: Runtime_V1_UpdateRuntimeConfigRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeUpdateRuntimeConfigInterceptors() ?? []
-    )
-  }
+    /// UpdateRuntimeConfig updates the runtime configuration based on the given request.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to UpdateRuntimeConfig.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func updateRuntimeConfig(
+        _ request: Runtime_V1_UpdateRuntimeConfigRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeUpdateRuntimeConfigInterceptors() ?? []
+        )
+    }
 
-  /// Status returns the status of the runtime.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to Status.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func status(
-    _ request: Runtime_V1_StatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.status.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStatusInterceptors() ?? []
-    )
-  }
+    /// Status returns the status of the runtime.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to Status.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func status(
+        _ request: Runtime_V1_StatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.status.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStatusInterceptors() ?? []
+        )
+    }
 
-  /// CheckpointContainer checkpoints a container
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to CheckpointContainer.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func checkpointContainer(
-    _ request: Runtime_V1_CheckpointContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeCheckpointContainerInterceptors() ?? []
-    )
-  }
+    /// CheckpointContainer checkpoints a container
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to CheckpointContainer.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func checkpointContainer(
+        _ request: Runtime_V1_CheckpointContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeCheckpointContainerInterceptors() ?? []
+        )
+    }
 
-  /// GetContainerEvents gets container events from the CRI runtime
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to GetContainerEvents.
-  ///   - callOptions: Call options.
-  ///   - handler: A closure called when each response is received from the server.
-  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
-  internal func getContainerEvents(
-    _ request: Runtime_V1_GetEventsRequest,
-    callOptions: CallOptions? = nil,
-    handler: @escaping (Runtime_V1_ContainerEventResponse) -> Void
-  ) -> ServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse> {
-    return self.makeServerStreamingCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeGetContainerEventsInterceptors() ?? [],
-      handler: handler
-    )
-  }
+    /// GetContainerEvents gets container events from the CRI runtime
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to GetContainerEvents.
+    ///   - callOptions: Call options.
+    ///   - handler: A closure called when each response is received from the server.
+    /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+    func getContainerEvents(
+        _ request: Runtime_V1_GetEventsRequest,
+        callOptions: CallOptions? = nil,
+        handler: @escaping (Runtime_V1_ContainerEventResponse) -> Void
+    ) -> ServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse> {
+        makeServerStreamingCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeGetContainerEventsInterceptors() ?? [],
+            handler: handler
+        )
+    }
 
-  /// ListMetricDescriptors gets the descriptors for the metrics that will be returned in ListPodSandboxMetrics.
-  /// This list should be static at startup: either the client and server restart together when
-  /// adding or removing metrics descriptors, or they should not change.
-  /// Put differently, if ListPodSandboxMetrics references a name that is not described in the initial
-  /// ListMetricDescriptors call, then the metric will not be broadcasted.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ListMetricDescriptors.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func listMetricDescriptors(
-    _ request: Runtime_V1_ListMetricDescriptorsRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListMetricDescriptorsInterceptors() ?? []
-    )
-  }
+    /// ListMetricDescriptors gets the descriptors for the metrics that will be returned in ListPodSandboxMetrics.
+    /// This list should be static at startup: either the client and server restart together when
+    /// adding or removing metrics descriptors, or they should not change.
+    /// Put differently, if ListPodSandboxMetrics references a name that is not described in the initial
+    /// ListMetricDescriptors call, then the metric will not be broadcasted.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ListMetricDescriptors.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func listMetricDescriptors(
+        _ request: Runtime_V1_ListMetricDescriptorsRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListMetricDescriptorsInterceptors() ?? []
+        )
+    }
 
-  /// ListPodSandboxMetrics gets pod sandbox metrics from CRI Runtime
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ListPodSandboxMetrics.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func listPodSandboxMetrics(
-    _ request: Runtime_V1_ListPodSandboxMetricsRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxMetricsInterceptors() ?? []
-    )
-  }
+    /// ListPodSandboxMetrics gets pod sandbox metrics from CRI Runtime
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ListPodSandboxMetrics.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func listPodSandboxMetrics(
+        _ request: Runtime_V1_ListPodSandboxMetricsRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxMetricsInterceptors() ?? []
+        )
+    }
 
-  /// RuntimeConfig returns configuration information of the runtime.
-  /// A couple of notes:
-  /// - The RuntimeConfigRequest object is not to be confused with the contents of UpdateRuntimeConfigRequest.
-  ///   The former is for having runtime tell Kubelet what to do, the latter vice versa.
-  /// - It is the expectation of the Kubelet that these fields are static for the lifecycle of the Kubelet.
-  ///   The Kubelet will not re-request the RuntimeConfiguration after startup, and CRI implementations should
-  ///   avoid updating them without a full node reboot.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to RuntimeConfig.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func runtimeConfig(
-    _ request: Runtime_V1_RuntimeConfigRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRuntimeConfigInterceptors() ?? []
-    )
-  }
+    /// RuntimeConfig returns configuration information of the runtime.
+    /// A couple of notes:
+    /// - The RuntimeConfigRequest object is not to be confused with the contents of UpdateRuntimeConfigRequest.
+    ///   The former is for having runtime tell Kubelet what to do, the latter vice versa.
+    /// - It is the expectation of the Kubelet that these fields are static for the lifecycle of the Kubelet.
+    ///   The Kubelet will not re-request the RuntimeConfiguration after startup, and CRI implementations should
+    ///   avoid updating them without a full node reboot.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to RuntimeConfig.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func runtimeConfig(
+        _ request: Runtime_V1_RuntimeConfigRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRuntimeConfigInterceptors() ?? []
+        )
+    }
 }
 
 @available(*, deprecated)
 extension Runtime_V1_RuntimeServiceClient: @unchecked Sendable {}
 
 @available(*, deprecated, renamed: "Runtime_V1_RuntimeServiceNIOClient")
-internal final class Runtime_V1_RuntimeServiceClient: Runtime_V1_RuntimeServiceClientProtocol {
-  private let lock = Lock()
-  private var _defaultCallOptions: CallOptions
-  private var _interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol?
-  internal let channel: GRPCChannel
-  internal var defaultCallOptions: CallOptions {
-    get { self.lock.withLock { return self._defaultCallOptions } }
-    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
-  }
-  internal var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? {
-    get { self.lock.withLock { return self._interceptors } }
-    set { self.lock.withLockVoid { self._interceptors = newValue } }
-  }
+final class Runtime_V1_RuntimeServiceClient: Runtime_V1_RuntimeServiceClientProtocol {
+    private let lock = Lock()
+    private var _defaultCallOptions: CallOptions
+    private var _interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol?
+    let channel: GRPCChannel
+    var defaultCallOptions: CallOptions {
+        get { lock.withLock { self._defaultCallOptions } }
+        set { lock.withLockVoid { self._defaultCallOptions = newValue } }
+    }
 
-  /// Creates a client for the runtime.v1.RuntimeService service.
-  ///
-  /// - Parameters:
-  ///   - channel: `GRPCChannel` to the service host.
-  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
-  ///   - interceptors: A factory providing interceptors for each RPC.
-  internal init(
-    channel: GRPCChannel,
-    defaultCallOptions: CallOptions = CallOptions(),
-    interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.channel = channel
-    self._defaultCallOptions = defaultCallOptions
-    self._interceptors = interceptors
-  }
+    var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? {
+        get { lock.withLock { self._interceptors } }
+        set { lock.withLockVoid { self._interceptors = newValue } }
+    }
+
+    /// Creates a client for the runtime.v1.RuntimeService service.
+    ///
+    /// - Parameters:
+    ///   - channel: `GRPCChannel` to the service host.
+    ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+    ///   - interceptors: A factory providing interceptors for each RPC.
+    init(
+        channel: GRPCChannel,
+        defaultCallOptions: CallOptions = CallOptions(),
+        interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? = nil
+    ) {
+        self.channel = channel
+        _defaultCallOptions = defaultCallOptions
+        _interceptors = interceptors
+    }
 }
 
-internal struct Runtime_V1_RuntimeServiceNIOClient: Runtime_V1_RuntimeServiceClientProtocol {
-  internal var channel: GRPCChannel
-  internal var defaultCallOptions: CallOptions
-  internal var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol?
+struct Runtime_V1_RuntimeServiceNIOClient: Runtime_V1_RuntimeServiceClientProtocol {
+    var channel: GRPCChannel
+    var defaultCallOptions: CallOptions
+    var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol?
 
-  /// Creates a client for the runtime.v1.RuntimeService service.
-  ///
-  /// - Parameters:
-  ///   - channel: `GRPCChannel` to the service host.
-  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
-  ///   - interceptors: A factory providing interceptors for each RPC.
-  internal init(
-    channel: GRPCChannel,
-    defaultCallOptions: CallOptions = CallOptions(),
-    interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.channel = channel
-    self.defaultCallOptions = defaultCallOptions
-    self.interceptors = interceptors
-  }
+    /// Creates a client for the runtime.v1.RuntimeService service.
+    ///
+    /// - Parameters:
+    ///   - channel: `GRPCChannel` to the service host.
+    ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+    ///   - interceptors: A factory providing interceptors for each RPC.
+    init(
+        channel: GRPCChannel,
+        defaultCallOptions: CallOptions = CallOptions(),
+        interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? = nil
+    ) {
+        self.channel = channel
+        self.defaultCallOptions = defaultCallOptions
+        self.interceptors = interceptors
+    }
 }
 
 /// Runtime service defines the public APIs for remote container runtimes
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-internal protocol Runtime_V1_RuntimeServiceAsyncClientProtocol: GRPCClient {
-  static var serviceDescriptor: GRPCServiceDescriptor { get }
-  var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_RuntimeServiceAsyncClientProtocol: GRPCClient {
+    static var serviceDescriptor: GRPCServiceDescriptor { get }
+    var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? { get }
 
-  func makeVersionCall(
-    _ request: Runtime_V1_VersionRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>
+    func makeVersionCall(
+        _ request: Runtime_V1_VersionRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>
 
-  func makeRunPodSandboxCall(
-    _ request: Runtime_V1_RunPodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse>
+    func makeRunPodSandboxCall(
+        _ request: Runtime_V1_RunPodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse>
 
-  func makeStopPodSandboxCall(
-    _ request: Runtime_V1_StopPodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse>
+    func makeStopPodSandboxCall(
+        _ request: Runtime_V1_StopPodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse>
 
-  func makeRemovePodSandboxCall(
-    _ request: Runtime_V1_RemovePodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse>
+    func makeRemovePodSandboxCall(
+        _ request: Runtime_V1_RemovePodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse>
 
-  func makePodSandboxStatusCall(
-    _ request: Runtime_V1_PodSandboxStatusRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse>
+    func makePodSandboxStatusCall(
+        _ request: Runtime_V1_PodSandboxStatusRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse>
 
-  func makeListPodSandboxCall(
-    _ request: Runtime_V1_ListPodSandboxRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse>
+    func makeListPodSandboxCall(
+        _ request: Runtime_V1_ListPodSandboxRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse>
 
-  func makeCreateContainerCall(
-    _ request: Runtime_V1_CreateContainerRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse>
+    func makeCreateContainerCall(
+        _ request: Runtime_V1_CreateContainerRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse>
 
-  func makeStartContainerCall(
-    _ request: Runtime_V1_StartContainerRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse>
+    func makeStartContainerCall(
+        _ request: Runtime_V1_StartContainerRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse>
 
-  func makeStopContainerCall(
-    _ request: Runtime_V1_StopContainerRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse>
+    func makeStopContainerCall(
+        _ request: Runtime_V1_StopContainerRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse>
 
-  func makeRemoveContainerCall(
-    _ request: Runtime_V1_RemoveContainerRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse>
+    func makeRemoveContainerCall(
+        _ request: Runtime_V1_RemoveContainerRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse>
 
-  func makeListContainersCall(
-    _ request: Runtime_V1_ListContainersRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse>
+    func makeListContainersCall(
+        _ request: Runtime_V1_ListContainersRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse>
 
-  func makeContainerStatusCall(
-    _ request: Runtime_V1_ContainerStatusRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse>
+    func makeContainerStatusCall(
+        _ request: Runtime_V1_ContainerStatusRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse>
 
-  func makeUpdateContainerResourcesCall(
-    _ request: Runtime_V1_UpdateContainerResourcesRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse>
+    func makeUpdateContainerResourcesCall(
+        _ request: Runtime_V1_UpdateContainerResourcesRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse>
 
-  func makeReopenContainerLogCall(
-    _ request: Runtime_V1_ReopenContainerLogRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse>
+    func makeReopenContainerLogCall(
+        _ request: Runtime_V1_ReopenContainerLogRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse>
 
-  func makeExecSyncCall(
-    _ request: Runtime_V1_ExecSyncRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>
+    func makeExecSyncCall(
+        _ request: Runtime_V1_ExecSyncRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>
 
-  func makeExecCall(
-    _ request: Runtime_V1_ExecRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>
+    func makeExecCall(
+        _ request: Runtime_V1_ExecRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>
 
-  func makeAttachCall(
-    _ request: Runtime_V1_AttachRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>
+    func makeAttachCall(
+        _ request: Runtime_V1_AttachRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>
 
-  func makePortForwardCall(
-    _ request: Runtime_V1_PortForwardRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse>
+    func makePortForwardCall(
+        _ request: Runtime_V1_PortForwardRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse>
 
-  func makeContainerStatsCall(
-    _ request: Runtime_V1_ContainerStatsRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse>
+    func makeContainerStatsCall(
+        _ request: Runtime_V1_ContainerStatsRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse>
 
-  func makeListContainerStatsCall(
-    _ request: Runtime_V1_ListContainerStatsRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse>
+    func makeListContainerStatsCall(
+        _ request: Runtime_V1_ListContainerStatsRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse>
 
-  func makePodSandboxStatsCall(
-    _ request: Runtime_V1_PodSandboxStatsRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse>
+    func makePodSandboxStatsCall(
+        _ request: Runtime_V1_PodSandboxStatsRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse>
 
-  func makeListPodSandboxStatsCall(
-    _ request: Runtime_V1_ListPodSandboxStatsRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse>
+    func makeListPodSandboxStatsCall(
+        _ request: Runtime_V1_ListPodSandboxStatsRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse>
 
-  func makeUpdateRuntimeConfigCall(
-    _ request: Runtime_V1_UpdateRuntimeConfigRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse>
+    func makeUpdateRuntimeConfigCall(
+        _ request: Runtime_V1_UpdateRuntimeConfigRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse>
 
-  func makeStatusCall(
-    _ request: Runtime_V1_StatusRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>
+    func makeStatusCall(
+        _ request: Runtime_V1_StatusRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>
 
-  func makeCheckpointContainerCall(
-    _ request: Runtime_V1_CheckpointContainerRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse>
+    func makeCheckpointContainerCall(
+        _ request: Runtime_V1_CheckpointContainerRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse>
 
-  func makeGetContainerEventsCall(
-    _ request: Runtime_V1_GetEventsRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse>
+    func makeGetContainerEventsCall(
+        _ request: Runtime_V1_GetEventsRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse>
 
-  func makeListMetricDescriptorsCall(
-    _ request: Runtime_V1_ListMetricDescriptorsRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse>
+    func makeListMetricDescriptorsCall(
+        _ request: Runtime_V1_ListMetricDescriptorsRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse>
 
-  func makeListPodSandboxMetricsCall(
-    _ request: Runtime_V1_ListPodSandboxMetricsRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse>
+    func makeListPodSandboxMetricsCall(
+        _ request: Runtime_V1_ListPodSandboxMetricsRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse>
 
-  func makeRuntimeConfigCall(
-    _ request: Runtime_V1_RuntimeConfigRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse>
+    func makeRuntimeConfigCall(
+        _ request: Runtime_V1_RuntimeConfigRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Runtime_V1_RuntimeServiceAsyncClientProtocol {
-  internal static var serviceDescriptor: GRPCServiceDescriptor {
-    return Runtime_V1_RuntimeServiceClientMetadata.serviceDescriptor
-  }
+    static var serviceDescriptor: GRPCServiceDescriptor {
+        Runtime_V1_RuntimeServiceClientMetadata.serviceDescriptor
+    }
 
-  internal var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? {
-    return nil
-  }
+    var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? {
+        nil
+    }
 
-  internal func makeVersionCall(
-    _ request: Runtime_V1_VersionRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.version.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeVersionInterceptors() ?? []
-    )
-  }
+    func makeVersionCall(
+        _ request: Runtime_V1_VersionRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.version.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeVersionInterceptors() ?? []
+        )
+    }
 
-  internal func makeRunPodSandboxCall(
-    _ request: Runtime_V1_RunPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRunPodSandboxInterceptors() ?? []
-    )
-  }
+    func makeRunPodSandboxCall(
+        _ request: Runtime_V1_RunPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRunPodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func makeStopPodSandboxCall(
-    _ request: Runtime_V1_StopPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStopPodSandboxInterceptors() ?? []
-    )
-  }
+    func makeStopPodSandboxCall(
+        _ request: Runtime_V1_StopPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStopPodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func makeRemovePodSandboxCall(
-    _ request: Runtime_V1_RemovePodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemovePodSandboxInterceptors() ?? []
-    )
-  }
+    func makeRemovePodSandboxCall(
+        _ request: Runtime_V1_RemovePodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemovePodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func makePodSandboxStatusCall(
-    _ request: Runtime_V1_PodSandboxStatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePodSandboxStatusInterceptors() ?? []
-    )
-  }
+    func makePodSandboxStatusCall(
+        _ request: Runtime_V1_PodSandboxStatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePodSandboxStatusInterceptors() ?? []
+        )
+    }
 
-  internal func makeListPodSandboxCall(
-    _ request: Runtime_V1_ListPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxInterceptors() ?? []
-    )
-  }
+    func makeListPodSandboxCall(
+        _ request: Runtime_V1_ListPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func makeCreateContainerCall(
-    _ request: Runtime_V1_CreateContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeCreateContainerInterceptors() ?? []
-    )
-  }
+    func makeCreateContainerCall(
+        _ request: Runtime_V1_CreateContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeCreateContainerInterceptors() ?? []
+        )
+    }
 
-  internal func makeStartContainerCall(
-    _ request: Runtime_V1_StartContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStartContainerInterceptors() ?? []
-    )
-  }
+    func makeStartContainerCall(
+        _ request: Runtime_V1_StartContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStartContainerInterceptors() ?? []
+        )
+    }
 
-  internal func makeStopContainerCall(
-    _ request: Runtime_V1_StopContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStopContainerInterceptors() ?? []
-    )
-  }
+    func makeStopContainerCall(
+        _ request: Runtime_V1_StopContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStopContainerInterceptors() ?? []
+        )
+    }
 
-  internal func makeRemoveContainerCall(
-    _ request: Runtime_V1_RemoveContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemoveContainerInterceptors() ?? []
-    )
-  }
+    func makeRemoveContainerCall(
+        _ request: Runtime_V1_RemoveContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemoveContainerInterceptors() ?? []
+        )
+    }
 
-  internal func makeListContainersCall(
-    _ request: Runtime_V1_ListContainersRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListContainersInterceptors() ?? []
-    )
-  }
+    func makeListContainersCall(
+        _ request: Runtime_V1_ListContainersRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListContainersInterceptors() ?? []
+        )
+    }
 
-  internal func makeContainerStatusCall(
-    _ request: Runtime_V1_ContainerStatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeContainerStatusInterceptors() ?? []
-    )
-  }
+    func makeContainerStatusCall(
+        _ request: Runtime_V1_ContainerStatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeContainerStatusInterceptors() ?? []
+        )
+    }
 
-  internal func makeUpdateContainerResourcesCall(
-    _ request: Runtime_V1_UpdateContainerResourcesRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeUpdateContainerResourcesInterceptors() ?? []
-    )
-  }
+    func makeUpdateContainerResourcesCall(
+        _ request: Runtime_V1_UpdateContainerResourcesRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeUpdateContainerResourcesInterceptors() ?? []
+        )
+    }
 
-  internal func makeReopenContainerLogCall(
-    _ request: Runtime_V1_ReopenContainerLogRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeReopenContainerLogInterceptors() ?? []
-    )
-  }
+    func makeReopenContainerLogCall(
+        _ request: Runtime_V1_ReopenContainerLogRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeReopenContainerLogInterceptors() ?? []
+        )
+    }
 
-  internal func makeExecSyncCall(
-    _ request: Runtime_V1_ExecSyncRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeExecSyncInterceptors() ?? []
-    )
-  }
+    func makeExecSyncCall(
+        _ request: Runtime_V1_ExecSyncRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeExecSyncInterceptors() ?? []
+        )
+    }
 
-  internal func makeExecCall(
-    _ request: Runtime_V1_ExecRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.exec.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeExecInterceptors() ?? []
-    )
-  }
+    func makeExecCall(
+        _ request: Runtime_V1_ExecRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.exec.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeExecInterceptors() ?? []
+        )
+    }
 
-  internal func makeAttachCall(
-    _ request: Runtime_V1_AttachRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.attach.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeAttachInterceptors() ?? []
-    )
-  }
+    func makeAttachCall(
+        _ request: Runtime_V1_AttachRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.attach.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeAttachInterceptors() ?? []
+        )
+    }
 
-  internal func makePortForwardCall(
-    _ request: Runtime_V1_PortForwardRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePortForwardInterceptors() ?? []
-    )
-  }
+    func makePortForwardCall(
+        _ request: Runtime_V1_PortForwardRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePortForwardInterceptors() ?? []
+        )
+    }
 
-  internal func makeContainerStatsCall(
-    _ request: Runtime_V1_ContainerStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeContainerStatsInterceptors() ?? []
-    )
-  }
+    func makeContainerStatsCall(
+        _ request: Runtime_V1_ContainerStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeContainerStatsInterceptors() ?? []
+        )
+    }
 
-  internal func makeListContainerStatsCall(
-    _ request: Runtime_V1_ListContainerStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListContainerStatsInterceptors() ?? []
-    )
-  }
+    func makeListContainerStatsCall(
+        _ request: Runtime_V1_ListContainerStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListContainerStatsInterceptors() ?? []
+        )
+    }
 
-  internal func makePodSandboxStatsCall(
-    _ request: Runtime_V1_PodSandboxStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePodSandboxStatsInterceptors() ?? []
-    )
-  }
+    func makePodSandboxStatsCall(
+        _ request: Runtime_V1_PodSandboxStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePodSandboxStatsInterceptors() ?? []
+        )
+    }
 
-  internal func makeListPodSandboxStatsCall(
-    _ request: Runtime_V1_ListPodSandboxStatsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxStatsInterceptors() ?? []
-    )
-  }
+    func makeListPodSandboxStatsCall(
+        _ request: Runtime_V1_ListPodSandboxStatsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxStatsInterceptors() ?? []
+        )
+    }
 
-  internal func makeUpdateRuntimeConfigCall(
-    _ request: Runtime_V1_UpdateRuntimeConfigRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeUpdateRuntimeConfigInterceptors() ?? []
-    )
-  }
+    func makeUpdateRuntimeConfigCall(
+        _ request: Runtime_V1_UpdateRuntimeConfigRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeUpdateRuntimeConfigInterceptors() ?? []
+        )
+    }
 
-  internal func makeStatusCall(
-    _ request: Runtime_V1_StatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.status.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStatusInterceptors() ?? []
-    )
-  }
+    func makeStatusCall(
+        _ request: Runtime_V1_StatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.status.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStatusInterceptors() ?? []
+        )
+    }
 
-  internal func makeCheckpointContainerCall(
-    _ request: Runtime_V1_CheckpointContainerRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeCheckpointContainerInterceptors() ?? []
-    )
-  }
+    func makeCheckpointContainerCall(
+        _ request: Runtime_V1_CheckpointContainerRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeCheckpointContainerInterceptors() ?? []
+        )
+    }
 
-  internal func makeGetContainerEventsCall(
-    _ request: Runtime_V1_GetEventsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse> {
-    return self.makeAsyncServerStreamingCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeGetContainerEventsInterceptors() ?? []
-    )
-  }
+    func makeGetContainerEventsCall(
+        _ request: Runtime_V1_GetEventsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncServerStreamingCall<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse> {
+        makeAsyncServerStreamingCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeGetContainerEventsInterceptors() ?? []
+        )
+    }
 
-  internal func makeListMetricDescriptorsCall(
-    _ request: Runtime_V1_ListMetricDescriptorsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListMetricDescriptorsInterceptors() ?? []
-    )
-  }
+    func makeListMetricDescriptorsCall(
+        _ request: Runtime_V1_ListMetricDescriptorsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListMetricDescriptorsInterceptors() ?? []
+        )
+    }
 
-  internal func makeListPodSandboxMetricsCall(
-    _ request: Runtime_V1_ListPodSandboxMetricsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxMetricsInterceptors() ?? []
-    )
-  }
+    func makeListPodSandboxMetricsCall(
+        _ request: Runtime_V1_ListPodSandboxMetricsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxMetricsInterceptors() ?? []
+        )
+    }
 
-  internal func makeRuntimeConfigCall(
-    _ request: Runtime_V1_RuntimeConfigRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRuntimeConfigInterceptors() ?? []
-    )
-  }
+    func makeRuntimeConfigCall(
+        _ request: Runtime_V1_RuntimeConfigRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRuntimeConfigInterceptors() ?? []
+        )
+    }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Runtime_V1_RuntimeServiceAsyncClientProtocol {
-  internal func version(
-    _ request: Runtime_V1_VersionRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_VersionResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.version.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeVersionInterceptors() ?? []
-    )
-  }
+    func version(
+        _ request: Runtime_V1_VersionRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_VersionResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.version.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeVersionInterceptors() ?? []
+        )
+    }
 
-  internal func runPodSandbox(
-    _ request: Runtime_V1_RunPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_RunPodSandboxResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRunPodSandboxInterceptors() ?? []
-    )
-  }
+    func runPodSandbox(
+        _ request: Runtime_V1_RunPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_RunPodSandboxResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRunPodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func stopPodSandbox(
-    _ request: Runtime_V1_StopPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_StopPodSandboxResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStopPodSandboxInterceptors() ?? []
-    )
-  }
+    func stopPodSandbox(
+        _ request: Runtime_V1_StopPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_StopPodSandboxResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStopPodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func removePodSandbox(
-    _ request: Runtime_V1_RemovePodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_RemovePodSandboxResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemovePodSandboxInterceptors() ?? []
-    )
-  }
+    func removePodSandbox(
+        _ request: Runtime_V1_RemovePodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_RemovePodSandboxResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemovePodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func podSandboxStatus(
-    _ request: Runtime_V1_PodSandboxStatusRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_PodSandboxStatusResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePodSandboxStatusInterceptors() ?? []
-    )
-  }
+    func podSandboxStatus(
+        _ request: Runtime_V1_PodSandboxStatusRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_PodSandboxStatusResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePodSandboxStatusInterceptors() ?? []
+        )
+    }
 
-  internal func listPodSandbox(
-    _ request: Runtime_V1_ListPodSandboxRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ListPodSandboxResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxInterceptors() ?? []
-    )
-  }
+    func listPodSandbox(
+        _ request: Runtime_V1_ListPodSandboxRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ListPodSandboxResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxInterceptors() ?? []
+        )
+    }
 
-  internal func createContainer(
-    _ request: Runtime_V1_CreateContainerRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_CreateContainerResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeCreateContainerInterceptors() ?? []
-    )
-  }
+    func createContainer(
+        _ request: Runtime_V1_CreateContainerRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_CreateContainerResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeCreateContainerInterceptors() ?? []
+        )
+    }
 
-  internal func startContainer(
-    _ request: Runtime_V1_StartContainerRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_StartContainerResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStartContainerInterceptors() ?? []
-    )
-  }
+    func startContainer(
+        _ request: Runtime_V1_StartContainerRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_StartContainerResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStartContainerInterceptors() ?? []
+        )
+    }
 
-  internal func stopContainer(
-    _ request: Runtime_V1_StopContainerRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_StopContainerResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStopContainerInterceptors() ?? []
-    )
-  }
+    func stopContainer(
+        _ request: Runtime_V1_StopContainerRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_StopContainerResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStopContainerInterceptors() ?? []
+        )
+    }
 
-  internal func removeContainer(
-    _ request: Runtime_V1_RemoveContainerRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_RemoveContainerResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemoveContainerInterceptors() ?? []
-    )
-  }
+    func removeContainer(
+        _ request: Runtime_V1_RemoveContainerRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_RemoveContainerResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemoveContainerInterceptors() ?? []
+        )
+    }
 
-  internal func listContainers(
-    _ request: Runtime_V1_ListContainersRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ListContainersResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListContainersInterceptors() ?? []
-    )
-  }
+    func listContainers(
+        _ request: Runtime_V1_ListContainersRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ListContainersResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListContainersInterceptors() ?? []
+        )
+    }
 
-  internal func containerStatus(
-    _ request: Runtime_V1_ContainerStatusRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ContainerStatusResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeContainerStatusInterceptors() ?? []
-    )
-  }
+    func containerStatus(
+        _ request: Runtime_V1_ContainerStatusRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ContainerStatusResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeContainerStatusInterceptors() ?? []
+        )
+    }
 
-  internal func updateContainerResources(
-    _ request: Runtime_V1_UpdateContainerResourcesRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_UpdateContainerResourcesResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeUpdateContainerResourcesInterceptors() ?? []
-    )
-  }
+    func updateContainerResources(
+        _ request: Runtime_V1_UpdateContainerResourcesRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_UpdateContainerResourcesResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeUpdateContainerResourcesInterceptors() ?? []
+        )
+    }
 
-  internal func reopenContainerLog(
-    _ request: Runtime_V1_ReopenContainerLogRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ReopenContainerLogResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeReopenContainerLogInterceptors() ?? []
-    )
-  }
+    func reopenContainerLog(
+        _ request: Runtime_V1_ReopenContainerLogRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ReopenContainerLogResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeReopenContainerLogInterceptors() ?? []
+        )
+    }
 
-  internal func execSync(
-    _ request: Runtime_V1_ExecSyncRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ExecSyncResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeExecSyncInterceptors() ?? []
-    )
-  }
+    func execSync(
+        _ request: Runtime_V1_ExecSyncRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ExecSyncResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeExecSyncInterceptors() ?? []
+        )
+    }
 
-  internal func exec(
-    _ request: Runtime_V1_ExecRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ExecResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.exec.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeExecInterceptors() ?? []
-    )
-  }
+    func exec(
+        _ request: Runtime_V1_ExecRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ExecResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.exec.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeExecInterceptors() ?? []
+        )
+    }
 
-  internal func attach(
-    _ request: Runtime_V1_AttachRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_AttachResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.attach.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeAttachInterceptors() ?? []
-    )
-  }
+    func attach(
+        _ request: Runtime_V1_AttachRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_AttachResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.attach.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeAttachInterceptors() ?? []
+        )
+    }
 
-  internal func portForward(
-    _ request: Runtime_V1_PortForwardRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_PortForwardResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePortForwardInterceptors() ?? []
-    )
-  }
+    func portForward(
+        _ request: Runtime_V1_PortForwardRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_PortForwardResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePortForwardInterceptors() ?? []
+        )
+    }
 
-  internal func containerStats(
-    _ request: Runtime_V1_ContainerStatsRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ContainerStatsResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeContainerStatsInterceptors() ?? []
-    )
-  }
+    func containerStats(
+        _ request: Runtime_V1_ContainerStatsRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ContainerStatsResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeContainerStatsInterceptors() ?? []
+        )
+    }
 
-  internal func listContainerStats(
-    _ request: Runtime_V1_ListContainerStatsRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ListContainerStatsResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListContainerStatsInterceptors() ?? []
-    )
-  }
+    func listContainerStats(
+        _ request: Runtime_V1_ListContainerStatsRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ListContainerStatsResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListContainerStatsInterceptors() ?? []
+        )
+    }
 
-  internal func podSandboxStats(
-    _ request: Runtime_V1_PodSandboxStatsRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_PodSandboxStatsResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePodSandboxStatsInterceptors() ?? []
-    )
-  }
+    func podSandboxStats(
+        _ request: Runtime_V1_PodSandboxStatsRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_PodSandboxStatsResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePodSandboxStatsInterceptors() ?? []
+        )
+    }
 
-  internal func listPodSandboxStats(
-    _ request: Runtime_V1_ListPodSandboxStatsRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ListPodSandboxStatsResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxStatsInterceptors() ?? []
-    )
-  }
+    func listPodSandboxStats(
+        _ request: Runtime_V1_ListPodSandboxStatsRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ListPodSandboxStatsResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxStatsInterceptors() ?? []
+        )
+    }
 
-  internal func updateRuntimeConfig(
-    _ request: Runtime_V1_UpdateRuntimeConfigRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_UpdateRuntimeConfigResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeUpdateRuntimeConfigInterceptors() ?? []
-    )
-  }
+    func updateRuntimeConfig(
+        _ request: Runtime_V1_UpdateRuntimeConfigRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_UpdateRuntimeConfigResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeUpdateRuntimeConfigInterceptors() ?? []
+        )
+    }
 
-  internal func status(
-    _ request: Runtime_V1_StatusRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_StatusResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.status.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeStatusInterceptors() ?? []
-    )
-  }
+    func status(
+        _ request: Runtime_V1_StatusRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_StatusResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.status.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeStatusInterceptors() ?? []
+        )
+    }
 
-  internal func checkpointContainer(
-    _ request: Runtime_V1_CheckpointContainerRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_CheckpointContainerResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeCheckpointContainerInterceptors() ?? []
-    )
-  }
+    func checkpointContainer(
+        _ request: Runtime_V1_CheckpointContainerRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_CheckpointContainerResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeCheckpointContainerInterceptors() ?? []
+        )
+    }
 
-  internal func getContainerEvents(
-    _ request: Runtime_V1_GetEventsRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncResponseStream<Runtime_V1_ContainerEventResponse> {
-    return self.performAsyncServerStreamingCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeGetContainerEventsInterceptors() ?? []
-    )
-  }
+    func getContainerEvents(
+        _ request: Runtime_V1_GetEventsRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncResponseStream<Runtime_V1_ContainerEventResponse> {
+        performAsyncServerStreamingCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeGetContainerEventsInterceptors() ?? []
+        )
+    }
 
-  internal func listMetricDescriptors(
-    _ request: Runtime_V1_ListMetricDescriptorsRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ListMetricDescriptorsResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListMetricDescriptorsInterceptors() ?? []
-    )
-  }
+    func listMetricDescriptors(
+        _ request: Runtime_V1_ListMetricDescriptorsRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ListMetricDescriptorsResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListMetricDescriptorsInterceptors() ?? []
+        )
+    }
 
-  internal func listPodSandboxMetrics(
-    _ request: Runtime_V1_ListPodSandboxMetricsRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ListPodSandboxMetricsResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListPodSandboxMetricsInterceptors() ?? []
-    )
-  }
+    func listPodSandboxMetrics(
+        _ request: Runtime_V1_ListPodSandboxMetricsRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ListPodSandboxMetricsResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListPodSandboxMetricsInterceptors() ?? []
+        )
+    }
 
-  internal func runtimeConfig(
-    _ request: Runtime_V1_RuntimeConfigRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_RuntimeConfigResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRuntimeConfigInterceptors() ?? []
-    )
-  }
+    func runtimeConfig(
+        _ request: Runtime_V1_RuntimeConfigRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_RuntimeConfigResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRuntimeConfigInterceptors() ?? []
+        )
+    }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-internal struct Runtime_V1_RuntimeServiceAsyncClient: Runtime_V1_RuntimeServiceAsyncClientProtocol {
-  internal var channel: GRPCChannel
-  internal var defaultCallOptions: CallOptions
-  internal var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol?
+struct Runtime_V1_RuntimeServiceAsyncClient: Runtime_V1_RuntimeServiceAsyncClientProtocol {
+    var channel: GRPCChannel
+    var defaultCallOptions: CallOptions
+    var interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol?
 
-  internal init(
-    channel: GRPCChannel,
-    defaultCallOptions: CallOptions = CallOptions(),
-    interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.channel = channel
-    self.defaultCallOptions = defaultCallOptions
-    self.interceptors = interceptors
-  }
+    init(
+        channel: GRPCChannel,
+        defaultCallOptions: CallOptions = CallOptions(),
+        interceptors: Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol? = nil
+    ) {
+        self.channel = channel
+        self.defaultCallOptions = defaultCallOptions
+        self.interceptors = interceptors
+    }
 }
 
-internal protocol Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol: Sendable {
+protocol Runtime_V1_RuntimeServiceClientInterceptorFactoryProtocol: Sendable {
+    /// - Returns: Interceptors to use when invoking 'version'.
+    func makeVersionInterceptors() -> [ClientInterceptor<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>]
 
-  /// - Returns: Interceptors to use when invoking 'version'.
-  func makeVersionInterceptors() -> [ClientInterceptor<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>]
+    /// - Returns: Interceptors to use when invoking 'runPodSandbox'.
+    func makeRunPodSandboxInterceptors() -> [ClientInterceptor<
+        Runtime_V1_RunPodSandboxRequest,
+        Runtime_V1_RunPodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'runPodSandbox'.
-  func makeRunPodSandboxInterceptors() -> [ClientInterceptor<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse>]
+    /// - Returns: Interceptors to use when invoking 'stopPodSandbox'.
+    func makeStopPodSandboxInterceptors() -> [ClientInterceptor<
+        Runtime_V1_StopPodSandboxRequest,
+        Runtime_V1_StopPodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'stopPodSandbox'.
-  func makeStopPodSandboxInterceptors() -> [ClientInterceptor<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse>]
+    /// - Returns: Interceptors to use when invoking 'removePodSandbox'.
+    func makeRemovePodSandboxInterceptors() -> [ClientInterceptor<
+        Runtime_V1_RemovePodSandboxRequest,
+        Runtime_V1_RemovePodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'removePodSandbox'.
-  func makeRemovePodSandboxInterceptors() -> [ClientInterceptor<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse>]
+    /// - Returns: Interceptors to use when invoking 'podSandboxStatus'.
+    func makePodSandboxStatusInterceptors() -> [ClientInterceptor<
+        Runtime_V1_PodSandboxStatusRequest,
+        Runtime_V1_PodSandboxStatusResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'podSandboxStatus'.
-  func makePodSandboxStatusInterceptors() -> [ClientInterceptor<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse>]
+    /// - Returns: Interceptors to use when invoking 'listPodSandbox'.
+    func makeListPodSandboxInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ListPodSandboxRequest,
+        Runtime_V1_ListPodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'listPodSandbox'.
-  func makeListPodSandboxInterceptors() -> [ClientInterceptor<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse>]
+    /// - Returns: Interceptors to use when invoking 'createContainer'.
+    func makeCreateContainerInterceptors() -> [ClientInterceptor<
+        Runtime_V1_CreateContainerRequest,
+        Runtime_V1_CreateContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'createContainer'.
-  func makeCreateContainerInterceptors() -> [ClientInterceptor<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse>]
+    /// - Returns: Interceptors to use when invoking 'startContainer'.
+    func makeStartContainerInterceptors() -> [ClientInterceptor<
+        Runtime_V1_StartContainerRequest,
+        Runtime_V1_StartContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'startContainer'.
-  func makeStartContainerInterceptors() -> [ClientInterceptor<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse>]
+    /// - Returns: Interceptors to use when invoking 'stopContainer'.
+    func makeStopContainerInterceptors() -> [ClientInterceptor<
+        Runtime_V1_StopContainerRequest,
+        Runtime_V1_StopContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'stopContainer'.
-  func makeStopContainerInterceptors() -> [ClientInterceptor<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse>]
+    /// - Returns: Interceptors to use when invoking 'removeContainer'.
+    func makeRemoveContainerInterceptors() -> [ClientInterceptor<
+        Runtime_V1_RemoveContainerRequest,
+        Runtime_V1_RemoveContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'removeContainer'.
-  func makeRemoveContainerInterceptors() -> [ClientInterceptor<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse>]
+    /// - Returns: Interceptors to use when invoking 'listContainers'.
+    func makeListContainersInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ListContainersRequest,
+        Runtime_V1_ListContainersResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'listContainers'.
-  func makeListContainersInterceptors() -> [ClientInterceptor<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse>]
+    /// - Returns: Interceptors to use when invoking 'containerStatus'.
+    func makeContainerStatusInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ContainerStatusRequest,
+        Runtime_V1_ContainerStatusResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'containerStatus'.
-  func makeContainerStatusInterceptors() -> [ClientInterceptor<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse>]
+    /// - Returns: Interceptors to use when invoking 'updateContainerResources'.
+    func makeUpdateContainerResourcesInterceptors() -> [ClientInterceptor<
+        Runtime_V1_UpdateContainerResourcesRequest,
+        Runtime_V1_UpdateContainerResourcesResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'updateContainerResources'.
-  func makeUpdateContainerResourcesInterceptors() -> [ClientInterceptor<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse>]
+    /// - Returns: Interceptors to use when invoking 'reopenContainerLog'.
+    func makeReopenContainerLogInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ReopenContainerLogRequest,
+        Runtime_V1_ReopenContainerLogResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'reopenContainerLog'.
-  func makeReopenContainerLogInterceptors() -> [ClientInterceptor<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse>]
+    /// - Returns: Interceptors to use when invoking 'execSync'.
+    func makeExecSyncInterceptors() -> [ClientInterceptor<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>]
 
-  /// - Returns: Interceptors to use when invoking 'execSync'.
-  func makeExecSyncInterceptors() -> [ClientInterceptor<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>]
+    /// - Returns: Interceptors to use when invoking 'exec'.
+    func makeExecInterceptors() -> [ClientInterceptor<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>]
 
-  /// - Returns: Interceptors to use when invoking 'exec'.
-  func makeExecInterceptors() -> [ClientInterceptor<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>]
+    /// - Returns: Interceptors to use when invoking 'attach'.
+    func makeAttachInterceptors() -> [ClientInterceptor<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>]
 
-  /// - Returns: Interceptors to use when invoking 'attach'.
-  func makeAttachInterceptors() -> [ClientInterceptor<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>]
+    /// - Returns: Interceptors to use when invoking 'portForward'.
+    func makePortForwardInterceptors() -> [ClientInterceptor<
+        Runtime_V1_PortForwardRequest,
+        Runtime_V1_PortForwardResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'portForward'.
-  func makePortForwardInterceptors() -> [ClientInterceptor<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse>]
+    /// - Returns: Interceptors to use when invoking 'containerStats'.
+    func makeContainerStatsInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ContainerStatsRequest,
+        Runtime_V1_ContainerStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'containerStats'.
-  func makeContainerStatsInterceptors() -> [ClientInterceptor<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse>]
+    /// - Returns: Interceptors to use when invoking 'listContainerStats'.
+    func makeListContainerStatsInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ListContainerStatsRequest,
+        Runtime_V1_ListContainerStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'listContainerStats'.
-  func makeListContainerStatsInterceptors() -> [ClientInterceptor<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse>]
+    /// - Returns: Interceptors to use when invoking 'podSandboxStats'.
+    func makePodSandboxStatsInterceptors() -> [ClientInterceptor<
+        Runtime_V1_PodSandboxStatsRequest,
+        Runtime_V1_PodSandboxStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'podSandboxStats'.
-  func makePodSandboxStatsInterceptors() -> [ClientInterceptor<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse>]
+    /// - Returns: Interceptors to use when invoking 'listPodSandboxStats'.
+    func makeListPodSandboxStatsInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ListPodSandboxStatsRequest,
+        Runtime_V1_ListPodSandboxStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'listPodSandboxStats'.
-  func makeListPodSandboxStatsInterceptors() -> [ClientInterceptor<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse>]
+    /// - Returns: Interceptors to use when invoking 'updateRuntimeConfig'.
+    func makeUpdateRuntimeConfigInterceptors() -> [ClientInterceptor<
+        Runtime_V1_UpdateRuntimeConfigRequest,
+        Runtime_V1_UpdateRuntimeConfigResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'updateRuntimeConfig'.
-  func makeUpdateRuntimeConfigInterceptors() -> [ClientInterceptor<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse>]
+    /// - Returns: Interceptors to use when invoking 'status'.
+    func makeStatusInterceptors() -> [ClientInterceptor<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>]
 
-  /// - Returns: Interceptors to use when invoking 'status'.
-  func makeStatusInterceptors() -> [ClientInterceptor<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>]
+    /// - Returns: Interceptors to use when invoking 'checkpointContainer'.
+    func makeCheckpointContainerInterceptors() -> [ClientInterceptor<
+        Runtime_V1_CheckpointContainerRequest,
+        Runtime_V1_CheckpointContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'checkpointContainer'.
-  func makeCheckpointContainerInterceptors() -> [ClientInterceptor<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse>]
+    /// - Returns: Interceptors to use when invoking 'getContainerEvents'.
+    func makeGetContainerEventsInterceptors() -> [ClientInterceptor<
+        Runtime_V1_GetEventsRequest,
+        Runtime_V1_ContainerEventResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'getContainerEvents'.
-  func makeGetContainerEventsInterceptors() -> [ClientInterceptor<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse>]
+    /// - Returns: Interceptors to use when invoking 'listMetricDescriptors'.
+    func makeListMetricDescriptorsInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ListMetricDescriptorsRequest,
+        Runtime_V1_ListMetricDescriptorsResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'listMetricDescriptors'.
-  func makeListMetricDescriptorsInterceptors() -> [ClientInterceptor<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse>]
+    /// - Returns: Interceptors to use when invoking 'listPodSandboxMetrics'.
+    func makeListPodSandboxMetricsInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ListPodSandboxMetricsRequest,
+        Runtime_V1_ListPodSandboxMetricsResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'listPodSandboxMetrics'.
-  func makeListPodSandboxMetricsInterceptors() -> [ClientInterceptor<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'runtimeConfig'.
-  func makeRuntimeConfigInterceptors() -> [ClientInterceptor<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse>]
+    /// - Returns: Interceptors to use when invoking 'runtimeConfig'.
+    func makeRuntimeConfigInterceptors() -> [ClientInterceptor<
+        Runtime_V1_RuntimeConfigRequest,
+        Runtime_V1_RuntimeConfigResponse
+    >]
 }
 
-internal enum Runtime_V1_RuntimeServiceClientMetadata {
-  internal static let serviceDescriptor = GRPCServiceDescriptor(
-    name: "RuntimeService",
-    fullName: "runtime.v1.RuntimeService",
-    methods: [
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.version,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.exec,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.attach,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.status,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics,
-      Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig,
-    ]
-  )
-
-  internal enum Methods {
-    internal static let version = GRPCMethodDescriptor(
-      name: "Version",
-      path: "/runtime.v1.RuntimeService/Version",
-      type: GRPCCallType.unary
+enum Runtime_V1_RuntimeServiceClientMetadata {
+    static let serviceDescriptor = GRPCServiceDescriptor(
+        name: "RuntimeService",
+        fullName: "runtime.v1.RuntimeService",
+        methods: [
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.version,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.runPodSandbox,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.stopPodSandbox,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.removePodSandbox,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStatus,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandbox,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.createContainer,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.startContainer,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.stopContainer,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.removeContainer,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainers,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStatus,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.updateContainerResources,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.reopenContainerLog,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.execSync,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.exec,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.attach,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.portForward,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.containerStats,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.listContainerStats,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.podSandboxStats,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxStats,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.updateRuntimeConfig,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.status,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.checkpointContainer,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.getContainerEvents,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.listMetricDescriptors,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.listPodSandboxMetrics,
+            Runtime_V1_RuntimeServiceClientMetadata.Methods.runtimeConfig,
+        ]
     )
 
-    internal static let runPodSandbox = GRPCMethodDescriptor(
-      name: "RunPodSandbox",
-      path: "/runtime.v1.RuntimeService/RunPodSandbox",
-      type: GRPCCallType.unary
-    )
+    enum Methods {
+        static let version = GRPCMethodDescriptor(
+            name: "Version",
+            path: "/runtime.v1.RuntimeService/Version",
+            type: GRPCCallType.unary
+        )
 
-    internal static let stopPodSandbox = GRPCMethodDescriptor(
-      name: "StopPodSandbox",
-      path: "/runtime.v1.RuntimeService/StopPodSandbox",
-      type: GRPCCallType.unary
-    )
+        static let runPodSandbox = GRPCMethodDescriptor(
+            name: "RunPodSandbox",
+            path: "/runtime.v1.RuntimeService/RunPodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let removePodSandbox = GRPCMethodDescriptor(
-      name: "RemovePodSandbox",
-      path: "/runtime.v1.RuntimeService/RemovePodSandbox",
-      type: GRPCCallType.unary
-    )
+        static let stopPodSandbox = GRPCMethodDescriptor(
+            name: "StopPodSandbox",
+            path: "/runtime.v1.RuntimeService/StopPodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let podSandboxStatus = GRPCMethodDescriptor(
-      name: "PodSandboxStatus",
-      path: "/runtime.v1.RuntimeService/PodSandboxStatus",
-      type: GRPCCallType.unary
-    )
+        static let removePodSandbox = GRPCMethodDescriptor(
+            name: "RemovePodSandbox",
+            path: "/runtime.v1.RuntimeService/RemovePodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listPodSandbox = GRPCMethodDescriptor(
-      name: "ListPodSandbox",
-      path: "/runtime.v1.RuntimeService/ListPodSandbox",
-      type: GRPCCallType.unary
-    )
+        static let podSandboxStatus = GRPCMethodDescriptor(
+            name: "PodSandboxStatus",
+            path: "/runtime.v1.RuntimeService/PodSandboxStatus",
+            type: GRPCCallType.unary
+        )
 
-    internal static let createContainer = GRPCMethodDescriptor(
-      name: "CreateContainer",
-      path: "/runtime.v1.RuntimeService/CreateContainer",
-      type: GRPCCallType.unary
-    )
+        static let listPodSandbox = GRPCMethodDescriptor(
+            name: "ListPodSandbox",
+            path: "/runtime.v1.RuntimeService/ListPodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let startContainer = GRPCMethodDescriptor(
-      name: "StartContainer",
-      path: "/runtime.v1.RuntimeService/StartContainer",
-      type: GRPCCallType.unary
-    )
+        static let createContainer = GRPCMethodDescriptor(
+            name: "CreateContainer",
+            path: "/runtime.v1.RuntimeService/CreateContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let stopContainer = GRPCMethodDescriptor(
-      name: "StopContainer",
-      path: "/runtime.v1.RuntimeService/StopContainer",
-      type: GRPCCallType.unary
-    )
+        static let startContainer = GRPCMethodDescriptor(
+            name: "StartContainer",
+            path: "/runtime.v1.RuntimeService/StartContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let removeContainer = GRPCMethodDescriptor(
-      name: "RemoveContainer",
-      path: "/runtime.v1.RuntimeService/RemoveContainer",
-      type: GRPCCallType.unary
-    )
+        static let stopContainer = GRPCMethodDescriptor(
+            name: "StopContainer",
+            path: "/runtime.v1.RuntimeService/StopContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listContainers = GRPCMethodDescriptor(
-      name: "ListContainers",
-      path: "/runtime.v1.RuntimeService/ListContainers",
-      type: GRPCCallType.unary
-    )
+        static let removeContainer = GRPCMethodDescriptor(
+            name: "RemoveContainer",
+            path: "/runtime.v1.RuntimeService/RemoveContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let containerStatus = GRPCMethodDescriptor(
-      name: "ContainerStatus",
-      path: "/runtime.v1.RuntimeService/ContainerStatus",
-      type: GRPCCallType.unary
-    )
+        static let listContainers = GRPCMethodDescriptor(
+            name: "ListContainers",
+            path: "/runtime.v1.RuntimeService/ListContainers",
+            type: GRPCCallType.unary
+        )
 
-    internal static let updateContainerResources = GRPCMethodDescriptor(
-      name: "UpdateContainerResources",
-      path: "/runtime.v1.RuntimeService/UpdateContainerResources",
-      type: GRPCCallType.unary
-    )
+        static let containerStatus = GRPCMethodDescriptor(
+            name: "ContainerStatus",
+            path: "/runtime.v1.RuntimeService/ContainerStatus",
+            type: GRPCCallType.unary
+        )
 
-    internal static let reopenContainerLog = GRPCMethodDescriptor(
-      name: "ReopenContainerLog",
-      path: "/runtime.v1.RuntimeService/ReopenContainerLog",
-      type: GRPCCallType.unary
-    )
+        static let updateContainerResources = GRPCMethodDescriptor(
+            name: "UpdateContainerResources",
+            path: "/runtime.v1.RuntimeService/UpdateContainerResources",
+            type: GRPCCallType.unary
+        )
 
-    internal static let execSync = GRPCMethodDescriptor(
-      name: "ExecSync",
-      path: "/runtime.v1.RuntimeService/ExecSync",
-      type: GRPCCallType.unary
-    )
+        static let reopenContainerLog = GRPCMethodDescriptor(
+            name: "ReopenContainerLog",
+            path: "/runtime.v1.RuntimeService/ReopenContainerLog",
+            type: GRPCCallType.unary
+        )
 
-    internal static let exec = GRPCMethodDescriptor(
-      name: "Exec",
-      path: "/runtime.v1.RuntimeService/Exec",
-      type: GRPCCallType.unary
-    )
+        static let execSync = GRPCMethodDescriptor(
+            name: "ExecSync",
+            path: "/runtime.v1.RuntimeService/ExecSync",
+            type: GRPCCallType.unary
+        )
 
-    internal static let attach = GRPCMethodDescriptor(
-      name: "Attach",
-      path: "/runtime.v1.RuntimeService/Attach",
-      type: GRPCCallType.unary
-    )
+        static let exec = GRPCMethodDescriptor(
+            name: "Exec",
+            path: "/runtime.v1.RuntimeService/Exec",
+            type: GRPCCallType.unary
+        )
 
-    internal static let portForward = GRPCMethodDescriptor(
-      name: "PortForward",
-      path: "/runtime.v1.RuntimeService/PortForward",
-      type: GRPCCallType.unary
-    )
+        static let attach = GRPCMethodDescriptor(
+            name: "Attach",
+            path: "/runtime.v1.RuntimeService/Attach",
+            type: GRPCCallType.unary
+        )
 
-    internal static let containerStats = GRPCMethodDescriptor(
-      name: "ContainerStats",
-      path: "/runtime.v1.RuntimeService/ContainerStats",
-      type: GRPCCallType.unary
-    )
+        static let portForward = GRPCMethodDescriptor(
+            name: "PortForward",
+            path: "/runtime.v1.RuntimeService/PortForward",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listContainerStats = GRPCMethodDescriptor(
-      name: "ListContainerStats",
-      path: "/runtime.v1.RuntimeService/ListContainerStats",
-      type: GRPCCallType.unary
-    )
+        static let containerStats = GRPCMethodDescriptor(
+            name: "ContainerStats",
+            path: "/runtime.v1.RuntimeService/ContainerStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let podSandboxStats = GRPCMethodDescriptor(
-      name: "PodSandboxStats",
-      path: "/runtime.v1.RuntimeService/PodSandboxStats",
-      type: GRPCCallType.unary
-    )
+        static let listContainerStats = GRPCMethodDescriptor(
+            name: "ListContainerStats",
+            path: "/runtime.v1.RuntimeService/ListContainerStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listPodSandboxStats = GRPCMethodDescriptor(
-      name: "ListPodSandboxStats",
-      path: "/runtime.v1.RuntimeService/ListPodSandboxStats",
-      type: GRPCCallType.unary
-    )
+        static let podSandboxStats = GRPCMethodDescriptor(
+            name: "PodSandboxStats",
+            path: "/runtime.v1.RuntimeService/PodSandboxStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let updateRuntimeConfig = GRPCMethodDescriptor(
-      name: "UpdateRuntimeConfig",
-      path: "/runtime.v1.RuntimeService/UpdateRuntimeConfig",
-      type: GRPCCallType.unary
-    )
+        static let listPodSandboxStats = GRPCMethodDescriptor(
+            name: "ListPodSandboxStats",
+            path: "/runtime.v1.RuntimeService/ListPodSandboxStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let status = GRPCMethodDescriptor(
-      name: "Status",
-      path: "/runtime.v1.RuntimeService/Status",
-      type: GRPCCallType.unary
-    )
+        static let updateRuntimeConfig = GRPCMethodDescriptor(
+            name: "UpdateRuntimeConfig",
+            path: "/runtime.v1.RuntimeService/UpdateRuntimeConfig",
+            type: GRPCCallType.unary
+        )
 
-    internal static let checkpointContainer = GRPCMethodDescriptor(
-      name: "CheckpointContainer",
-      path: "/runtime.v1.RuntimeService/CheckpointContainer",
-      type: GRPCCallType.unary
-    )
+        static let status = GRPCMethodDescriptor(
+            name: "Status",
+            path: "/runtime.v1.RuntimeService/Status",
+            type: GRPCCallType.unary
+        )
 
-    internal static let getContainerEvents = GRPCMethodDescriptor(
-      name: "GetContainerEvents",
-      path: "/runtime.v1.RuntimeService/GetContainerEvents",
-      type: GRPCCallType.serverStreaming
-    )
+        static let checkpointContainer = GRPCMethodDescriptor(
+            name: "CheckpointContainer",
+            path: "/runtime.v1.RuntimeService/CheckpointContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listMetricDescriptors = GRPCMethodDescriptor(
-      name: "ListMetricDescriptors",
-      path: "/runtime.v1.RuntimeService/ListMetricDescriptors",
-      type: GRPCCallType.unary
-    )
+        static let getContainerEvents = GRPCMethodDescriptor(
+            name: "GetContainerEvents",
+            path: "/runtime.v1.RuntimeService/GetContainerEvents",
+            type: GRPCCallType.serverStreaming
+        )
 
-    internal static let listPodSandboxMetrics = GRPCMethodDescriptor(
-      name: "ListPodSandboxMetrics",
-      path: "/runtime.v1.RuntimeService/ListPodSandboxMetrics",
-      type: GRPCCallType.unary
-    )
+        static let listMetricDescriptors = GRPCMethodDescriptor(
+            name: "ListMetricDescriptors",
+            path: "/runtime.v1.RuntimeService/ListMetricDescriptors",
+            type: GRPCCallType.unary
+        )
 
-    internal static let runtimeConfig = GRPCMethodDescriptor(
-      name: "RuntimeConfig",
-      path: "/runtime.v1.RuntimeService/RuntimeConfig",
-      type: GRPCCallType.unary
-    )
-  }
+        static let listPodSandboxMetrics = GRPCMethodDescriptor(
+            name: "ListPodSandboxMetrics",
+            path: "/runtime.v1.RuntimeService/ListPodSandboxMetrics",
+            type: GRPCCallType.unary
+        )
+
+        static let runtimeConfig = GRPCMethodDescriptor(
+            name: "RuntimeConfig",
+            path: "/runtime.v1.RuntimeService/RuntimeConfig",
+            type: GRPCCallType.unary
+        )
+    }
 }
 
 /// ImageService defines the public APIs for managing images.
 ///
 /// Usage: instantiate `Runtime_V1_ImageServiceClient`, then call methods of this protocol to make API calls.
-internal protocol Runtime_V1_ImageServiceClientProtocol: GRPCClient {
-  var serviceName: String { get }
-  var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_ImageServiceClientProtocol: GRPCClient {
+    var serviceName: String { get }
+    var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? { get }
 
-  func listImages(
-    _ request: Runtime_V1_ListImagesRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse>
+    func listImages(
+        _ request: Runtime_V1_ListImagesRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse>
 
-  func imageStatus(
-    _ request: Runtime_V1_ImageStatusRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse>
+    func imageStatus(
+        _ request: Runtime_V1_ImageStatusRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse>
 
-  func pullImage(
-    _ request: Runtime_V1_PullImageRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>
+    func pullImage(
+        _ request: Runtime_V1_PullImageRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>
 
-  func removeImage(
-    _ request: Runtime_V1_RemoveImageRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse>
+    func removeImage(
+        _ request: Runtime_V1_RemoveImageRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse>
 
-  func imageFsInfo(
-    _ request: Runtime_V1_ImageFsInfoRequest,
-    callOptions: CallOptions?
-  ) -> UnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse>
+    func imageFsInfo(
+        _ request: Runtime_V1_ImageFsInfoRequest,
+        callOptions: CallOptions?
+    ) -> UnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse>
 }
 
 extension Runtime_V1_ImageServiceClientProtocol {
-  internal var serviceName: String {
-    return "runtime.v1.ImageService"
-  }
+    var serviceName: String {
+        "runtime.v1.ImageService"
+    }
 
-  /// ListImages lists existing images.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ListImages.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func listImages(
-    _ request: Runtime_V1_ListImagesRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.listImages.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListImagesInterceptors() ?? []
-    )
-  }
+    /// ListImages lists existing images.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ListImages.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func listImages(
+        _ request: Runtime_V1_ListImagesRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.listImages.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListImagesInterceptors() ?? []
+        )
+    }
 
-  /// ImageStatus returns the status of the image. If the image is not
-  /// present, returns a response with ImageStatusResponse.Image set to
-  /// nil.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ImageStatus.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func imageStatus(
-    _ request: Runtime_V1_ImageStatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeImageStatusInterceptors() ?? []
-    )
-  }
+    /// ImageStatus returns the status of the image. If the image is not
+    /// present, returns a response with ImageStatusResponse.Image set to
+    /// nil.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ImageStatus.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func imageStatus(
+        _ request: Runtime_V1_ImageStatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeImageStatusInterceptors() ?? []
+        )
+    }
 
-  /// PullImage pulls an image with authentication config.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to PullImage.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func pullImage(
-    _ request: Runtime_V1_PullImageRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.pullImage.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePullImageInterceptors() ?? []
-    )
-  }
+    /// PullImage pulls an image with authentication config.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to PullImage.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func pullImage(
+        _ request: Runtime_V1_PullImageRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.pullImage.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePullImageInterceptors() ?? []
+        )
+    }
 
-  /// RemoveImage removes the image.
-  /// This call is idempotent, and must not return an error if the image has
-  /// already been removed.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to RemoveImage.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func removeImage(
-    _ request: Runtime_V1_RemoveImageRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.removeImage.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemoveImageInterceptors() ?? []
-    )
-  }
+    /// RemoveImage removes the image.
+    /// This call is idempotent, and must not return an error if the image has
+    /// already been removed.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to RemoveImage.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func removeImage(
+        _ request: Runtime_V1_RemoveImageRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.removeImage.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemoveImageInterceptors() ?? []
+        )
+    }
 
-  /// ImageFSInfo returns information of the filesystem that is used to store images.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to ImageFsInfo.
-  ///   - callOptions: Call options.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func imageFsInfo(
-    _ request: Runtime_V1_ImageFsInfoRequest,
-    callOptions: CallOptions? = nil
-  ) -> UnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse> {
-    return self.makeUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeImageFsInfoInterceptors() ?? []
-    )
-  }
+    /// ImageFSInfo returns information of the filesystem that is used to store images.
+    ///
+    /// - Parameters:
+    ///   - request: Request to send to ImageFsInfo.
+    ///   - callOptions: Call options.
+    /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+    func imageFsInfo(
+        _ request: Runtime_V1_ImageFsInfoRequest,
+        callOptions: CallOptions? = nil
+    ) -> UnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse> {
+        makeUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeImageFsInfoInterceptors() ?? []
+        )
+    }
 }
 
 @available(*, deprecated)
 extension Runtime_V1_ImageServiceClient: @unchecked Sendable {}
 
 @available(*, deprecated, renamed: "Runtime_V1_ImageServiceNIOClient")
-internal final class Runtime_V1_ImageServiceClient: Runtime_V1_ImageServiceClientProtocol {
-  private let lock = Lock()
-  private var _defaultCallOptions: CallOptions
-  private var _interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol?
-  internal let channel: GRPCChannel
-  internal var defaultCallOptions: CallOptions {
-    get { self.lock.withLock { return self._defaultCallOptions } }
-    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
-  }
-  internal var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? {
-    get { self.lock.withLock { return self._interceptors } }
-    set { self.lock.withLockVoid { self._interceptors = newValue } }
-  }
+final class Runtime_V1_ImageServiceClient: Runtime_V1_ImageServiceClientProtocol {
+    private let lock = Lock()
+    private var _defaultCallOptions: CallOptions
+    private var _interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol?
+    let channel: GRPCChannel
+    var defaultCallOptions: CallOptions {
+        get { lock.withLock { self._defaultCallOptions } }
+        set { lock.withLockVoid { self._defaultCallOptions = newValue } }
+    }
 
-  /// Creates a client for the runtime.v1.ImageService service.
-  ///
-  /// - Parameters:
-  ///   - channel: `GRPCChannel` to the service host.
-  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
-  ///   - interceptors: A factory providing interceptors for each RPC.
-  internal init(
-    channel: GRPCChannel,
-    defaultCallOptions: CallOptions = CallOptions(),
-    interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.channel = channel
-    self._defaultCallOptions = defaultCallOptions
-    self._interceptors = interceptors
-  }
+    var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? {
+        get { lock.withLock { self._interceptors } }
+        set { lock.withLockVoid { self._interceptors = newValue } }
+    }
+
+    /// Creates a client for the runtime.v1.ImageService service.
+    ///
+    /// - Parameters:
+    ///   - channel: `GRPCChannel` to the service host.
+    ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+    ///   - interceptors: A factory providing interceptors for each RPC.
+    init(
+        channel: GRPCChannel,
+        defaultCallOptions: CallOptions = CallOptions(),
+        interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? = nil
+    ) {
+        self.channel = channel
+        _defaultCallOptions = defaultCallOptions
+        _interceptors = interceptors
+    }
 }
 
-internal struct Runtime_V1_ImageServiceNIOClient: Runtime_V1_ImageServiceClientProtocol {
-  internal var channel: GRPCChannel
-  internal var defaultCallOptions: CallOptions
-  internal var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol?
+struct Runtime_V1_ImageServiceNIOClient: Runtime_V1_ImageServiceClientProtocol {
+    var channel: GRPCChannel
+    var defaultCallOptions: CallOptions
+    var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol?
 
-  /// Creates a client for the runtime.v1.ImageService service.
-  ///
-  /// - Parameters:
-  ///   - channel: `GRPCChannel` to the service host.
-  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
-  ///   - interceptors: A factory providing interceptors for each RPC.
-  internal init(
-    channel: GRPCChannel,
-    defaultCallOptions: CallOptions = CallOptions(),
-    interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.channel = channel
-    self.defaultCallOptions = defaultCallOptions
-    self.interceptors = interceptors
-  }
+    /// Creates a client for the runtime.v1.ImageService service.
+    ///
+    /// - Parameters:
+    ///   - channel: `GRPCChannel` to the service host.
+    ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+    ///   - interceptors: A factory providing interceptors for each RPC.
+    init(
+        channel: GRPCChannel,
+        defaultCallOptions: CallOptions = CallOptions(),
+        interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? = nil
+    ) {
+        self.channel = channel
+        self.defaultCallOptions = defaultCallOptions
+        self.interceptors = interceptors
+    }
 }
 
 /// ImageService defines the public APIs for managing images.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-internal protocol Runtime_V1_ImageServiceAsyncClientProtocol: GRPCClient {
-  static var serviceDescriptor: GRPCServiceDescriptor { get }
-  var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_ImageServiceAsyncClientProtocol: GRPCClient {
+    static var serviceDescriptor: GRPCServiceDescriptor { get }
+    var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? { get }
 
-  func makeListImagesCall(
-    _ request: Runtime_V1_ListImagesRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse>
+    func makeListImagesCall(
+        _ request: Runtime_V1_ListImagesRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse>
 
-  func makeImageStatusCall(
-    _ request: Runtime_V1_ImageStatusRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse>
+    func makeImageStatusCall(
+        _ request: Runtime_V1_ImageStatusRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse>
 
-  func makePullImageCall(
-    _ request: Runtime_V1_PullImageRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>
+    func makePullImageCall(
+        _ request: Runtime_V1_PullImageRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>
 
-  func makeRemoveImageCall(
-    _ request: Runtime_V1_RemoveImageRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse>
+    func makeRemoveImageCall(
+        _ request: Runtime_V1_RemoveImageRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse>
 
-  func makeImageFsInfoCall(
-    _ request: Runtime_V1_ImageFsInfoRequest,
-    callOptions: CallOptions?
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse>
+    func makeImageFsInfoCall(
+        _ request: Runtime_V1_ImageFsInfoRequest,
+        callOptions: CallOptions?
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Runtime_V1_ImageServiceAsyncClientProtocol {
-  internal static var serviceDescriptor: GRPCServiceDescriptor {
-    return Runtime_V1_ImageServiceClientMetadata.serviceDescriptor
-  }
+    static var serviceDescriptor: GRPCServiceDescriptor {
+        Runtime_V1_ImageServiceClientMetadata.serviceDescriptor
+    }
 
-  internal var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? {
-    return nil
-  }
+    var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? {
+        nil
+    }
 
-  internal func makeListImagesCall(
-    _ request: Runtime_V1_ListImagesRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.listImages.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListImagesInterceptors() ?? []
-    )
-  }
+    func makeListImagesCall(
+        _ request: Runtime_V1_ListImagesRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.listImages.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListImagesInterceptors() ?? []
+        )
+    }
 
-  internal func makeImageStatusCall(
-    _ request: Runtime_V1_ImageStatusRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeImageStatusInterceptors() ?? []
-    )
-  }
+    func makeImageStatusCall(
+        _ request: Runtime_V1_ImageStatusRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeImageStatusInterceptors() ?? []
+        )
+    }
 
-  internal func makePullImageCall(
-    _ request: Runtime_V1_PullImageRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.pullImage.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePullImageInterceptors() ?? []
-    )
-  }
+    func makePullImageCall(
+        _ request: Runtime_V1_PullImageRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.pullImage.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePullImageInterceptors() ?? []
+        )
+    }
 
-  internal func makeRemoveImageCall(
-    _ request: Runtime_V1_RemoveImageRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.removeImage.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemoveImageInterceptors() ?? []
-    )
-  }
+    func makeRemoveImageCall(
+        _ request: Runtime_V1_RemoveImageRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.removeImage.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemoveImageInterceptors() ?? []
+        )
+    }
 
-  internal func makeImageFsInfoCall(
-    _ request: Runtime_V1_ImageFsInfoRequest,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse> {
-    return self.makeAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeImageFsInfoInterceptors() ?? []
-    )
-  }
+    func makeImageFsInfoCall(
+        _ request: Runtime_V1_ImageFsInfoRequest,
+        callOptions: CallOptions? = nil
+    ) -> GRPCAsyncUnaryCall<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse> {
+        makeAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeImageFsInfoInterceptors() ?? []
+        )
+    }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Runtime_V1_ImageServiceAsyncClientProtocol {
-  internal func listImages(
-    _ request: Runtime_V1_ListImagesRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ListImagesResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.listImages.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeListImagesInterceptors() ?? []
-    )
-  }
+    func listImages(
+        _ request: Runtime_V1_ListImagesRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ListImagesResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.listImages.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeListImagesInterceptors() ?? []
+        )
+    }
 
-  internal func imageStatus(
-    _ request: Runtime_V1_ImageStatusRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ImageStatusResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeImageStatusInterceptors() ?? []
-    )
-  }
+    func imageStatus(
+        _ request: Runtime_V1_ImageStatusRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ImageStatusResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeImageStatusInterceptors() ?? []
+        )
+    }
 
-  internal func pullImage(
-    _ request: Runtime_V1_PullImageRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_PullImageResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.pullImage.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makePullImageInterceptors() ?? []
-    )
-  }
+    func pullImage(
+        _ request: Runtime_V1_PullImageRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_PullImageResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.pullImage.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makePullImageInterceptors() ?? []
+        )
+    }
 
-  internal func removeImage(
-    _ request: Runtime_V1_RemoveImageRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_RemoveImageResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.removeImage.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeRemoveImageInterceptors() ?? []
-    )
-  }
+    func removeImage(
+        _ request: Runtime_V1_RemoveImageRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_RemoveImageResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.removeImage.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeRemoveImageInterceptors() ?? []
+        )
+    }
 
-  internal func imageFsInfo(
-    _ request: Runtime_V1_ImageFsInfoRequest,
-    callOptions: CallOptions? = nil
-  ) async throws -> Runtime_V1_ImageFsInfoResponse {
-    return try await self.performAsyncUnaryCall(
-      path: Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo.path,
-      request: request,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeImageFsInfoInterceptors() ?? []
-    )
-  }
+    func imageFsInfo(
+        _ request: Runtime_V1_ImageFsInfoRequest,
+        callOptions: CallOptions? = nil
+    ) async throws -> Runtime_V1_ImageFsInfoResponse {
+        try await performAsyncUnaryCall(
+            path: Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo.path,
+            request: request,
+            callOptions: callOptions ?? defaultCallOptions,
+            interceptors: interceptors?.makeImageFsInfoInterceptors() ?? []
+        )
+    }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-internal struct Runtime_V1_ImageServiceAsyncClient: Runtime_V1_ImageServiceAsyncClientProtocol {
-  internal var channel: GRPCChannel
-  internal var defaultCallOptions: CallOptions
-  internal var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol?
+struct Runtime_V1_ImageServiceAsyncClient: Runtime_V1_ImageServiceAsyncClientProtocol {
+    var channel: GRPCChannel
+    var defaultCallOptions: CallOptions
+    var interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol?
 
-  internal init(
-    channel: GRPCChannel,
-    defaultCallOptions: CallOptions = CallOptions(),
-    interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.channel = channel
-    self.defaultCallOptions = defaultCallOptions
-    self.interceptors = interceptors
-  }
+    init(
+        channel: GRPCChannel,
+        defaultCallOptions: CallOptions = CallOptions(),
+        interceptors: Runtime_V1_ImageServiceClientInterceptorFactoryProtocol? = nil
+    ) {
+        self.channel = channel
+        self.defaultCallOptions = defaultCallOptions
+        self.interceptors = interceptors
+    }
 }
 
-internal protocol Runtime_V1_ImageServiceClientInterceptorFactoryProtocol: Sendable {
+protocol Runtime_V1_ImageServiceClientInterceptorFactoryProtocol: Sendable {
+    /// - Returns: Interceptors to use when invoking 'listImages'.
+    func makeListImagesInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ListImagesRequest,
+        Runtime_V1_ListImagesResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'listImages'.
-  func makeListImagesInterceptors() -> [ClientInterceptor<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse>]
+    /// - Returns: Interceptors to use when invoking 'imageStatus'.
+    func makeImageStatusInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ImageStatusRequest,
+        Runtime_V1_ImageStatusResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'imageStatus'.
-  func makeImageStatusInterceptors() -> [ClientInterceptor<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse>]
+    /// - Returns: Interceptors to use when invoking 'pullImage'.
+    func makePullImageInterceptors() -> [ClientInterceptor<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>]
 
-  /// - Returns: Interceptors to use when invoking 'pullImage'.
-  func makePullImageInterceptors() -> [ClientInterceptor<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>]
+    /// - Returns: Interceptors to use when invoking 'removeImage'.
+    func makeRemoveImageInterceptors() -> [ClientInterceptor<
+        Runtime_V1_RemoveImageRequest,
+        Runtime_V1_RemoveImageResponse
+    >]
 
-  /// - Returns: Interceptors to use when invoking 'removeImage'.
-  func makeRemoveImageInterceptors() -> [ClientInterceptor<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'imageFsInfo'.
-  func makeImageFsInfoInterceptors() -> [ClientInterceptor<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse>]
+    /// - Returns: Interceptors to use when invoking 'imageFsInfo'.
+    func makeImageFsInfoInterceptors() -> [ClientInterceptor<
+        Runtime_V1_ImageFsInfoRequest,
+        Runtime_V1_ImageFsInfoResponse
+    >]
 }
 
-internal enum Runtime_V1_ImageServiceClientMetadata {
-  internal static let serviceDescriptor = GRPCServiceDescriptor(
-    name: "ImageService",
-    fullName: "runtime.v1.ImageService",
-    methods: [
-      Runtime_V1_ImageServiceClientMetadata.Methods.listImages,
-      Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus,
-      Runtime_V1_ImageServiceClientMetadata.Methods.pullImage,
-      Runtime_V1_ImageServiceClientMetadata.Methods.removeImage,
-      Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo,
-    ]
-  )
-
-  internal enum Methods {
-    internal static let listImages = GRPCMethodDescriptor(
-      name: "ListImages",
-      path: "/runtime.v1.ImageService/ListImages",
-      type: GRPCCallType.unary
+enum Runtime_V1_ImageServiceClientMetadata {
+    static let serviceDescriptor = GRPCServiceDescriptor(
+        name: "ImageService",
+        fullName: "runtime.v1.ImageService",
+        methods: [
+            Runtime_V1_ImageServiceClientMetadata.Methods.listImages,
+            Runtime_V1_ImageServiceClientMetadata.Methods.imageStatus,
+            Runtime_V1_ImageServiceClientMetadata.Methods.pullImage,
+            Runtime_V1_ImageServiceClientMetadata.Methods.removeImage,
+            Runtime_V1_ImageServiceClientMetadata.Methods.imageFsInfo,
+        ]
     )
 
-    internal static let imageStatus = GRPCMethodDescriptor(
-      name: "ImageStatus",
-      path: "/runtime.v1.ImageService/ImageStatus",
-      type: GRPCCallType.unary
-    )
+    enum Methods {
+        static let listImages = GRPCMethodDescriptor(
+            name: "ListImages",
+            path: "/runtime.v1.ImageService/ListImages",
+            type: GRPCCallType.unary
+        )
 
-    internal static let pullImage = GRPCMethodDescriptor(
-      name: "PullImage",
-      path: "/runtime.v1.ImageService/PullImage",
-      type: GRPCCallType.unary
-    )
+        static let imageStatus = GRPCMethodDescriptor(
+            name: "ImageStatus",
+            path: "/runtime.v1.ImageService/ImageStatus",
+            type: GRPCCallType.unary
+        )
 
-    internal static let removeImage = GRPCMethodDescriptor(
-      name: "RemoveImage",
-      path: "/runtime.v1.ImageService/RemoveImage",
-      type: GRPCCallType.unary
-    )
+        static let pullImage = GRPCMethodDescriptor(
+            name: "PullImage",
+            path: "/runtime.v1.ImageService/PullImage",
+            type: GRPCCallType.unary
+        )
 
-    internal static let imageFsInfo = GRPCMethodDescriptor(
-      name: "ImageFsInfo",
-      path: "/runtime.v1.ImageService/ImageFsInfo",
-      type: GRPCCallType.unary
-    )
-  }
+        static let removeImage = GRPCMethodDescriptor(
+            name: "RemoveImage",
+            path: "/runtime.v1.ImageService/RemoveImage",
+            type: GRPCCallType.unary
+        )
+
+        static let imageFsInfo = GRPCMethodDescriptor(
+            name: "ImageFsInfo",
+            path: "/runtime.v1.ImageService/ImageFsInfo",
+            type: GRPCCallType.unary
+        )
+    }
 }
 
 /// Runtime service defines the public APIs for remote container runtimes
 ///
 /// To build a server, implement a class that conforms to this protocol.
-internal protocol Runtime_V1_RuntimeServiceProvider: CallHandlerProvider {
-  var interceptors: Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_RuntimeServiceProvider: CallHandlerProvider {
+    var interceptors: Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol? { get }
 
-  /// Version returns the runtime name, runtime version, and runtime API version.
-  func version(request: Runtime_V1_VersionRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_VersionResponse>
+    /// Version returns the runtime name, runtime version, and runtime API version.
+    func version(request: Runtime_V1_VersionRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_VersionResponse>
 
-  /// RunPodSandbox creates and starts a pod-level sandbox. Runtimes must ensure
-  /// the sandbox is in the ready state on success.
-  func runPodSandbox(request: Runtime_V1_RunPodSandboxRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_RunPodSandboxResponse>
+    /// RunPodSandbox creates and starts a pod-level sandbox. Runtimes must ensure
+    /// the sandbox is in the ready state on success.
+    func runPodSandbox(request: Runtime_V1_RunPodSandboxRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_RunPodSandboxResponse>
 
-  /// StopPodSandbox stops any running process that is part of the sandbox and
-  /// reclaims network resources (e.g., IP addresses) allocated to the sandbox.
-  /// If there are any running containers in the sandbox, they must be forcibly
-  /// terminated.
-  /// This call is idempotent, and must not return an error if all relevant
-  /// resources have already been reclaimed. kubelet will call StopPodSandbox
-  /// at least once before calling RemovePodSandbox. It will also attempt to
-  /// reclaim resources eagerly, as soon as a sandbox is not needed. Hence,
-  /// multiple StopPodSandbox calls are expected.
-  func stopPodSandbox(request: Runtime_V1_StopPodSandboxRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_StopPodSandboxResponse>
+    /// StopPodSandbox stops any running process that is part of the sandbox and
+    /// reclaims network resources (e.g., IP addresses) allocated to the sandbox.
+    /// If there are any running containers in the sandbox, they must be forcibly
+    /// terminated.
+    /// This call is idempotent, and must not return an error if all relevant
+    /// resources have already been reclaimed. kubelet will call StopPodSandbox
+    /// at least once before calling RemovePodSandbox. It will also attempt to
+    /// reclaim resources eagerly, as soon as a sandbox is not needed. Hence,
+    /// multiple StopPodSandbox calls are expected.
+    func stopPodSandbox(request: Runtime_V1_StopPodSandboxRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_StopPodSandboxResponse>
 
-  /// RemovePodSandbox removes the sandbox. If there are any running containers
-  /// in the sandbox, they must be forcibly terminated and removed.
-  /// This call is idempotent, and must not return an error if the sandbox has
-  /// already been removed.
-  func removePodSandbox(request: Runtime_V1_RemovePodSandboxRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_RemovePodSandboxResponse>
+    /// RemovePodSandbox removes the sandbox. If there are any running containers
+    /// in the sandbox, they must be forcibly terminated and removed.
+    /// This call is idempotent, and must not return an error if the sandbox has
+    /// already been removed.
+    func removePodSandbox(request: Runtime_V1_RemovePodSandboxRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_RemovePodSandboxResponse>
 
-  /// PodSandboxStatus returns the status of the PodSandbox. If the PodSandbox is not
-  /// present, returns an error.
-  func podSandboxStatus(request: Runtime_V1_PodSandboxStatusRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_PodSandboxStatusResponse>
+    /// PodSandboxStatus returns the status of the PodSandbox. If the PodSandbox is not
+    /// present, returns an error.
+    func podSandboxStatus(request: Runtime_V1_PodSandboxStatusRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_PodSandboxStatusResponse>
 
-  /// ListPodSandbox returns a list of PodSandboxes.
-  func listPodSandbox(request: Runtime_V1_ListPodSandboxRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ListPodSandboxResponse>
+    /// ListPodSandbox returns a list of PodSandboxes.
+    func listPodSandbox(request: Runtime_V1_ListPodSandboxRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ListPodSandboxResponse>
 
-  /// CreateContainer creates a new container in specified PodSandbox
-  func createContainer(request: Runtime_V1_CreateContainerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_CreateContainerResponse>
+    /// CreateContainer creates a new container in specified PodSandbox
+    func createContainer(request: Runtime_V1_CreateContainerRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_CreateContainerResponse>
 
-  /// StartContainer starts the container.
-  func startContainer(request: Runtime_V1_StartContainerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_StartContainerResponse>
+    /// StartContainer starts the container.
+    func startContainer(request: Runtime_V1_StartContainerRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_StartContainerResponse>
 
-  /// StopContainer stops a running container with a grace period (i.e., timeout).
-  /// This call is idempotent, and must not return an error if the container has
-  /// already been stopped.
-  /// The runtime must forcibly kill the container after the grace period is
-  /// reached.
-  func stopContainer(request: Runtime_V1_StopContainerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_StopContainerResponse>
+    /// StopContainer stops a running container with a grace period (i.e., timeout).
+    /// This call is idempotent, and must not return an error if the container has
+    /// already been stopped.
+    /// The runtime must forcibly kill the container after the grace period is
+    /// reached.
+    func stopContainer(request: Runtime_V1_StopContainerRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_StopContainerResponse>
 
-  /// RemoveContainer removes the container. If the container is running, the
-  /// container must be forcibly removed.
-  /// This call is idempotent, and must not return an error if the container has
-  /// already been removed.
-  func removeContainer(request: Runtime_V1_RemoveContainerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_RemoveContainerResponse>
+    /// RemoveContainer removes the container. If the container is running, the
+    /// container must be forcibly removed.
+    /// This call is idempotent, and must not return an error if the container has
+    /// already been removed.
+    func removeContainer(request: Runtime_V1_RemoveContainerRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_RemoveContainerResponse>
 
-  /// ListContainers lists all containers by filters.
-  func listContainers(request: Runtime_V1_ListContainersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ListContainersResponse>
+    /// ListContainers lists all containers by filters.
+    func listContainers(request: Runtime_V1_ListContainersRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ListContainersResponse>
 
-  /// ContainerStatus returns status of the container. If the container is not
-  /// present, returns an error.
-  func containerStatus(request: Runtime_V1_ContainerStatusRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ContainerStatusResponse>
+    /// ContainerStatus returns status of the container. If the container is not
+    /// present, returns an error.
+    func containerStatus(request: Runtime_V1_ContainerStatusRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ContainerStatusResponse>
 
-  /// UpdateContainerResources updates ContainerConfig of the container synchronously.
-  /// If runtime fails to transactionally update the requested resources, an error is returned.
-  func updateContainerResources(request: Runtime_V1_UpdateContainerResourcesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_UpdateContainerResourcesResponse>
+    /// UpdateContainerResources updates ContainerConfig of the container synchronously.
+    /// If runtime fails to transactionally update the requested resources, an error is returned.
+    func updateContainerResources(request: Runtime_V1_UpdateContainerResourcesRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_UpdateContainerResourcesResponse>
 
-  /// ReopenContainerLog asks runtime to reopen the stdout/stderr log file
-  /// for the container. This is often called after the log file has been
-  /// rotated. If the container is not running, container runtime can choose
-  /// to either create a new log file and return nil, or return an error.
-  /// Once it returns error, new container log file MUST NOT be created.
-  func reopenContainerLog(request: Runtime_V1_ReopenContainerLogRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ReopenContainerLogResponse>
+    /// ReopenContainerLog asks runtime to reopen the stdout/stderr log file
+    /// for the container. This is often called after the log file has been
+    /// rotated. If the container is not running, container runtime can choose
+    /// to either create a new log file and return nil, or return an error.
+    /// Once it returns error, new container log file MUST NOT be created.
+    func reopenContainerLog(request: Runtime_V1_ReopenContainerLogRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ReopenContainerLogResponse>
 
-  /// ExecSync runs a command in a container synchronously.
-  func execSync(request: Runtime_V1_ExecSyncRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ExecSyncResponse>
+    /// ExecSync runs a command in a container synchronously.
+    func execSync(request: Runtime_V1_ExecSyncRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ExecSyncResponse>
 
-  /// Exec prepares a streaming endpoint to execute a command in the container.
-  func exec(request: Runtime_V1_ExecRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ExecResponse>
+    /// Exec prepares a streaming endpoint to execute a command in the container.
+    func exec(request: Runtime_V1_ExecRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ExecResponse>
 
-  /// Attach prepares a streaming endpoint to attach to a running container.
-  func attach(request: Runtime_V1_AttachRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_AttachResponse>
+    /// Attach prepares a streaming endpoint to attach to a running container.
+    func attach(request: Runtime_V1_AttachRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_AttachResponse>
 
-  /// PortForward prepares a streaming endpoint to forward ports from a PodSandbox.
-  func portForward(request: Runtime_V1_PortForwardRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_PortForwardResponse>
+    /// PortForward prepares a streaming endpoint to forward ports from a PodSandbox.
+    func portForward(request: Runtime_V1_PortForwardRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_PortForwardResponse>
 
-  /// ContainerStats returns stats of the container. If the container does not
-  /// exist, the call returns an error.
-  func containerStats(request: Runtime_V1_ContainerStatsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ContainerStatsResponse>
+    /// ContainerStats returns stats of the container. If the container does not
+    /// exist, the call returns an error.
+    func containerStats(request: Runtime_V1_ContainerStatsRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ContainerStatsResponse>
 
-  /// ListContainerStats returns stats of all running containers.
-  func listContainerStats(request: Runtime_V1_ListContainerStatsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ListContainerStatsResponse>
+    /// ListContainerStats returns stats of all running containers.
+    func listContainerStats(request: Runtime_V1_ListContainerStatsRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ListContainerStatsResponse>
 
-  /// PodSandboxStats returns stats of the pod sandbox. If the pod sandbox does not
-  /// exist, the call returns an error.
-  func podSandboxStats(request: Runtime_V1_PodSandboxStatsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_PodSandboxStatsResponse>
+    /// PodSandboxStats returns stats of the pod sandbox. If the pod sandbox does not
+    /// exist, the call returns an error.
+    func podSandboxStats(request: Runtime_V1_PodSandboxStatsRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_PodSandboxStatsResponse>
 
-  /// ListPodSandboxStats returns stats of the pod sandboxes matching a filter.
-  func listPodSandboxStats(request: Runtime_V1_ListPodSandboxStatsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ListPodSandboxStatsResponse>
+    /// ListPodSandboxStats returns stats of the pod sandboxes matching a filter.
+    func listPodSandboxStats(request: Runtime_V1_ListPodSandboxStatsRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ListPodSandboxStatsResponse>
 
-  /// UpdateRuntimeConfig updates the runtime configuration based on the given request.
-  func updateRuntimeConfig(request: Runtime_V1_UpdateRuntimeConfigRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_UpdateRuntimeConfigResponse>
+    /// UpdateRuntimeConfig updates the runtime configuration based on the given request.
+    func updateRuntimeConfig(request: Runtime_V1_UpdateRuntimeConfigRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_UpdateRuntimeConfigResponse>
 
-  /// Status returns the status of the runtime.
-  func status(request: Runtime_V1_StatusRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_StatusResponse>
+    /// Status returns the status of the runtime.
+    func status(request: Runtime_V1_StatusRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_StatusResponse>
 
-  /// CheckpointContainer checkpoints a container
-  func checkpointContainer(request: Runtime_V1_CheckpointContainerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_CheckpointContainerResponse>
+    /// CheckpointContainer checkpoints a container
+    func checkpointContainer(request: Runtime_V1_CheckpointContainerRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_CheckpointContainerResponse>
 
-  /// GetContainerEvents gets container events from the CRI runtime
-  func getContainerEvents(request: Runtime_V1_GetEventsRequest, context: StreamingResponseCallContext<Runtime_V1_ContainerEventResponse>) -> EventLoopFuture<GRPCStatus>
+    /// GetContainerEvents gets container events from the CRI runtime
+    func getContainerEvents(
+        request: Runtime_V1_GetEventsRequest,
+        context: StreamingResponseCallContext<Runtime_V1_ContainerEventResponse>
+    ) -> EventLoopFuture<GRPCStatus>
 
-  /// ListMetricDescriptors gets the descriptors for the metrics that will be returned in ListPodSandboxMetrics.
-  /// This list should be static at startup: either the client and server restart together when
-  /// adding or removing metrics descriptors, or they should not change.
-  /// Put differently, if ListPodSandboxMetrics references a name that is not described in the initial
-  /// ListMetricDescriptors call, then the metric will not be broadcasted.
-  func listMetricDescriptors(request: Runtime_V1_ListMetricDescriptorsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ListMetricDescriptorsResponse>
+    /// ListMetricDescriptors gets the descriptors for the metrics that will be returned in ListPodSandboxMetrics.
+    /// This list should be static at startup: either the client and server restart together when
+    /// adding or removing metrics descriptors, or they should not change.
+    /// Put differently, if ListPodSandboxMetrics references a name that is not described in the initial
+    /// ListMetricDescriptors call, then the metric will not be broadcasted.
+    func listMetricDescriptors(request: Runtime_V1_ListMetricDescriptorsRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ListMetricDescriptorsResponse>
 
-  /// ListPodSandboxMetrics gets pod sandbox metrics from CRI Runtime
-  func listPodSandboxMetrics(request: Runtime_V1_ListPodSandboxMetricsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ListPodSandboxMetricsResponse>
+    /// ListPodSandboxMetrics gets pod sandbox metrics from CRI Runtime
+    func listPodSandboxMetrics(request: Runtime_V1_ListPodSandboxMetricsRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ListPodSandboxMetricsResponse>
 
-  /// RuntimeConfig returns configuration information of the runtime.
-  /// A couple of notes:
-  /// - The RuntimeConfigRequest object is not to be confused with the contents of UpdateRuntimeConfigRequest.
-  ///   The former is for having runtime tell Kubelet what to do, the latter vice versa.
-  /// - It is the expectation of the Kubelet that these fields are static for the lifecycle of the Kubelet.
-  ///   The Kubelet will not re-request the RuntimeConfiguration after startup, and CRI implementations should
-  ///   avoid updating them without a full node reboot.
-  func runtimeConfig(request: Runtime_V1_RuntimeConfigRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_RuntimeConfigResponse>
+    /// RuntimeConfig returns configuration information of the runtime.
+    /// A couple of notes:
+    /// - The RuntimeConfigRequest object is not to be confused with the contents of UpdateRuntimeConfigRequest.
+    ///   The former is for having runtime tell Kubelet what to do, the latter vice versa.
+    /// - It is the expectation of the Kubelet that these fields are static for the lifecycle of the Kubelet.
+    ///   The Kubelet will not re-request the RuntimeConfiguration after startup, and CRI implementations should
+    ///   avoid updating them without a full node reboot.
+    func runtimeConfig(request: Runtime_V1_RuntimeConfigRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_RuntimeConfigResponse>
 }
 
 extension Runtime_V1_RuntimeServiceProvider {
-  internal var serviceName: Substring {
-    return Runtime_V1_RuntimeServiceServerMetadata.serviceDescriptor.fullName[...]
-  }
-
-  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
-  /// Returns nil for methods not handled by this service.
-  internal func handle(
-    method name: Substring,
-    context: CallHandlerContext
-  ) -> GRPCServerHandlerProtocol? {
-    switch name {
-    case "Version":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_VersionRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_VersionResponse>(),
-        interceptors: self.interceptors?.makeVersionInterceptors() ?? [],
-        userFunction: self.version(request:context:)
-      )
-
-    case "RunPodSandbox":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RunPodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RunPodSandboxResponse>(),
-        interceptors: self.interceptors?.makeRunPodSandboxInterceptors() ?? [],
-        userFunction: self.runPodSandbox(request:context:)
-      )
-
-    case "StopPodSandbox":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StopPodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StopPodSandboxResponse>(),
-        interceptors: self.interceptors?.makeStopPodSandboxInterceptors() ?? [],
-        userFunction: self.stopPodSandbox(request:context:)
-      )
-
-    case "RemovePodSandbox":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RemovePodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RemovePodSandboxResponse>(),
-        interceptors: self.interceptors?.makeRemovePodSandboxInterceptors() ?? [],
-        userFunction: self.removePodSandbox(request:context:)
-      )
-
-    case "PodSandboxStatus":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatusResponse>(),
-        interceptors: self.interceptors?.makePodSandboxStatusInterceptors() ?? [],
-        userFunction: self.podSandboxStatus(request:context:)
-      )
-
-    case "ListPodSandbox":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxResponse>(),
-        interceptors: self.interceptors?.makeListPodSandboxInterceptors() ?? [],
-        userFunction: self.listPodSandbox(request:context:)
-      )
-
-    case "CreateContainer":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_CreateContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_CreateContainerResponse>(),
-        interceptors: self.interceptors?.makeCreateContainerInterceptors() ?? [],
-        userFunction: self.createContainer(request:context:)
-      )
-
-    case "StartContainer":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StartContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StartContainerResponse>(),
-        interceptors: self.interceptors?.makeStartContainerInterceptors() ?? [],
-        userFunction: self.startContainer(request:context:)
-      )
-
-    case "StopContainer":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StopContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StopContainerResponse>(),
-        interceptors: self.interceptors?.makeStopContainerInterceptors() ?? [],
-        userFunction: self.stopContainer(request:context:)
-      )
-
-    case "RemoveContainer":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RemoveContainerResponse>(),
-        interceptors: self.interceptors?.makeRemoveContainerInterceptors() ?? [],
-        userFunction: self.removeContainer(request:context:)
-      )
-
-    case "ListContainers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainersRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListContainersResponse>(),
-        interceptors: self.interceptors?.makeListContainersInterceptors() ?? [],
-        userFunction: self.listContainers(request:context:)
-      )
-
-    case "ContainerStatus":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatusResponse>(),
-        interceptors: self.interceptors?.makeContainerStatusInterceptors() ?? [],
-        userFunction: self.containerStatus(request:context:)
-      )
-
-    case "UpdateContainerResources":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateContainerResourcesRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_UpdateContainerResourcesResponse>(),
-        interceptors: self.interceptors?.makeUpdateContainerResourcesInterceptors() ?? [],
-        userFunction: self.updateContainerResources(request:context:)
-      )
-
-    case "ReopenContainerLog":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ReopenContainerLogRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ReopenContainerLogResponse>(),
-        interceptors: self.interceptors?.makeReopenContainerLogInterceptors() ?? [],
-        userFunction: self.reopenContainerLog(request:context:)
-      )
-
-    case "ExecSync":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecSyncRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ExecSyncResponse>(),
-        interceptors: self.interceptors?.makeExecSyncInterceptors() ?? [],
-        userFunction: self.execSync(request:context:)
-      )
-
-    case "Exec":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ExecResponse>(),
-        interceptors: self.interceptors?.makeExecInterceptors() ?? [],
-        userFunction: self.exec(request:context:)
-      )
-
-    case "Attach":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_AttachRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_AttachResponse>(),
-        interceptors: self.interceptors?.makeAttachInterceptors() ?? [],
-        userFunction: self.attach(request:context:)
-      )
-
-    case "PortForward":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PortForwardRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PortForwardResponse>(),
-        interceptors: self.interceptors?.makePortForwardInterceptors() ?? [],
-        userFunction: self.portForward(request:context:)
-      )
-
-    case "ContainerStats":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatsResponse>(),
-        interceptors: self.interceptors?.makeContainerStatsInterceptors() ?? [],
-        userFunction: self.containerStats(request:context:)
-      )
-
-    case "ListContainerStats":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainerStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListContainerStatsResponse>(),
-        interceptors: self.interceptors?.makeListContainerStatsInterceptors() ?? [],
-        userFunction: self.listContainerStats(request:context:)
-      )
-
-    case "PodSandboxStats":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatsResponse>(),
-        interceptors: self.interceptors?.makePodSandboxStatsInterceptors() ?? [],
-        userFunction: self.podSandboxStats(request:context:)
-      )
-
-    case "ListPodSandboxStats":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxStatsResponse>(),
-        interceptors: self.interceptors?.makeListPodSandboxStatsInterceptors() ?? [],
-        userFunction: self.listPodSandboxStats(request:context:)
-      )
-
-    case "UpdateRuntimeConfig":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateRuntimeConfigRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_UpdateRuntimeConfigResponse>(),
-        interceptors: self.interceptors?.makeUpdateRuntimeConfigInterceptors() ?? [],
-        userFunction: self.updateRuntimeConfig(request:context:)
-      )
-
-    case "Status":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StatusResponse>(),
-        interceptors: self.interceptors?.makeStatusInterceptors() ?? [],
-        userFunction: self.status(request:context:)
-      )
-
-    case "CheckpointContainer":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_CheckpointContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_CheckpointContainerResponse>(),
-        interceptors: self.interceptors?.makeCheckpointContainerInterceptors() ?? [],
-        userFunction: self.checkpointContainer(request:context:)
-      )
-
-    case "GetContainerEvents":
-      return ServerStreamingServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_GetEventsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ContainerEventResponse>(),
-        interceptors: self.interceptors?.makeGetContainerEventsInterceptors() ?? [],
-        userFunction: self.getContainerEvents(request:context:)
-      )
-
-    case "ListMetricDescriptors":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListMetricDescriptorsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListMetricDescriptorsResponse>(),
-        interceptors: self.interceptors?.makeListMetricDescriptorsInterceptors() ?? [],
-        userFunction: self.listMetricDescriptors(request:context:)
-      )
-
-    case "ListPodSandboxMetrics":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxMetricsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxMetricsResponse>(),
-        interceptors: self.interceptors?.makeListPodSandboxMetricsInterceptors() ?? [],
-        userFunction: self.listPodSandboxMetrics(request:context:)
-      )
-
-    case "RuntimeConfig":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RuntimeConfigRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RuntimeConfigResponse>(),
-        interceptors: self.interceptors?.makeRuntimeConfigInterceptors() ?? [],
-        userFunction: self.runtimeConfig(request:context:)
-      )
-
-    default:
-      return nil
+    var serviceName: Substring {
+        Runtime_V1_RuntimeServiceServerMetadata.serviceDescriptor.fullName[...]
     }
-  }
+
+    /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+    /// Returns nil for methods not handled by this service.
+    func handle(
+        method name: Substring,
+        context: CallHandlerContext
+    ) -> GRPCServerHandlerProtocol? {
+        switch name {
+        case "Version":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_VersionRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_VersionResponse>(),
+                interceptors: interceptors?.makeVersionInterceptors() ?? [],
+                userFunction: version(request:context:)
+            )
+
+        case "RunPodSandbox":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RunPodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RunPodSandboxResponse>(),
+                interceptors: interceptors?.makeRunPodSandboxInterceptors() ?? [],
+                userFunction: runPodSandbox(request:context:)
+            )
+
+        case "StopPodSandbox":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StopPodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StopPodSandboxResponse>(),
+                interceptors: interceptors?.makeStopPodSandboxInterceptors() ?? [],
+                userFunction: stopPodSandbox(request:context:)
+            )
+
+        case "RemovePodSandbox":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RemovePodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RemovePodSandboxResponse>(),
+                interceptors: interceptors?.makeRemovePodSandboxInterceptors() ?? [],
+                userFunction: removePodSandbox(request:context:)
+            )
+
+        case "PodSandboxStatus":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatusResponse>(),
+                interceptors: interceptors?.makePodSandboxStatusInterceptors() ?? [],
+                userFunction: podSandboxStatus(request:context:)
+            )
+
+        case "ListPodSandbox":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxResponse>(),
+                interceptors: interceptors?.makeListPodSandboxInterceptors() ?? [],
+                userFunction: listPodSandbox(request:context:)
+            )
+
+        case "CreateContainer":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_CreateContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_CreateContainerResponse>(),
+                interceptors: interceptors?.makeCreateContainerInterceptors() ?? [],
+                userFunction: createContainer(request:context:)
+            )
+
+        case "StartContainer":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StartContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StartContainerResponse>(),
+                interceptors: interceptors?.makeStartContainerInterceptors() ?? [],
+                userFunction: startContainer(request:context:)
+            )
+
+        case "StopContainer":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StopContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StopContainerResponse>(),
+                interceptors: interceptors?.makeStopContainerInterceptors() ?? [],
+                userFunction: stopContainer(request:context:)
+            )
+
+        case "RemoveContainer":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RemoveContainerResponse>(),
+                interceptors: interceptors?.makeRemoveContainerInterceptors() ?? [],
+                userFunction: removeContainer(request:context:)
+            )
+
+        case "ListContainers":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainersRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListContainersResponse>(),
+                interceptors: interceptors?.makeListContainersInterceptors() ?? [],
+                userFunction: listContainers(request:context:)
+            )
+
+        case "ContainerStatus":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatusResponse>(),
+                interceptors: interceptors?.makeContainerStatusInterceptors() ?? [],
+                userFunction: containerStatus(request:context:)
+            )
+
+        case "UpdateContainerResources":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateContainerResourcesRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_UpdateContainerResourcesResponse>(),
+                interceptors: interceptors?.makeUpdateContainerResourcesInterceptors() ?? [],
+                userFunction: updateContainerResources(request:context:)
+            )
+
+        case "ReopenContainerLog":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ReopenContainerLogRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ReopenContainerLogResponse>(),
+                interceptors: interceptors?.makeReopenContainerLogInterceptors() ?? [],
+                userFunction: reopenContainerLog(request:context:)
+            )
+
+        case "ExecSync":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecSyncRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ExecSyncResponse>(),
+                interceptors: interceptors?.makeExecSyncInterceptors() ?? [],
+                userFunction: execSync(request:context:)
+            )
+
+        case "Exec":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ExecResponse>(),
+                interceptors: interceptors?.makeExecInterceptors() ?? [],
+                userFunction: exec(request:context:)
+            )
+
+        case "Attach":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_AttachRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_AttachResponse>(),
+                interceptors: interceptors?.makeAttachInterceptors() ?? [],
+                userFunction: attach(request:context:)
+            )
+
+        case "PortForward":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PortForwardRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PortForwardResponse>(),
+                interceptors: interceptors?.makePortForwardInterceptors() ?? [],
+                userFunction: portForward(request:context:)
+            )
+
+        case "ContainerStats":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatsResponse>(),
+                interceptors: interceptors?.makeContainerStatsInterceptors() ?? [],
+                userFunction: containerStats(request:context:)
+            )
+
+        case "ListContainerStats":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainerStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListContainerStatsResponse>(),
+                interceptors: interceptors?.makeListContainerStatsInterceptors() ?? [],
+                userFunction: listContainerStats(request:context:)
+            )
+
+        case "PodSandboxStats":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatsResponse>(),
+                interceptors: interceptors?.makePodSandboxStatsInterceptors() ?? [],
+                userFunction: podSandboxStats(request:context:)
+            )
+
+        case "ListPodSandboxStats":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxStatsResponse>(),
+                interceptors: interceptors?.makeListPodSandboxStatsInterceptors() ?? [],
+                userFunction: listPodSandboxStats(request:context:)
+            )
+
+        case "UpdateRuntimeConfig":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateRuntimeConfigRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_UpdateRuntimeConfigResponse>(),
+                interceptors: interceptors?.makeUpdateRuntimeConfigInterceptors() ?? [],
+                userFunction: updateRuntimeConfig(request:context:)
+            )
+
+        case "Status":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StatusResponse>(),
+                interceptors: interceptors?.makeStatusInterceptors() ?? [],
+                userFunction: status(request:context:)
+            )
+
+        case "CheckpointContainer":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_CheckpointContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_CheckpointContainerResponse>(),
+                interceptors: interceptors?.makeCheckpointContainerInterceptors() ?? [],
+                userFunction: checkpointContainer(request:context:)
+            )
+
+        case "GetContainerEvents":
+            return ServerStreamingServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_GetEventsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ContainerEventResponse>(),
+                interceptors: interceptors?.makeGetContainerEventsInterceptors() ?? [],
+                userFunction: getContainerEvents(request:context:)
+            )
+
+        case "ListMetricDescriptors":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListMetricDescriptorsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListMetricDescriptorsResponse>(),
+                interceptors: interceptors?.makeListMetricDescriptorsInterceptors() ?? [],
+                userFunction: listMetricDescriptors(request:context:)
+            )
+
+        case "ListPodSandboxMetrics":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxMetricsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxMetricsResponse>(),
+                interceptors: interceptors?.makeListPodSandboxMetricsInterceptors() ?? [],
+                userFunction: listPodSandboxMetrics(request:context:)
+            )
+
+        case "RuntimeConfig":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RuntimeConfigRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RuntimeConfigResponse>(),
+                interceptors: interceptors?.makeRuntimeConfigInterceptors() ?? [],
+                userFunction: runtimeConfig(request:context:)
+            )
+
+        default:
+            return nil
+        }
+    }
 }
 
 /// Runtime service defines the public APIs for remote container runtimes
 ///
 /// To implement a server, implement an object which conforms to this protocol.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-internal protocol Runtime_V1_RuntimeServiceAsyncProvider: CallHandlerProvider, Sendable {
-  static var serviceDescriptor: GRPCServiceDescriptor { get }
-  var interceptors: Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_RuntimeServiceAsyncProvider: CallHandlerProvider, Sendable {
+    static var serviceDescriptor: GRPCServiceDescriptor { get }
+    var interceptors: Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol? { get }
 
-  /// Version returns the runtime name, runtime version, and runtime API version.
-  func version(
-    request: Runtime_V1_VersionRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_VersionResponse
+    /// Version returns the runtime name, runtime version, and runtime API version.
+    func version(
+        request: Runtime_V1_VersionRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_VersionResponse
 
-  /// RunPodSandbox creates and starts a pod-level sandbox. Runtimes must ensure
-  /// the sandbox is in the ready state on success.
-  func runPodSandbox(
-    request: Runtime_V1_RunPodSandboxRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_RunPodSandboxResponse
+    /// RunPodSandbox creates and starts a pod-level sandbox. Runtimes must ensure
+    /// the sandbox is in the ready state on success.
+    func runPodSandbox(
+        request: Runtime_V1_RunPodSandboxRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_RunPodSandboxResponse
 
-  /// StopPodSandbox stops any running process that is part of the sandbox and
-  /// reclaims network resources (e.g., IP addresses) allocated to the sandbox.
-  /// If there are any running containers in the sandbox, they must be forcibly
-  /// terminated.
-  /// This call is idempotent, and must not return an error if all relevant
-  /// resources have already been reclaimed. kubelet will call StopPodSandbox
-  /// at least once before calling RemovePodSandbox. It will also attempt to
-  /// reclaim resources eagerly, as soon as a sandbox is not needed. Hence,
-  /// multiple StopPodSandbox calls are expected.
-  func stopPodSandbox(
-    request: Runtime_V1_StopPodSandboxRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_StopPodSandboxResponse
+    /// StopPodSandbox stops any running process that is part of the sandbox and
+    /// reclaims network resources (e.g., IP addresses) allocated to the sandbox.
+    /// If there are any running containers in the sandbox, they must be forcibly
+    /// terminated.
+    /// This call is idempotent, and must not return an error if all relevant
+    /// resources have already been reclaimed. kubelet will call StopPodSandbox
+    /// at least once before calling RemovePodSandbox. It will also attempt to
+    /// reclaim resources eagerly, as soon as a sandbox is not needed. Hence,
+    /// multiple StopPodSandbox calls are expected.
+    func stopPodSandbox(
+        request: Runtime_V1_StopPodSandboxRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_StopPodSandboxResponse
 
-  /// RemovePodSandbox removes the sandbox. If there are any running containers
-  /// in the sandbox, they must be forcibly terminated and removed.
-  /// This call is idempotent, and must not return an error if the sandbox has
-  /// already been removed.
-  func removePodSandbox(
-    request: Runtime_V1_RemovePodSandboxRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_RemovePodSandboxResponse
+    /// RemovePodSandbox removes the sandbox. If there are any running containers
+    /// in the sandbox, they must be forcibly terminated and removed.
+    /// This call is idempotent, and must not return an error if the sandbox has
+    /// already been removed.
+    func removePodSandbox(
+        request: Runtime_V1_RemovePodSandboxRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_RemovePodSandboxResponse
 
-  /// PodSandboxStatus returns the status of the PodSandbox. If the PodSandbox is not
-  /// present, returns an error.
-  func podSandboxStatus(
-    request: Runtime_V1_PodSandboxStatusRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_PodSandboxStatusResponse
+    /// PodSandboxStatus returns the status of the PodSandbox. If the PodSandbox is not
+    /// present, returns an error.
+    func podSandboxStatus(
+        request: Runtime_V1_PodSandboxStatusRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_PodSandboxStatusResponse
 
-  /// ListPodSandbox returns a list of PodSandboxes.
-  func listPodSandbox(
-    request: Runtime_V1_ListPodSandboxRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ListPodSandboxResponse
+    /// ListPodSandbox returns a list of PodSandboxes.
+    func listPodSandbox(
+        request: Runtime_V1_ListPodSandboxRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ListPodSandboxResponse
 
-  /// CreateContainer creates a new container in specified PodSandbox
-  func createContainer(
-    request: Runtime_V1_CreateContainerRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_CreateContainerResponse
+    /// CreateContainer creates a new container in specified PodSandbox
+    func createContainer(
+        request: Runtime_V1_CreateContainerRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_CreateContainerResponse
 
-  /// StartContainer starts the container.
-  func startContainer(
-    request: Runtime_V1_StartContainerRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_StartContainerResponse
+    /// StartContainer starts the container.
+    func startContainer(
+        request: Runtime_V1_StartContainerRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_StartContainerResponse
 
-  /// StopContainer stops a running container with a grace period (i.e., timeout).
-  /// This call is idempotent, and must not return an error if the container has
-  /// already been stopped.
-  /// The runtime must forcibly kill the container after the grace period is
-  /// reached.
-  func stopContainer(
-    request: Runtime_V1_StopContainerRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_StopContainerResponse
+    /// StopContainer stops a running container with a grace period (i.e., timeout).
+    /// This call is idempotent, and must not return an error if the container has
+    /// already been stopped.
+    /// The runtime must forcibly kill the container after the grace period is
+    /// reached.
+    func stopContainer(
+        request: Runtime_V1_StopContainerRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_StopContainerResponse
 
-  /// RemoveContainer removes the container. If the container is running, the
-  /// container must be forcibly removed.
-  /// This call is idempotent, and must not return an error if the container has
-  /// already been removed.
-  func removeContainer(
-    request: Runtime_V1_RemoveContainerRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_RemoveContainerResponse
+    /// RemoveContainer removes the container. If the container is running, the
+    /// container must be forcibly removed.
+    /// This call is idempotent, and must not return an error if the container has
+    /// already been removed.
+    func removeContainer(
+        request: Runtime_V1_RemoveContainerRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_RemoveContainerResponse
 
-  /// ListContainers lists all containers by filters.
-  func listContainers(
-    request: Runtime_V1_ListContainersRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ListContainersResponse
+    /// ListContainers lists all containers by filters.
+    func listContainers(
+        request: Runtime_V1_ListContainersRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ListContainersResponse
 
-  /// ContainerStatus returns status of the container. If the container is not
-  /// present, returns an error.
-  func containerStatus(
-    request: Runtime_V1_ContainerStatusRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ContainerStatusResponse
+    /// ContainerStatus returns status of the container. If the container is not
+    /// present, returns an error.
+    func containerStatus(
+        request: Runtime_V1_ContainerStatusRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ContainerStatusResponse
 
-  /// UpdateContainerResources updates ContainerConfig of the container synchronously.
-  /// If runtime fails to transactionally update the requested resources, an error is returned.
-  func updateContainerResources(
-    request: Runtime_V1_UpdateContainerResourcesRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_UpdateContainerResourcesResponse
+    /// UpdateContainerResources updates ContainerConfig of the container synchronously.
+    /// If runtime fails to transactionally update the requested resources, an error is returned.
+    func updateContainerResources(
+        request: Runtime_V1_UpdateContainerResourcesRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_UpdateContainerResourcesResponse
 
-  /// ReopenContainerLog asks runtime to reopen the stdout/stderr log file
-  /// for the container. This is often called after the log file has been
-  /// rotated. If the container is not running, container runtime can choose
-  /// to either create a new log file and return nil, or return an error.
-  /// Once it returns error, new container log file MUST NOT be created.
-  func reopenContainerLog(
-    request: Runtime_V1_ReopenContainerLogRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ReopenContainerLogResponse
+    /// ReopenContainerLog asks runtime to reopen the stdout/stderr log file
+    /// for the container. This is often called after the log file has been
+    /// rotated. If the container is not running, container runtime can choose
+    /// to either create a new log file and return nil, or return an error.
+    /// Once it returns error, new container log file MUST NOT be created.
+    func reopenContainerLog(
+        request: Runtime_V1_ReopenContainerLogRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ReopenContainerLogResponse
 
-  /// ExecSync runs a command in a container synchronously.
-  func execSync(
-    request: Runtime_V1_ExecSyncRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ExecSyncResponse
+    /// ExecSync runs a command in a container synchronously.
+    func execSync(
+        request: Runtime_V1_ExecSyncRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ExecSyncResponse
 
-  /// Exec prepares a streaming endpoint to execute a command in the container.
-  func exec(
-    request: Runtime_V1_ExecRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ExecResponse
+    /// Exec prepares a streaming endpoint to execute a command in the container.
+    func exec(
+        request: Runtime_V1_ExecRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ExecResponse
 
-  /// Attach prepares a streaming endpoint to attach to a running container.
-  func attach(
-    request: Runtime_V1_AttachRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_AttachResponse
+    /// Attach prepares a streaming endpoint to attach to a running container.
+    func attach(
+        request: Runtime_V1_AttachRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_AttachResponse
 
-  /// PortForward prepares a streaming endpoint to forward ports from a PodSandbox.
-  func portForward(
-    request: Runtime_V1_PortForwardRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_PortForwardResponse
+    /// PortForward prepares a streaming endpoint to forward ports from a PodSandbox.
+    func portForward(
+        request: Runtime_V1_PortForwardRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_PortForwardResponse
 
-  /// ContainerStats returns stats of the container. If the container does not
-  /// exist, the call returns an error.
-  func containerStats(
-    request: Runtime_V1_ContainerStatsRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ContainerStatsResponse
+    /// ContainerStats returns stats of the container. If the container does not
+    /// exist, the call returns an error.
+    func containerStats(
+        request: Runtime_V1_ContainerStatsRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ContainerStatsResponse
 
-  /// ListContainerStats returns stats of all running containers.
-  func listContainerStats(
-    request: Runtime_V1_ListContainerStatsRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ListContainerStatsResponse
+    /// ListContainerStats returns stats of all running containers.
+    func listContainerStats(
+        request: Runtime_V1_ListContainerStatsRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ListContainerStatsResponse
 
-  /// PodSandboxStats returns stats of the pod sandbox. If the pod sandbox does not
-  /// exist, the call returns an error.
-  func podSandboxStats(
-    request: Runtime_V1_PodSandboxStatsRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_PodSandboxStatsResponse
+    /// PodSandboxStats returns stats of the pod sandbox. If the pod sandbox does not
+    /// exist, the call returns an error.
+    func podSandboxStats(
+        request: Runtime_V1_PodSandboxStatsRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_PodSandboxStatsResponse
 
-  /// ListPodSandboxStats returns stats of the pod sandboxes matching a filter.
-  func listPodSandboxStats(
-    request: Runtime_V1_ListPodSandboxStatsRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ListPodSandboxStatsResponse
+    /// ListPodSandboxStats returns stats of the pod sandboxes matching a filter.
+    func listPodSandboxStats(
+        request: Runtime_V1_ListPodSandboxStatsRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ListPodSandboxStatsResponse
 
-  /// UpdateRuntimeConfig updates the runtime configuration based on the given request.
-  func updateRuntimeConfig(
-    request: Runtime_V1_UpdateRuntimeConfigRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_UpdateRuntimeConfigResponse
+    /// UpdateRuntimeConfig updates the runtime configuration based on the given request.
+    func updateRuntimeConfig(
+        request: Runtime_V1_UpdateRuntimeConfigRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_UpdateRuntimeConfigResponse
 
-  /// Status returns the status of the runtime.
-  func status(
-    request: Runtime_V1_StatusRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_StatusResponse
+    /// Status returns the status of the runtime.
+    func status(
+        request: Runtime_V1_StatusRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_StatusResponse
 
-  /// CheckpointContainer checkpoints a container
-  func checkpointContainer(
-    request: Runtime_V1_CheckpointContainerRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_CheckpointContainerResponse
+    /// CheckpointContainer checkpoints a container
+    func checkpointContainer(
+        request: Runtime_V1_CheckpointContainerRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_CheckpointContainerResponse
 
-  /// GetContainerEvents gets container events from the CRI runtime
-  func getContainerEvents(
-    request: Runtime_V1_GetEventsRequest,
-    responseStream: GRPCAsyncResponseStreamWriter<Runtime_V1_ContainerEventResponse>,
-    context: GRPCAsyncServerCallContext
-  ) async throws
+    /// GetContainerEvents gets container events from the CRI runtime
+    func getContainerEvents(
+        request: Runtime_V1_GetEventsRequest,
+        responseStream: GRPCAsyncResponseStreamWriter<Runtime_V1_ContainerEventResponse>,
+        context: GRPCAsyncServerCallContext
+    ) async throws
 
-  /// ListMetricDescriptors gets the descriptors for the metrics that will be returned in ListPodSandboxMetrics.
-  /// This list should be static at startup: either the client and server restart together when
-  /// adding or removing metrics descriptors, or they should not change.
-  /// Put differently, if ListPodSandboxMetrics references a name that is not described in the initial
-  /// ListMetricDescriptors call, then the metric will not be broadcasted.
-  func listMetricDescriptors(
-    request: Runtime_V1_ListMetricDescriptorsRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ListMetricDescriptorsResponse
+    /// ListMetricDescriptors gets the descriptors for the metrics that will be returned in ListPodSandboxMetrics.
+    /// This list should be static at startup: either the client and server restart together when
+    /// adding or removing metrics descriptors, or they should not change.
+    /// Put differently, if ListPodSandboxMetrics references a name that is not described in the initial
+    /// ListMetricDescriptors call, then the metric will not be broadcasted.
+    func listMetricDescriptors(
+        request: Runtime_V1_ListMetricDescriptorsRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ListMetricDescriptorsResponse
 
-  /// ListPodSandboxMetrics gets pod sandbox metrics from CRI Runtime
-  func listPodSandboxMetrics(
-    request: Runtime_V1_ListPodSandboxMetricsRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ListPodSandboxMetricsResponse
+    /// ListPodSandboxMetrics gets pod sandbox metrics from CRI Runtime
+    func listPodSandboxMetrics(
+        request: Runtime_V1_ListPodSandboxMetricsRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ListPodSandboxMetricsResponse
 
-  /// RuntimeConfig returns configuration information of the runtime.
-  /// A couple of notes:
-  /// - The RuntimeConfigRequest object is not to be confused with the contents of UpdateRuntimeConfigRequest.
-  ///   The former is for having runtime tell Kubelet what to do, the latter vice versa.
-  /// - It is the expectation of the Kubelet that these fields are static for the lifecycle of the Kubelet.
-  ///   The Kubelet will not re-request the RuntimeConfiguration after startup, and CRI implementations should
-  ///   avoid updating them without a full node reboot.
-  func runtimeConfig(
-    request: Runtime_V1_RuntimeConfigRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_RuntimeConfigResponse
+    /// RuntimeConfig returns configuration information of the runtime.
+    /// A couple of notes:
+    /// - The RuntimeConfigRequest object is not to be confused with the contents of UpdateRuntimeConfigRequest.
+    ///   The former is for having runtime tell Kubelet what to do, the latter vice versa.
+    /// - It is the expectation of the Kubelet that these fields are static for the lifecycle of the Kubelet.
+    ///   The Kubelet will not re-request the RuntimeConfiguration after startup, and CRI implementations should
+    ///   avoid updating them without a full node reboot.
+    func runtimeConfig(
+        request: Runtime_V1_RuntimeConfigRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_RuntimeConfigResponse
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Runtime_V1_RuntimeServiceAsyncProvider {
-  internal static var serviceDescriptor: GRPCServiceDescriptor {
-    return Runtime_V1_RuntimeServiceServerMetadata.serviceDescriptor
-  }
-
-  internal var serviceName: Substring {
-    return Runtime_V1_RuntimeServiceServerMetadata.serviceDescriptor.fullName[...]
-  }
-
-  internal var interceptors: Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol? {
-    return nil
-  }
-
-  internal func handle(
-    method name: Substring,
-    context: CallHandlerContext
-  ) -> GRPCServerHandlerProtocol? {
-    switch name {
-    case "Version":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_VersionRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_VersionResponse>(),
-        interceptors: self.interceptors?.makeVersionInterceptors() ?? [],
-        wrapping: { try await self.version(request: $0, context: $1) }
-      )
-
-    case "RunPodSandbox":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RunPodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RunPodSandboxResponse>(),
-        interceptors: self.interceptors?.makeRunPodSandboxInterceptors() ?? [],
-        wrapping: { try await self.runPodSandbox(request: $0, context: $1) }
-      )
-
-    case "StopPodSandbox":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StopPodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StopPodSandboxResponse>(),
-        interceptors: self.interceptors?.makeStopPodSandboxInterceptors() ?? [],
-        wrapping: { try await self.stopPodSandbox(request: $0, context: $1) }
-      )
-
-    case "RemovePodSandbox":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RemovePodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RemovePodSandboxResponse>(),
-        interceptors: self.interceptors?.makeRemovePodSandboxInterceptors() ?? [],
-        wrapping: { try await self.removePodSandbox(request: $0, context: $1) }
-      )
-
-    case "PodSandboxStatus":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatusResponse>(),
-        interceptors: self.interceptors?.makePodSandboxStatusInterceptors() ?? [],
-        wrapping: { try await self.podSandboxStatus(request: $0, context: $1) }
-      )
-
-    case "ListPodSandbox":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxResponse>(),
-        interceptors: self.interceptors?.makeListPodSandboxInterceptors() ?? [],
-        wrapping: { try await self.listPodSandbox(request: $0, context: $1) }
-      )
-
-    case "CreateContainer":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_CreateContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_CreateContainerResponse>(),
-        interceptors: self.interceptors?.makeCreateContainerInterceptors() ?? [],
-        wrapping: { try await self.createContainer(request: $0, context: $1) }
-      )
-
-    case "StartContainer":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StartContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StartContainerResponse>(),
-        interceptors: self.interceptors?.makeStartContainerInterceptors() ?? [],
-        wrapping: { try await self.startContainer(request: $0, context: $1) }
-      )
-
-    case "StopContainer":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StopContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StopContainerResponse>(),
-        interceptors: self.interceptors?.makeStopContainerInterceptors() ?? [],
-        wrapping: { try await self.stopContainer(request: $0, context: $1) }
-      )
-
-    case "RemoveContainer":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RemoveContainerResponse>(),
-        interceptors: self.interceptors?.makeRemoveContainerInterceptors() ?? [],
-        wrapping: { try await self.removeContainer(request: $0, context: $1) }
-      )
-
-    case "ListContainers":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainersRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListContainersResponse>(),
-        interceptors: self.interceptors?.makeListContainersInterceptors() ?? [],
-        wrapping: { try await self.listContainers(request: $0, context: $1) }
-      )
-
-    case "ContainerStatus":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatusResponse>(),
-        interceptors: self.interceptors?.makeContainerStatusInterceptors() ?? [],
-        wrapping: { try await self.containerStatus(request: $0, context: $1) }
-      )
-
-    case "UpdateContainerResources":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateContainerResourcesRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_UpdateContainerResourcesResponse>(),
-        interceptors: self.interceptors?.makeUpdateContainerResourcesInterceptors() ?? [],
-        wrapping: { try await self.updateContainerResources(request: $0, context: $1) }
-      )
-
-    case "ReopenContainerLog":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ReopenContainerLogRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ReopenContainerLogResponse>(),
-        interceptors: self.interceptors?.makeReopenContainerLogInterceptors() ?? [],
-        wrapping: { try await self.reopenContainerLog(request: $0, context: $1) }
-      )
-
-    case "ExecSync":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecSyncRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ExecSyncResponse>(),
-        interceptors: self.interceptors?.makeExecSyncInterceptors() ?? [],
-        wrapping: { try await self.execSync(request: $0, context: $1) }
-      )
-
-    case "Exec":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ExecResponse>(),
-        interceptors: self.interceptors?.makeExecInterceptors() ?? [],
-        wrapping: { try await self.exec(request: $0, context: $1) }
-      )
-
-    case "Attach":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_AttachRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_AttachResponse>(),
-        interceptors: self.interceptors?.makeAttachInterceptors() ?? [],
-        wrapping: { try await self.attach(request: $0, context: $1) }
-      )
-
-    case "PortForward":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PortForwardRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PortForwardResponse>(),
-        interceptors: self.interceptors?.makePortForwardInterceptors() ?? [],
-        wrapping: { try await self.portForward(request: $0, context: $1) }
-      )
-
-    case "ContainerStats":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatsResponse>(),
-        interceptors: self.interceptors?.makeContainerStatsInterceptors() ?? [],
-        wrapping: { try await self.containerStats(request: $0, context: $1) }
-      )
-
-    case "ListContainerStats":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainerStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListContainerStatsResponse>(),
-        interceptors: self.interceptors?.makeListContainerStatsInterceptors() ?? [],
-        wrapping: { try await self.listContainerStats(request: $0, context: $1) }
-      )
-
-    case "PodSandboxStats":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatsResponse>(),
-        interceptors: self.interceptors?.makePodSandboxStatsInterceptors() ?? [],
-        wrapping: { try await self.podSandboxStats(request: $0, context: $1) }
-      )
-
-    case "ListPodSandboxStats":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxStatsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxStatsResponse>(),
-        interceptors: self.interceptors?.makeListPodSandboxStatsInterceptors() ?? [],
-        wrapping: { try await self.listPodSandboxStats(request: $0, context: $1) }
-      )
-
-    case "UpdateRuntimeConfig":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateRuntimeConfigRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_UpdateRuntimeConfigResponse>(),
-        interceptors: self.interceptors?.makeUpdateRuntimeConfigInterceptors() ?? [],
-        wrapping: { try await self.updateRuntimeConfig(request: $0, context: $1) }
-      )
-
-    case "Status":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_StatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_StatusResponse>(),
-        interceptors: self.interceptors?.makeStatusInterceptors() ?? [],
-        wrapping: { try await self.status(request: $0, context: $1) }
-      )
-
-    case "CheckpointContainer":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_CheckpointContainerRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_CheckpointContainerResponse>(),
-        interceptors: self.interceptors?.makeCheckpointContainerInterceptors() ?? [],
-        wrapping: { try await self.checkpointContainer(request: $0, context: $1) }
-      )
-
-    case "GetContainerEvents":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_GetEventsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ContainerEventResponse>(),
-        interceptors: self.interceptors?.makeGetContainerEventsInterceptors() ?? [],
-        wrapping: { try await self.getContainerEvents(request: $0, responseStream: $1, context: $2) }
-      )
-
-    case "ListMetricDescriptors":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListMetricDescriptorsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListMetricDescriptorsResponse>(),
-        interceptors: self.interceptors?.makeListMetricDescriptorsInterceptors() ?? [],
-        wrapping: { try await self.listMetricDescriptors(request: $0, context: $1) }
-      )
-
-    case "ListPodSandboxMetrics":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxMetricsRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxMetricsResponse>(),
-        interceptors: self.interceptors?.makeListPodSandboxMetricsInterceptors() ?? [],
-        wrapping: { try await self.listPodSandboxMetrics(request: $0, context: $1) }
-      )
-
-    case "RuntimeConfig":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RuntimeConfigRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RuntimeConfigResponse>(),
-        interceptors: self.interceptors?.makeRuntimeConfigInterceptors() ?? [],
-        wrapping: { try await self.runtimeConfig(request: $0, context: $1) }
-      )
-
-    default:
-      return nil
+    static var serviceDescriptor: GRPCServiceDescriptor {
+        Runtime_V1_RuntimeServiceServerMetadata.serviceDescriptor
     }
-  }
+
+    var serviceName: Substring {
+        Runtime_V1_RuntimeServiceServerMetadata.serviceDescriptor.fullName[...]
+    }
+
+    var interceptors: Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol? {
+        nil
+    }
+
+    func handle(
+        method name: Substring,
+        context: CallHandlerContext
+    ) -> GRPCServerHandlerProtocol? {
+        switch name {
+        case "Version":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_VersionRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_VersionResponse>(),
+                interceptors: interceptors?.makeVersionInterceptors() ?? [],
+                wrapping: { try await self.version(request: $0, context: $1) }
+            )
+
+        case "RunPodSandbox":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RunPodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RunPodSandboxResponse>(),
+                interceptors: interceptors?.makeRunPodSandboxInterceptors() ?? [],
+                wrapping: { try await self.runPodSandbox(request: $0, context: $1) }
+            )
+
+        case "StopPodSandbox":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StopPodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StopPodSandboxResponse>(),
+                interceptors: interceptors?.makeStopPodSandboxInterceptors() ?? [],
+                wrapping: { try await self.stopPodSandbox(request: $0, context: $1) }
+            )
+
+        case "RemovePodSandbox":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RemovePodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RemovePodSandboxResponse>(),
+                interceptors: interceptors?.makeRemovePodSandboxInterceptors() ?? [],
+                wrapping: { try await self.removePodSandbox(request: $0, context: $1) }
+            )
+
+        case "PodSandboxStatus":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatusResponse>(),
+                interceptors: interceptors?.makePodSandboxStatusInterceptors() ?? [],
+                wrapping: { try await self.podSandboxStatus(request: $0, context: $1) }
+            )
+
+        case "ListPodSandbox":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxResponse>(),
+                interceptors: interceptors?.makeListPodSandboxInterceptors() ?? [],
+                wrapping: { try await self.listPodSandbox(request: $0, context: $1) }
+            )
+
+        case "CreateContainer":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_CreateContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_CreateContainerResponse>(),
+                interceptors: interceptors?.makeCreateContainerInterceptors() ?? [],
+                wrapping: { try await self.createContainer(request: $0, context: $1) }
+            )
+
+        case "StartContainer":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StartContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StartContainerResponse>(),
+                interceptors: interceptors?.makeStartContainerInterceptors() ?? [],
+                wrapping: { try await self.startContainer(request: $0, context: $1) }
+            )
+
+        case "StopContainer":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StopContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StopContainerResponse>(),
+                interceptors: interceptors?.makeStopContainerInterceptors() ?? [],
+                wrapping: { try await self.stopContainer(request: $0, context: $1) }
+            )
+
+        case "RemoveContainer":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RemoveContainerResponse>(),
+                interceptors: interceptors?.makeRemoveContainerInterceptors() ?? [],
+                wrapping: { try await self.removeContainer(request: $0, context: $1) }
+            )
+
+        case "ListContainers":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainersRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListContainersResponse>(),
+                interceptors: interceptors?.makeListContainersInterceptors() ?? [],
+                wrapping: { try await self.listContainers(request: $0, context: $1) }
+            )
+
+        case "ContainerStatus":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatusResponse>(),
+                interceptors: interceptors?.makeContainerStatusInterceptors() ?? [],
+                wrapping: { try await self.containerStatus(request: $0, context: $1) }
+            )
+
+        case "UpdateContainerResources":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateContainerResourcesRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_UpdateContainerResourcesResponse>(),
+                interceptors: interceptors?.makeUpdateContainerResourcesInterceptors() ?? [],
+                wrapping: { try await self.updateContainerResources(request: $0, context: $1) }
+            )
+
+        case "ReopenContainerLog":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ReopenContainerLogRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ReopenContainerLogResponse>(),
+                interceptors: interceptors?.makeReopenContainerLogInterceptors() ?? [],
+                wrapping: { try await self.reopenContainerLog(request: $0, context: $1) }
+            )
+
+        case "ExecSync":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecSyncRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ExecSyncResponse>(),
+                interceptors: interceptors?.makeExecSyncInterceptors() ?? [],
+                wrapping: { try await self.execSync(request: $0, context: $1) }
+            )
+
+        case "Exec":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ExecRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ExecResponse>(),
+                interceptors: interceptors?.makeExecInterceptors() ?? [],
+                wrapping: { try await self.exec(request: $0, context: $1) }
+            )
+
+        case "Attach":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_AttachRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_AttachResponse>(),
+                interceptors: interceptors?.makeAttachInterceptors() ?? [],
+                wrapping: { try await self.attach(request: $0, context: $1) }
+            )
+
+        case "PortForward":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PortForwardRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PortForwardResponse>(),
+                interceptors: interceptors?.makePortForwardInterceptors() ?? [],
+                wrapping: { try await self.portForward(request: $0, context: $1) }
+            )
+
+        case "ContainerStats":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ContainerStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ContainerStatsResponse>(),
+                interceptors: interceptors?.makeContainerStatsInterceptors() ?? [],
+                wrapping: { try await self.containerStats(request: $0, context: $1) }
+            )
+
+        case "ListContainerStats":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListContainerStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListContainerStatsResponse>(),
+                interceptors: interceptors?.makeListContainerStatsInterceptors() ?? [],
+                wrapping: { try await self.listContainerStats(request: $0, context: $1) }
+            )
+
+        case "PodSandboxStats":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PodSandboxStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PodSandboxStatsResponse>(),
+                interceptors: interceptors?.makePodSandboxStatsInterceptors() ?? [],
+                wrapping: { try await self.podSandboxStats(request: $0, context: $1) }
+            )
+
+        case "ListPodSandboxStats":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxStatsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxStatsResponse>(),
+                interceptors: interceptors?.makeListPodSandboxStatsInterceptors() ?? [],
+                wrapping: { try await self.listPodSandboxStats(request: $0, context: $1) }
+            )
+
+        case "UpdateRuntimeConfig":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_UpdateRuntimeConfigRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_UpdateRuntimeConfigResponse>(),
+                interceptors: interceptors?.makeUpdateRuntimeConfigInterceptors() ?? [],
+                wrapping: { try await self.updateRuntimeConfig(request: $0, context: $1) }
+            )
+
+        case "Status":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_StatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_StatusResponse>(),
+                interceptors: interceptors?.makeStatusInterceptors() ?? [],
+                wrapping: { try await self.status(request: $0, context: $1) }
+            )
+
+        case "CheckpointContainer":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_CheckpointContainerRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_CheckpointContainerResponse>(),
+                interceptors: interceptors?.makeCheckpointContainerInterceptors() ?? [],
+                wrapping: { try await self.checkpointContainer(request: $0, context: $1) }
+            )
+
+        case "GetContainerEvents":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_GetEventsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ContainerEventResponse>(),
+                interceptors: interceptors?.makeGetContainerEventsInterceptors() ?? [],
+                wrapping: { try await self.getContainerEvents(request: $0, responseStream: $1, context: $2) }
+            )
+
+        case "ListMetricDescriptors":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListMetricDescriptorsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListMetricDescriptorsResponse>(),
+                interceptors: interceptors?.makeListMetricDescriptorsInterceptors() ?? [],
+                wrapping: { try await self.listMetricDescriptors(request: $0, context: $1) }
+            )
+
+        case "ListPodSandboxMetrics":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListPodSandboxMetricsRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListPodSandboxMetricsResponse>(),
+                interceptors: interceptors?.makeListPodSandboxMetricsInterceptors() ?? [],
+                wrapping: { try await self.listPodSandboxMetrics(request: $0, context: $1) }
+            )
+
+        case "RuntimeConfig":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RuntimeConfigRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RuntimeConfigResponse>(),
+                interceptors: interceptors?.makeRuntimeConfigInterceptors() ?? [],
+                wrapping: { try await self.runtimeConfig(request: $0, context: $1) }
+            )
+
+        default:
+            return nil
+        }
+    }
 }
 
-internal protocol Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol: Sendable {
+protocol Runtime_V1_RuntimeServiceServerInterceptorFactoryProtocol: Sendable {
+    /// - Returns: Interceptors to use when handling 'version'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeVersionInterceptors() -> [ServerInterceptor<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>]
 
-  /// - Returns: Interceptors to use when handling 'version'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeVersionInterceptors() -> [ServerInterceptor<Runtime_V1_VersionRequest, Runtime_V1_VersionResponse>]
+    /// - Returns: Interceptors to use when handling 'runPodSandbox'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeRunPodSandboxInterceptors() -> [ServerInterceptor<
+        Runtime_V1_RunPodSandboxRequest,
+        Runtime_V1_RunPodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'runPodSandbox'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeRunPodSandboxInterceptors() -> [ServerInterceptor<Runtime_V1_RunPodSandboxRequest, Runtime_V1_RunPodSandboxResponse>]
+    /// - Returns: Interceptors to use when handling 'stopPodSandbox'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeStopPodSandboxInterceptors() -> [ServerInterceptor<
+        Runtime_V1_StopPodSandboxRequest,
+        Runtime_V1_StopPodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'stopPodSandbox'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeStopPodSandboxInterceptors() -> [ServerInterceptor<Runtime_V1_StopPodSandboxRequest, Runtime_V1_StopPodSandboxResponse>]
+    /// - Returns: Interceptors to use when handling 'removePodSandbox'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeRemovePodSandboxInterceptors() -> [ServerInterceptor<
+        Runtime_V1_RemovePodSandboxRequest,
+        Runtime_V1_RemovePodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'removePodSandbox'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeRemovePodSandboxInterceptors() -> [ServerInterceptor<Runtime_V1_RemovePodSandboxRequest, Runtime_V1_RemovePodSandboxResponse>]
+    /// - Returns: Interceptors to use when handling 'podSandboxStatus'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makePodSandboxStatusInterceptors() -> [ServerInterceptor<
+        Runtime_V1_PodSandboxStatusRequest,
+        Runtime_V1_PodSandboxStatusResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'podSandboxStatus'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makePodSandboxStatusInterceptors() -> [ServerInterceptor<Runtime_V1_PodSandboxStatusRequest, Runtime_V1_PodSandboxStatusResponse>]
+    /// - Returns: Interceptors to use when handling 'listPodSandbox'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeListPodSandboxInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ListPodSandboxRequest,
+        Runtime_V1_ListPodSandboxResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'listPodSandbox'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListPodSandboxInterceptors() -> [ServerInterceptor<Runtime_V1_ListPodSandboxRequest, Runtime_V1_ListPodSandboxResponse>]
+    /// - Returns: Interceptors to use when handling 'createContainer'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeCreateContainerInterceptors() -> [ServerInterceptor<
+        Runtime_V1_CreateContainerRequest,
+        Runtime_V1_CreateContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'createContainer'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeCreateContainerInterceptors() -> [ServerInterceptor<Runtime_V1_CreateContainerRequest, Runtime_V1_CreateContainerResponse>]
+    /// - Returns: Interceptors to use when handling 'startContainer'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeStartContainerInterceptors() -> [ServerInterceptor<
+        Runtime_V1_StartContainerRequest,
+        Runtime_V1_StartContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'startContainer'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeStartContainerInterceptors() -> [ServerInterceptor<Runtime_V1_StartContainerRequest, Runtime_V1_StartContainerResponse>]
+    /// - Returns: Interceptors to use when handling 'stopContainer'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeStopContainerInterceptors() -> [ServerInterceptor<
+        Runtime_V1_StopContainerRequest,
+        Runtime_V1_StopContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'stopContainer'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeStopContainerInterceptors() -> [ServerInterceptor<Runtime_V1_StopContainerRequest, Runtime_V1_StopContainerResponse>]
+    /// - Returns: Interceptors to use when handling 'removeContainer'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeRemoveContainerInterceptors() -> [ServerInterceptor<
+        Runtime_V1_RemoveContainerRequest,
+        Runtime_V1_RemoveContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'removeContainer'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeRemoveContainerInterceptors() -> [ServerInterceptor<Runtime_V1_RemoveContainerRequest, Runtime_V1_RemoveContainerResponse>]
+    /// - Returns: Interceptors to use when handling 'listContainers'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeListContainersInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ListContainersRequest,
+        Runtime_V1_ListContainersResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'listContainers'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListContainersInterceptors() -> [ServerInterceptor<Runtime_V1_ListContainersRequest, Runtime_V1_ListContainersResponse>]
+    /// - Returns: Interceptors to use when handling 'containerStatus'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeContainerStatusInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ContainerStatusRequest,
+        Runtime_V1_ContainerStatusResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'containerStatus'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeContainerStatusInterceptors() -> [ServerInterceptor<Runtime_V1_ContainerStatusRequest, Runtime_V1_ContainerStatusResponse>]
+    /// - Returns: Interceptors to use when handling 'updateContainerResources'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeUpdateContainerResourcesInterceptors() -> [ServerInterceptor<
+        Runtime_V1_UpdateContainerResourcesRequest,
+        Runtime_V1_UpdateContainerResourcesResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'updateContainerResources'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUpdateContainerResourcesInterceptors() -> [ServerInterceptor<Runtime_V1_UpdateContainerResourcesRequest, Runtime_V1_UpdateContainerResourcesResponse>]
+    /// - Returns: Interceptors to use when handling 'reopenContainerLog'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeReopenContainerLogInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ReopenContainerLogRequest,
+        Runtime_V1_ReopenContainerLogResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'reopenContainerLog'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeReopenContainerLogInterceptors() -> [ServerInterceptor<Runtime_V1_ReopenContainerLogRequest, Runtime_V1_ReopenContainerLogResponse>]
+    /// - Returns: Interceptors to use when handling 'execSync'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeExecSyncInterceptors() -> [ServerInterceptor<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>]
 
-  /// - Returns: Interceptors to use when handling 'execSync'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeExecSyncInterceptors() -> [ServerInterceptor<Runtime_V1_ExecSyncRequest, Runtime_V1_ExecSyncResponse>]
+    /// - Returns: Interceptors to use when handling 'exec'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeExecInterceptors() -> [ServerInterceptor<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>]
 
-  /// - Returns: Interceptors to use when handling 'exec'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeExecInterceptors() -> [ServerInterceptor<Runtime_V1_ExecRequest, Runtime_V1_ExecResponse>]
+    /// - Returns: Interceptors to use when handling 'attach'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeAttachInterceptors() -> [ServerInterceptor<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>]
 
-  /// - Returns: Interceptors to use when handling 'attach'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAttachInterceptors() -> [ServerInterceptor<Runtime_V1_AttachRequest, Runtime_V1_AttachResponse>]
+    /// - Returns: Interceptors to use when handling 'portForward'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makePortForwardInterceptors() -> [ServerInterceptor<
+        Runtime_V1_PortForwardRequest,
+        Runtime_V1_PortForwardResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'portForward'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makePortForwardInterceptors() -> [ServerInterceptor<Runtime_V1_PortForwardRequest, Runtime_V1_PortForwardResponse>]
+    /// - Returns: Interceptors to use when handling 'containerStats'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeContainerStatsInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ContainerStatsRequest,
+        Runtime_V1_ContainerStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'containerStats'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeContainerStatsInterceptors() -> [ServerInterceptor<Runtime_V1_ContainerStatsRequest, Runtime_V1_ContainerStatsResponse>]
+    /// - Returns: Interceptors to use when handling 'listContainerStats'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeListContainerStatsInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ListContainerStatsRequest,
+        Runtime_V1_ListContainerStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'listContainerStats'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListContainerStatsInterceptors() -> [ServerInterceptor<Runtime_V1_ListContainerStatsRequest, Runtime_V1_ListContainerStatsResponse>]
+    /// - Returns: Interceptors to use when handling 'podSandboxStats'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makePodSandboxStatsInterceptors() -> [ServerInterceptor<
+        Runtime_V1_PodSandboxStatsRequest,
+        Runtime_V1_PodSandboxStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'podSandboxStats'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makePodSandboxStatsInterceptors() -> [ServerInterceptor<Runtime_V1_PodSandboxStatsRequest, Runtime_V1_PodSandboxStatsResponse>]
+    /// - Returns: Interceptors to use when handling 'listPodSandboxStats'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeListPodSandboxStatsInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ListPodSandboxStatsRequest,
+        Runtime_V1_ListPodSandboxStatsResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'listPodSandboxStats'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListPodSandboxStatsInterceptors() -> [ServerInterceptor<Runtime_V1_ListPodSandboxStatsRequest, Runtime_V1_ListPodSandboxStatsResponse>]
+    /// - Returns: Interceptors to use when handling 'updateRuntimeConfig'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeUpdateRuntimeConfigInterceptors() -> [ServerInterceptor<
+        Runtime_V1_UpdateRuntimeConfigRequest,
+        Runtime_V1_UpdateRuntimeConfigResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'updateRuntimeConfig'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUpdateRuntimeConfigInterceptors() -> [ServerInterceptor<Runtime_V1_UpdateRuntimeConfigRequest, Runtime_V1_UpdateRuntimeConfigResponse>]
+    /// - Returns: Interceptors to use when handling 'status'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeStatusInterceptors() -> [ServerInterceptor<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>]
 
-  /// - Returns: Interceptors to use when handling 'status'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeStatusInterceptors() -> [ServerInterceptor<Runtime_V1_StatusRequest, Runtime_V1_StatusResponse>]
+    /// - Returns: Interceptors to use when handling 'checkpointContainer'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeCheckpointContainerInterceptors() -> [ServerInterceptor<
+        Runtime_V1_CheckpointContainerRequest,
+        Runtime_V1_CheckpointContainerResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'checkpointContainer'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeCheckpointContainerInterceptors() -> [ServerInterceptor<Runtime_V1_CheckpointContainerRequest, Runtime_V1_CheckpointContainerResponse>]
+    /// - Returns: Interceptors to use when handling 'getContainerEvents'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeGetContainerEventsInterceptors() -> [ServerInterceptor<
+        Runtime_V1_GetEventsRequest,
+        Runtime_V1_ContainerEventResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'getContainerEvents'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeGetContainerEventsInterceptors() -> [ServerInterceptor<Runtime_V1_GetEventsRequest, Runtime_V1_ContainerEventResponse>]
+    /// - Returns: Interceptors to use when handling 'listMetricDescriptors'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeListMetricDescriptorsInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ListMetricDescriptorsRequest,
+        Runtime_V1_ListMetricDescriptorsResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'listMetricDescriptors'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListMetricDescriptorsInterceptors() -> [ServerInterceptor<Runtime_V1_ListMetricDescriptorsRequest, Runtime_V1_ListMetricDescriptorsResponse>]
+    /// - Returns: Interceptors to use when handling 'listPodSandboxMetrics'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeListPodSandboxMetricsInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ListPodSandboxMetricsRequest,
+        Runtime_V1_ListPodSandboxMetricsResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'listPodSandboxMetrics'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListPodSandboxMetricsInterceptors() -> [ServerInterceptor<Runtime_V1_ListPodSandboxMetricsRequest, Runtime_V1_ListPodSandboxMetricsResponse>]
-
-  /// - Returns: Interceptors to use when handling 'runtimeConfig'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeRuntimeConfigInterceptors() -> [ServerInterceptor<Runtime_V1_RuntimeConfigRequest, Runtime_V1_RuntimeConfigResponse>]
+    /// - Returns: Interceptors to use when handling 'runtimeConfig'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeRuntimeConfigInterceptors() -> [ServerInterceptor<
+        Runtime_V1_RuntimeConfigRequest,
+        Runtime_V1_RuntimeConfigResponse
+    >]
 }
 
-internal enum Runtime_V1_RuntimeServiceServerMetadata {
-  internal static let serviceDescriptor = GRPCServiceDescriptor(
-    name: "RuntimeService",
-    fullName: "runtime.v1.RuntimeService",
-    methods: [
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.version,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.runPodSandbox,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.stopPodSandbox,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.removePodSandbox,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.podSandboxStatus,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.listPodSandbox,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.createContainer,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.startContainer,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.stopContainer,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.removeContainer,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.listContainers,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.containerStatus,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.updateContainerResources,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.reopenContainerLog,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.execSync,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.exec,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.attach,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.portForward,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.containerStats,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.listContainerStats,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.podSandboxStats,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.listPodSandboxStats,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.updateRuntimeConfig,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.status,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.checkpointContainer,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.getContainerEvents,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.listMetricDescriptors,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.listPodSandboxMetrics,
-      Runtime_V1_RuntimeServiceServerMetadata.Methods.runtimeConfig,
-    ]
-  )
-
-  internal enum Methods {
-    internal static let version = GRPCMethodDescriptor(
-      name: "Version",
-      path: "/runtime.v1.RuntimeService/Version",
-      type: GRPCCallType.unary
+enum Runtime_V1_RuntimeServiceServerMetadata {
+    static let serviceDescriptor = GRPCServiceDescriptor(
+        name: "RuntimeService",
+        fullName: "runtime.v1.RuntimeService",
+        methods: [
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.version,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.runPodSandbox,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.stopPodSandbox,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.removePodSandbox,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.podSandboxStatus,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.listPodSandbox,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.createContainer,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.startContainer,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.stopContainer,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.removeContainer,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.listContainers,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.containerStatus,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.updateContainerResources,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.reopenContainerLog,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.execSync,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.exec,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.attach,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.portForward,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.containerStats,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.listContainerStats,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.podSandboxStats,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.listPodSandboxStats,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.updateRuntimeConfig,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.status,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.checkpointContainer,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.getContainerEvents,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.listMetricDescriptors,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.listPodSandboxMetrics,
+            Runtime_V1_RuntimeServiceServerMetadata.Methods.runtimeConfig,
+        ]
     )
 
-    internal static let runPodSandbox = GRPCMethodDescriptor(
-      name: "RunPodSandbox",
-      path: "/runtime.v1.RuntimeService/RunPodSandbox",
-      type: GRPCCallType.unary
-    )
+    enum Methods {
+        static let version = GRPCMethodDescriptor(
+            name: "Version",
+            path: "/runtime.v1.RuntimeService/Version",
+            type: GRPCCallType.unary
+        )
 
-    internal static let stopPodSandbox = GRPCMethodDescriptor(
-      name: "StopPodSandbox",
-      path: "/runtime.v1.RuntimeService/StopPodSandbox",
-      type: GRPCCallType.unary
-    )
+        static let runPodSandbox = GRPCMethodDescriptor(
+            name: "RunPodSandbox",
+            path: "/runtime.v1.RuntimeService/RunPodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let removePodSandbox = GRPCMethodDescriptor(
-      name: "RemovePodSandbox",
-      path: "/runtime.v1.RuntimeService/RemovePodSandbox",
-      type: GRPCCallType.unary
-    )
+        static let stopPodSandbox = GRPCMethodDescriptor(
+            name: "StopPodSandbox",
+            path: "/runtime.v1.RuntimeService/StopPodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let podSandboxStatus = GRPCMethodDescriptor(
-      name: "PodSandboxStatus",
-      path: "/runtime.v1.RuntimeService/PodSandboxStatus",
-      type: GRPCCallType.unary
-    )
+        static let removePodSandbox = GRPCMethodDescriptor(
+            name: "RemovePodSandbox",
+            path: "/runtime.v1.RuntimeService/RemovePodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listPodSandbox = GRPCMethodDescriptor(
-      name: "ListPodSandbox",
-      path: "/runtime.v1.RuntimeService/ListPodSandbox",
-      type: GRPCCallType.unary
-    )
+        static let podSandboxStatus = GRPCMethodDescriptor(
+            name: "PodSandboxStatus",
+            path: "/runtime.v1.RuntimeService/PodSandboxStatus",
+            type: GRPCCallType.unary
+        )
 
-    internal static let createContainer = GRPCMethodDescriptor(
-      name: "CreateContainer",
-      path: "/runtime.v1.RuntimeService/CreateContainer",
-      type: GRPCCallType.unary
-    )
+        static let listPodSandbox = GRPCMethodDescriptor(
+            name: "ListPodSandbox",
+            path: "/runtime.v1.RuntimeService/ListPodSandbox",
+            type: GRPCCallType.unary
+        )
 
-    internal static let startContainer = GRPCMethodDescriptor(
-      name: "StartContainer",
-      path: "/runtime.v1.RuntimeService/StartContainer",
-      type: GRPCCallType.unary
-    )
+        static let createContainer = GRPCMethodDescriptor(
+            name: "CreateContainer",
+            path: "/runtime.v1.RuntimeService/CreateContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let stopContainer = GRPCMethodDescriptor(
-      name: "StopContainer",
-      path: "/runtime.v1.RuntimeService/StopContainer",
-      type: GRPCCallType.unary
-    )
+        static let startContainer = GRPCMethodDescriptor(
+            name: "StartContainer",
+            path: "/runtime.v1.RuntimeService/StartContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let removeContainer = GRPCMethodDescriptor(
-      name: "RemoveContainer",
-      path: "/runtime.v1.RuntimeService/RemoveContainer",
-      type: GRPCCallType.unary
-    )
+        static let stopContainer = GRPCMethodDescriptor(
+            name: "StopContainer",
+            path: "/runtime.v1.RuntimeService/StopContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listContainers = GRPCMethodDescriptor(
-      name: "ListContainers",
-      path: "/runtime.v1.RuntimeService/ListContainers",
-      type: GRPCCallType.unary
-    )
+        static let removeContainer = GRPCMethodDescriptor(
+            name: "RemoveContainer",
+            path: "/runtime.v1.RuntimeService/RemoveContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let containerStatus = GRPCMethodDescriptor(
-      name: "ContainerStatus",
-      path: "/runtime.v1.RuntimeService/ContainerStatus",
-      type: GRPCCallType.unary
-    )
+        static let listContainers = GRPCMethodDescriptor(
+            name: "ListContainers",
+            path: "/runtime.v1.RuntimeService/ListContainers",
+            type: GRPCCallType.unary
+        )
 
-    internal static let updateContainerResources = GRPCMethodDescriptor(
-      name: "UpdateContainerResources",
-      path: "/runtime.v1.RuntimeService/UpdateContainerResources",
-      type: GRPCCallType.unary
-    )
+        static let containerStatus = GRPCMethodDescriptor(
+            name: "ContainerStatus",
+            path: "/runtime.v1.RuntimeService/ContainerStatus",
+            type: GRPCCallType.unary
+        )
 
-    internal static let reopenContainerLog = GRPCMethodDescriptor(
-      name: "ReopenContainerLog",
-      path: "/runtime.v1.RuntimeService/ReopenContainerLog",
-      type: GRPCCallType.unary
-    )
+        static let updateContainerResources = GRPCMethodDescriptor(
+            name: "UpdateContainerResources",
+            path: "/runtime.v1.RuntimeService/UpdateContainerResources",
+            type: GRPCCallType.unary
+        )
 
-    internal static let execSync = GRPCMethodDescriptor(
-      name: "ExecSync",
-      path: "/runtime.v1.RuntimeService/ExecSync",
-      type: GRPCCallType.unary
-    )
+        static let reopenContainerLog = GRPCMethodDescriptor(
+            name: "ReopenContainerLog",
+            path: "/runtime.v1.RuntimeService/ReopenContainerLog",
+            type: GRPCCallType.unary
+        )
 
-    internal static let exec = GRPCMethodDescriptor(
-      name: "Exec",
-      path: "/runtime.v1.RuntimeService/Exec",
-      type: GRPCCallType.unary
-    )
+        static let execSync = GRPCMethodDescriptor(
+            name: "ExecSync",
+            path: "/runtime.v1.RuntimeService/ExecSync",
+            type: GRPCCallType.unary
+        )
 
-    internal static let attach = GRPCMethodDescriptor(
-      name: "Attach",
-      path: "/runtime.v1.RuntimeService/Attach",
-      type: GRPCCallType.unary
-    )
+        static let exec = GRPCMethodDescriptor(
+            name: "Exec",
+            path: "/runtime.v1.RuntimeService/Exec",
+            type: GRPCCallType.unary
+        )
 
-    internal static let portForward = GRPCMethodDescriptor(
-      name: "PortForward",
-      path: "/runtime.v1.RuntimeService/PortForward",
-      type: GRPCCallType.unary
-    )
+        static let attach = GRPCMethodDescriptor(
+            name: "Attach",
+            path: "/runtime.v1.RuntimeService/Attach",
+            type: GRPCCallType.unary
+        )
 
-    internal static let containerStats = GRPCMethodDescriptor(
-      name: "ContainerStats",
-      path: "/runtime.v1.RuntimeService/ContainerStats",
-      type: GRPCCallType.unary
-    )
+        static let portForward = GRPCMethodDescriptor(
+            name: "PortForward",
+            path: "/runtime.v1.RuntimeService/PortForward",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listContainerStats = GRPCMethodDescriptor(
-      name: "ListContainerStats",
-      path: "/runtime.v1.RuntimeService/ListContainerStats",
-      type: GRPCCallType.unary
-    )
+        static let containerStats = GRPCMethodDescriptor(
+            name: "ContainerStats",
+            path: "/runtime.v1.RuntimeService/ContainerStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let podSandboxStats = GRPCMethodDescriptor(
-      name: "PodSandboxStats",
-      path: "/runtime.v1.RuntimeService/PodSandboxStats",
-      type: GRPCCallType.unary
-    )
+        static let listContainerStats = GRPCMethodDescriptor(
+            name: "ListContainerStats",
+            path: "/runtime.v1.RuntimeService/ListContainerStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listPodSandboxStats = GRPCMethodDescriptor(
-      name: "ListPodSandboxStats",
-      path: "/runtime.v1.RuntimeService/ListPodSandboxStats",
-      type: GRPCCallType.unary
-    )
+        static let podSandboxStats = GRPCMethodDescriptor(
+            name: "PodSandboxStats",
+            path: "/runtime.v1.RuntimeService/PodSandboxStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let updateRuntimeConfig = GRPCMethodDescriptor(
-      name: "UpdateRuntimeConfig",
-      path: "/runtime.v1.RuntimeService/UpdateRuntimeConfig",
-      type: GRPCCallType.unary
-    )
+        static let listPodSandboxStats = GRPCMethodDescriptor(
+            name: "ListPodSandboxStats",
+            path: "/runtime.v1.RuntimeService/ListPodSandboxStats",
+            type: GRPCCallType.unary
+        )
 
-    internal static let status = GRPCMethodDescriptor(
-      name: "Status",
-      path: "/runtime.v1.RuntimeService/Status",
-      type: GRPCCallType.unary
-    )
+        static let updateRuntimeConfig = GRPCMethodDescriptor(
+            name: "UpdateRuntimeConfig",
+            path: "/runtime.v1.RuntimeService/UpdateRuntimeConfig",
+            type: GRPCCallType.unary
+        )
 
-    internal static let checkpointContainer = GRPCMethodDescriptor(
-      name: "CheckpointContainer",
-      path: "/runtime.v1.RuntimeService/CheckpointContainer",
-      type: GRPCCallType.unary
-    )
+        static let status = GRPCMethodDescriptor(
+            name: "Status",
+            path: "/runtime.v1.RuntimeService/Status",
+            type: GRPCCallType.unary
+        )
 
-    internal static let getContainerEvents = GRPCMethodDescriptor(
-      name: "GetContainerEvents",
-      path: "/runtime.v1.RuntimeService/GetContainerEvents",
-      type: GRPCCallType.serverStreaming
-    )
+        static let checkpointContainer = GRPCMethodDescriptor(
+            name: "CheckpointContainer",
+            path: "/runtime.v1.RuntimeService/CheckpointContainer",
+            type: GRPCCallType.unary
+        )
 
-    internal static let listMetricDescriptors = GRPCMethodDescriptor(
-      name: "ListMetricDescriptors",
-      path: "/runtime.v1.RuntimeService/ListMetricDescriptors",
-      type: GRPCCallType.unary
-    )
+        static let getContainerEvents = GRPCMethodDescriptor(
+            name: "GetContainerEvents",
+            path: "/runtime.v1.RuntimeService/GetContainerEvents",
+            type: GRPCCallType.serverStreaming
+        )
 
-    internal static let listPodSandboxMetrics = GRPCMethodDescriptor(
-      name: "ListPodSandboxMetrics",
-      path: "/runtime.v1.RuntimeService/ListPodSandboxMetrics",
-      type: GRPCCallType.unary
-    )
+        static let listMetricDescriptors = GRPCMethodDescriptor(
+            name: "ListMetricDescriptors",
+            path: "/runtime.v1.RuntimeService/ListMetricDescriptors",
+            type: GRPCCallType.unary
+        )
 
-    internal static let runtimeConfig = GRPCMethodDescriptor(
-      name: "RuntimeConfig",
-      path: "/runtime.v1.RuntimeService/RuntimeConfig",
-      type: GRPCCallType.unary
-    )
-  }
+        static let listPodSandboxMetrics = GRPCMethodDescriptor(
+            name: "ListPodSandboxMetrics",
+            path: "/runtime.v1.RuntimeService/ListPodSandboxMetrics",
+            type: GRPCCallType.unary
+        )
+
+        static let runtimeConfig = GRPCMethodDescriptor(
+            name: "RuntimeConfig",
+            path: "/runtime.v1.RuntimeService/RuntimeConfig",
+            type: GRPCCallType.unary
+        )
+    }
 }
+
 /// ImageService defines the public APIs for managing images.
 ///
 /// To build a server, implement a class that conforms to this protocol.
-internal protocol Runtime_V1_ImageServiceProvider: CallHandlerProvider {
-  var interceptors: Runtime_V1_ImageServiceServerInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_ImageServiceProvider: CallHandlerProvider {
+    var interceptors: Runtime_V1_ImageServiceServerInterceptorFactoryProtocol? { get }
 
-  /// ListImages lists existing images.
-  func listImages(request: Runtime_V1_ListImagesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ListImagesResponse>
+    /// ListImages lists existing images.
+    func listImages(request: Runtime_V1_ListImagesRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ListImagesResponse>
 
-  /// ImageStatus returns the status of the image. If the image is not
-  /// present, returns a response with ImageStatusResponse.Image set to
-  /// nil.
-  func imageStatus(request: Runtime_V1_ImageStatusRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ImageStatusResponse>
+    /// ImageStatus returns the status of the image. If the image is not
+    /// present, returns a response with ImageStatusResponse.Image set to
+    /// nil.
+    func imageStatus(request: Runtime_V1_ImageStatusRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ImageStatusResponse>
 
-  /// PullImage pulls an image with authentication config.
-  func pullImage(request: Runtime_V1_PullImageRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_PullImageResponse>
+    /// PullImage pulls an image with authentication config.
+    func pullImage(request: Runtime_V1_PullImageRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_PullImageResponse>
 
-  /// RemoveImage removes the image.
-  /// This call is idempotent, and must not return an error if the image has
-  /// already been removed.
-  func removeImage(request: Runtime_V1_RemoveImageRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_RemoveImageResponse>
+    /// RemoveImage removes the image.
+    /// This call is idempotent, and must not return an error if the image has
+    /// already been removed.
+    func removeImage(request: Runtime_V1_RemoveImageRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_RemoveImageResponse>
 
-  /// ImageFSInfo returns information of the filesystem that is used to store images.
-  func imageFsInfo(request: Runtime_V1_ImageFsInfoRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Runtime_V1_ImageFsInfoResponse>
+    /// ImageFSInfo returns information of the filesystem that is used to store images.
+    func imageFsInfo(request: Runtime_V1_ImageFsInfoRequest, context: StatusOnlyCallContext)
+        -> EventLoopFuture<Runtime_V1_ImageFsInfoResponse>
 }
 
 extension Runtime_V1_ImageServiceProvider {
-  internal var serviceName: Substring {
-    return Runtime_V1_ImageServiceServerMetadata.serviceDescriptor.fullName[...]
-  }
-
-  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
-  /// Returns nil for methods not handled by this service.
-  internal func handle(
-    method name: Substring,
-    context: CallHandlerContext
-  ) -> GRPCServerHandlerProtocol? {
-    switch name {
-    case "ListImages":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListImagesRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListImagesResponse>(),
-        interceptors: self.interceptors?.makeListImagesInterceptors() ?? [],
-        userFunction: self.listImages(request:context:)
-      )
-
-    case "ImageStatus":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageStatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ImageStatusResponse>(),
-        interceptors: self.interceptors?.makeImageStatusInterceptors() ?? [],
-        userFunction: self.imageStatus(request:context:)
-      )
-
-    case "PullImage":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PullImageRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PullImageResponse>(),
-        interceptors: self.interceptors?.makePullImageInterceptors() ?? [],
-        userFunction: self.pullImage(request:context:)
-      )
-
-    case "RemoveImage":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveImageRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RemoveImageResponse>(),
-        interceptors: self.interceptors?.makeRemoveImageInterceptors() ?? [],
-        userFunction: self.removeImage(request:context:)
-      )
-
-    case "ImageFsInfo":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageFsInfoRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ImageFsInfoResponse>(),
-        interceptors: self.interceptors?.makeImageFsInfoInterceptors() ?? [],
-        userFunction: self.imageFsInfo(request:context:)
-      )
-
-    default:
-      return nil
+    var serviceName: Substring {
+        Runtime_V1_ImageServiceServerMetadata.serviceDescriptor.fullName[...]
     }
-  }
+
+    /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+    /// Returns nil for methods not handled by this service.
+    func handle(
+        method name: Substring,
+        context: CallHandlerContext
+    ) -> GRPCServerHandlerProtocol? {
+        switch name {
+        case "ListImages":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListImagesRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListImagesResponse>(),
+                interceptors: interceptors?.makeListImagesInterceptors() ?? [],
+                userFunction: listImages(request:context:)
+            )
+
+        case "ImageStatus":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageStatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ImageStatusResponse>(),
+                interceptors: interceptors?.makeImageStatusInterceptors() ?? [],
+                userFunction: imageStatus(request:context:)
+            )
+
+        case "PullImage":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PullImageRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PullImageResponse>(),
+                interceptors: interceptors?.makePullImageInterceptors() ?? [],
+                userFunction: pullImage(request:context:)
+            )
+
+        case "RemoveImage":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveImageRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RemoveImageResponse>(),
+                interceptors: interceptors?.makeRemoveImageInterceptors() ?? [],
+                userFunction: removeImage(request:context:)
+            )
+
+        case "ImageFsInfo":
+            return UnaryServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageFsInfoRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ImageFsInfoResponse>(),
+                interceptors: interceptors?.makeImageFsInfoInterceptors() ?? [],
+                userFunction: imageFsInfo(request:context:)
+            )
+
+        default:
+            return nil
+        }
+    }
 }
 
 /// ImageService defines the public APIs for managing images.
 ///
 /// To implement a server, implement an object which conforms to this protocol.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-internal protocol Runtime_V1_ImageServiceAsyncProvider: CallHandlerProvider, Sendable {
-  static var serviceDescriptor: GRPCServiceDescriptor { get }
-  var interceptors: Runtime_V1_ImageServiceServerInterceptorFactoryProtocol? { get }
+protocol Runtime_V1_ImageServiceAsyncProvider: CallHandlerProvider, Sendable {
+    static var serviceDescriptor: GRPCServiceDescriptor { get }
+    var interceptors: Runtime_V1_ImageServiceServerInterceptorFactoryProtocol? { get }
 
-  /// ListImages lists existing images.
-  func listImages(
-    request: Runtime_V1_ListImagesRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ListImagesResponse
+    /// ListImages lists existing images.
+    func listImages(
+        request: Runtime_V1_ListImagesRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ListImagesResponse
 
-  /// ImageStatus returns the status of the image. If the image is not
-  /// present, returns a response with ImageStatusResponse.Image set to
-  /// nil.
-  func imageStatus(
-    request: Runtime_V1_ImageStatusRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ImageStatusResponse
+    /// ImageStatus returns the status of the image. If the image is not
+    /// present, returns a response with ImageStatusResponse.Image set to
+    /// nil.
+    func imageStatus(
+        request: Runtime_V1_ImageStatusRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ImageStatusResponse
 
-  /// PullImage pulls an image with authentication config.
-  func pullImage(
-    request: Runtime_V1_PullImageRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_PullImageResponse
+    /// PullImage pulls an image with authentication config.
+    func pullImage(
+        request: Runtime_V1_PullImageRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_PullImageResponse
 
-  /// RemoveImage removes the image.
-  /// This call is idempotent, and must not return an error if the image has
-  /// already been removed.
-  func removeImage(
-    request: Runtime_V1_RemoveImageRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_RemoveImageResponse
+    /// RemoveImage removes the image.
+    /// This call is idempotent, and must not return an error if the image has
+    /// already been removed.
+    func removeImage(
+        request: Runtime_V1_RemoveImageRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_RemoveImageResponse
 
-  /// ImageFSInfo returns information of the filesystem that is used to store images.
-  func imageFsInfo(
-    request: Runtime_V1_ImageFsInfoRequest,
-    context: GRPCAsyncServerCallContext
-  ) async throws -> Runtime_V1_ImageFsInfoResponse
+    /// ImageFSInfo returns information of the filesystem that is used to store images.
+    func imageFsInfo(
+        request: Runtime_V1_ImageFsInfoRequest,
+        context: GRPCAsyncServerCallContext
+    ) async throws -> Runtime_V1_ImageFsInfoResponse
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Runtime_V1_ImageServiceAsyncProvider {
-  internal static var serviceDescriptor: GRPCServiceDescriptor {
-    return Runtime_V1_ImageServiceServerMetadata.serviceDescriptor
-  }
-
-  internal var serviceName: Substring {
-    return Runtime_V1_ImageServiceServerMetadata.serviceDescriptor.fullName[...]
-  }
-
-  internal var interceptors: Runtime_V1_ImageServiceServerInterceptorFactoryProtocol? {
-    return nil
-  }
-
-  internal func handle(
-    method name: Substring,
-    context: CallHandlerContext
-  ) -> GRPCServerHandlerProtocol? {
-    switch name {
-    case "ListImages":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ListImagesRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ListImagesResponse>(),
-        interceptors: self.interceptors?.makeListImagesInterceptors() ?? [],
-        wrapping: { try await self.listImages(request: $0, context: $1) }
-      )
-
-    case "ImageStatus":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageStatusRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ImageStatusResponse>(),
-        interceptors: self.interceptors?.makeImageStatusInterceptors() ?? [],
-        wrapping: { try await self.imageStatus(request: $0, context: $1) }
-      )
-
-    case "PullImage":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_PullImageRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_PullImageResponse>(),
-        interceptors: self.interceptors?.makePullImageInterceptors() ?? [],
-        wrapping: { try await self.pullImage(request: $0, context: $1) }
-      )
-
-    case "RemoveImage":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveImageRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_RemoveImageResponse>(),
-        interceptors: self.interceptors?.makeRemoveImageInterceptors() ?? [],
-        wrapping: { try await self.removeImage(request: $0, context: $1) }
-      )
-
-    case "ImageFsInfo":
-      return GRPCAsyncServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageFsInfoRequest>(),
-        responseSerializer: ProtobufSerializer<Runtime_V1_ImageFsInfoResponse>(),
-        interceptors: self.interceptors?.makeImageFsInfoInterceptors() ?? [],
-        wrapping: { try await self.imageFsInfo(request: $0, context: $1) }
-      )
-
-    default:
-      return nil
+    static var serviceDescriptor: GRPCServiceDescriptor {
+        Runtime_V1_ImageServiceServerMetadata.serviceDescriptor
     }
-  }
+
+    var serviceName: Substring {
+        Runtime_V1_ImageServiceServerMetadata.serviceDescriptor.fullName[...]
+    }
+
+    var interceptors: Runtime_V1_ImageServiceServerInterceptorFactoryProtocol? {
+        nil
+    }
+
+    func handle(
+        method name: Substring,
+        context: CallHandlerContext
+    ) -> GRPCServerHandlerProtocol? {
+        switch name {
+        case "ListImages":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ListImagesRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ListImagesResponse>(),
+                interceptors: interceptors?.makeListImagesInterceptors() ?? [],
+                wrapping: { try await self.listImages(request: $0, context: $1) }
+            )
+
+        case "ImageStatus":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageStatusRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ImageStatusResponse>(),
+                interceptors: interceptors?.makeImageStatusInterceptors() ?? [],
+                wrapping: { try await self.imageStatus(request: $0, context: $1) }
+            )
+
+        case "PullImage":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_PullImageRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_PullImageResponse>(),
+                interceptors: interceptors?.makePullImageInterceptors() ?? [],
+                wrapping: { try await self.pullImage(request: $0, context: $1) }
+            )
+
+        case "RemoveImage":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_RemoveImageRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_RemoveImageResponse>(),
+                interceptors: interceptors?.makeRemoveImageInterceptors() ?? [],
+                wrapping: { try await self.removeImage(request: $0, context: $1) }
+            )
+
+        case "ImageFsInfo":
+            return GRPCAsyncServerHandler(
+                context: context,
+                requestDeserializer: ProtobufDeserializer<Runtime_V1_ImageFsInfoRequest>(),
+                responseSerializer: ProtobufSerializer<Runtime_V1_ImageFsInfoResponse>(),
+                interceptors: interceptors?.makeImageFsInfoInterceptors() ?? [],
+                wrapping: { try await self.imageFsInfo(request: $0, context: $1) }
+            )
+
+        default:
+            return nil
+        }
+    }
 }
 
-internal protocol Runtime_V1_ImageServiceServerInterceptorFactoryProtocol: Sendable {
+protocol Runtime_V1_ImageServiceServerInterceptorFactoryProtocol: Sendable {
+    /// - Returns: Interceptors to use when handling 'listImages'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeListImagesInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ListImagesRequest,
+        Runtime_V1_ListImagesResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'listImages'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListImagesInterceptors() -> [ServerInterceptor<Runtime_V1_ListImagesRequest, Runtime_V1_ListImagesResponse>]
+    /// - Returns: Interceptors to use when handling 'imageStatus'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeImageStatusInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ImageStatusRequest,
+        Runtime_V1_ImageStatusResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'imageStatus'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeImageStatusInterceptors() -> [ServerInterceptor<Runtime_V1_ImageStatusRequest, Runtime_V1_ImageStatusResponse>]
+    /// - Returns: Interceptors to use when handling 'pullImage'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makePullImageInterceptors() -> [ServerInterceptor<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>]
 
-  /// - Returns: Interceptors to use when handling 'pullImage'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makePullImageInterceptors() -> [ServerInterceptor<Runtime_V1_PullImageRequest, Runtime_V1_PullImageResponse>]
+    /// - Returns: Interceptors to use when handling 'removeImage'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeRemoveImageInterceptors() -> [ServerInterceptor<
+        Runtime_V1_RemoveImageRequest,
+        Runtime_V1_RemoveImageResponse
+    >]
 
-  /// - Returns: Interceptors to use when handling 'removeImage'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeRemoveImageInterceptors() -> [ServerInterceptor<Runtime_V1_RemoveImageRequest, Runtime_V1_RemoveImageResponse>]
-
-  /// - Returns: Interceptors to use when handling 'imageFsInfo'.
-  ///   Defaults to calling `self.makeInterceptors()`.
-  func makeImageFsInfoInterceptors() -> [ServerInterceptor<Runtime_V1_ImageFsInfoRequest, Runtime_V1_ImageFsInfoResponse>]
+    /// - Returns: Interceptors to use when handling 'imageFsInfo'.
+    ///   Defaults to calling `self.makeInterceptors()`.
+    func makeImageFsInfoInterceptors() -> [ServerInterceptor<
+        Runtime_V1_ImageFsInfoRequest,
+        Runtime_V1_ImageFsInfoResponse
+    >]
 }
 
-internal enum Runtime_V1_ImageServiceServerMetadata {
-  internal static let serviceDescriptor = GRPCServiceDescriptor(
-    name: "ImageService",
-    fullName: "runtime.v1.ImageService",
-    methods: [
-      Runtime_V1_ImageServiceServerMetadata.Methods.listImages,
-      Runtime_V1_ImageServiceServerMetadata.Methods.imageStatus,
-      Runtime_V1_ImageServiceServerMetadata.Methods.pullImage,
-      Runtime_V1_ImageServiceServerMetadata.Methods.removeImage,
-      Runtime_V1_ImageServiceServerMetadata.Methods.imageFsInfo,
-    ]
-  )
-
-  internal enum Methods {
-    internal static let listImages = GRPCMethodDescriptor(
-      name: "ListImages",
-      path: "/runtime.v1.ImageService/ListImages",
-      type: GRPCCallType.unary
+enum Runtime_V1_ImageServiceServerMetadata {
+    static let serviceDescriptor = GRPCServiceDescriptor(
+        name: "ImageService",
+        fullName: "runtime.v1.ImageService",
+        methods: [
+            Runtime_V1_ImageServiceServerMetadata.Methods.listImages,
+            Runtime_V1_ImageServiceServerMetadata.Methods.imageStatus,
+            Runtime_V1_ImageServiceServerMetadata.Methods.pullImage,
+            Runtime_V1_ImageServiceServerMetadata.Methods.removeImage,
+            Runtime_V1_ImageServiceServerMetadata.Methods.imageFsInfo,
+        ]
     )
 
-    internal static let imageStatus = GRPCMethodDescriptor(
-      name: "ImageStatus",
-      path: "/runtime.v1.ImageService/ImageStatus",
-      type: GRPCCallType.unary
-    )
+    enum Methods {
+        static let listImages = GRPCMethodDescriptor(
+            name: "ListImages",
+            path: "/runtime.v1.ImageService/ListImages",
+            type: GRPCCallType.unary
+        )
 
-    internal static let pullImage = GRPCMethodDescriptor(
-      name: "PullImage",
-      path: "/runtime.v1.ImageService/PullImage",
-      type: GRPCCallType.unary
-    )
+        static let imageStatus = GRPCMethodDescriptor(
+            name: "ImageStatus",
+            path: "/runtime.v1.ImageService/ImageStatus",
+            type: GRPCCallType.unary
+        )
 
-    internal static let removeImage = GRPCMethodDescriptor(
-      name: "RemoveImage",
-      path: "/runtime.v1.ImageService/RemoveImage",
-      type: GRPCCallType.unary
-    )
+        static let pullImage = GRPCMethodDescriptor(
+            name: "PullImage",
+            path: "/runtime.v1.ImageService/PullImage",
+            type: GRPCCallType.unary
+        )
 
-    internal static let imageFsInfo = GRPCMethodDescriptor(
-      name: "ImageFsInfo",
-      path: "/runtime.v1.ImageService/ImageFsInfo",
-      type: GRPCCallType.unary
-    )
-  }
+        static let removeImage = GRPCMethodDescriptor(
+            name: "RemoveImage",
+            path: "/runtime.v1.ImageService/RemoveImage",
+            type: GRPCCallType.unary
+        )
+
+        static let imageFsInfo = GRPCMethodDescriptor(
+            name: "ImageFsInfo",
+            path: "/runtime.v1.ImageService/ImageFsInfo",
+            type: GRPCCallType.unary
+        )
+    }
 }
