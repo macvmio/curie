@@ -24,6 +24,7 @@ generate:
 	swift build -c release --product protoc-gen-swift
 	swift build -c release --product protoc-gen-grpc-swift
 	protoc --proto_path=CRI/api/v1 --swift_out=Sources/CurieCRI/Generated/ CRI/api/v1/api.proto
+	protoc --plugin=.build/release/protoc_generate_grpc_swift --proto_path=CRI/api/v1 --grpc-swift_out=Sources/CurieCRI/Generated/ CRI/api/v1/api.proto
 
 autocorrect:
 	swiftlint autocorrect --quiet
