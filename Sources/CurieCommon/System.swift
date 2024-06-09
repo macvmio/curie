@@ -10,11 +10,11 @@ public enum OutputType {
     var output: Output {
         switch self {
         case .default:
-            return StandardOutput.shared
+            StandardOutput.shared
         case .muted:
-            return ForwardOutput(stdout: nil, stderr: nil)
+            ForwardOutput(stdout: nil, stderr: nil)
         case let .custom(output):
-            return output
+            output
         }
     }
 }
@@ -106,9 +106,9 @@ private extension OutputType {
     func outputRedirection() -> TSCBasic.Process.OutputRedirection {
         switch self {
         case .default:
-            return .none
+            .none
         default:
-            return .stream { [output] bytes in output.write(bytes, to: .stdout) }
+            .stream { [output] bytes in output.write(bytes, to: .stdout) }
                 stderr: { [output] bytes in output.write(bytes, to: .stderr)
                 }
         }

@@ -226,9 +226,9 @@ final class DefaultImageCache: ImageCache {
     private func storeAbsolutePath(_ type: ImageType) -> AbsolutePath {
         switch type {
         case .container:
-            return containersAbsolutePath
+            containersAbsolutePath
         case .image:
-            return imagesAbsolutePath
+            imagesAbsolutePath
         }
     }
 
@@ -338,9 +338,9 @@ final class DefaultImageCache: ImageCache {
 private extension ImageDescriptor {
     func relativePath() -> RelativePath {
         if let tag {
-            return RelativePath("\(repository):\(tag)")
+            RelativePath("\(repository):\(tag)")
         } else {
-            return RelativePath(repository)
+            RelativePath(repository)
         }
     }
 }
@@ -349,9 +349,9 @@ private extension Target {
     func imageDescriptor(source: ImageReference, imageId: ImageID) throws -> ImageDescriptor {
         switch self {
         case let .reference(reference):
-            return try ImageDescriptor(reference: reference)
+            try ImageDescriptor(reference: reference)
         case .newReference:
-            return ImageDescriptor(
+            ImageDescriptor(
                 repository: "@\(imageId.description)/\(source.descriptor.repository)",
                 tag: source.descriptor.tag
             )
@@ -361,9 +361,9 @@ private extension Target {
     func imageType() -> ImageType {
         switch self {
         case .reference:
-            return .image
+            .image
         case .newReference:
-            return .container
+            .container
         }
     }
 }

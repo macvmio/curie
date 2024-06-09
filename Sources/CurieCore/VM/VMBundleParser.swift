@@ -58,11 +58,10 @@ final class DefaultVMBundleParser: VMBundleParser {
     func readConfig(from bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VMConfig {
         let data = try fileSystem.read(from: bundle.config)
         let diskConfig = try jsonDecoder.decode(VMPartialConfig.self, from: data)
-        let partialConfig: VMPartialConfig
-        if let overrideConfig {
-            partialConfig = diskConfig.merge(config: overrideConfig)
+        let partialConfig: VMPartialConfig = if let overrideConfig {
+            diskConfig.merge(config: overrideConfig)
         } else {
-            partialConfig = diskConfig
+            diskConfig
         }
         let config = prepareConfig(partialConfig: partialConfig)
         return config
