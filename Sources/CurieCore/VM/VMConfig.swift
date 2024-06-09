@@ -257,9 +257,9 @@ extension VMConfig.ShutdownConfig.ShutdownBehaviour: CustomStringConvertible {
     var description: String {
         switch self {
         case .stop:
-            return "exit"
+            "exit"
         case .pause:
-            return "pause"
+            "pause"
         }
     }
 }

@@ -26,7 +26,7 @@ enum CommandError: Error {
     var exitCode: Int32 {
         switch self {
         case let .exit(exitCode):
-            return exitCode
+            exitCode
         }
     }
 }

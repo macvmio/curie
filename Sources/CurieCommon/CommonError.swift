@@ -59,7 +59,7 @@ public enum CoreError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .generic(message):
-            return message
+            message
         }
     }
 }

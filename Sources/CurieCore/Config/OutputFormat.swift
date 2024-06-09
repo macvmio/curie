@@ -10,9 +10,9 @@ extension OutputFormat {
     func rendererFormat() -> TableRenderer.Format {
         switch self {
         case .text:
-            return .text
+            .text
         case .json:
-            return .json
+            .json
         }
     }
 }

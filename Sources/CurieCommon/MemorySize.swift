@@ -133,15 +133,15 @@ public struct MemorySize: Equatable, Codable, CustomStringConvertible, Comparabl
     private static func unit(from string: String) -> UInt64? {
         switch string {
         case "B":
-            return 1
+            1
         case "KB":
-            return KB
+            KB
         case "MB":
-            return MB
+            MB
         case "GB":
-            return GB
+            GB
         default:
-            return nil
+            nil
         }
     }
 }
@@ -154,11 +154,11 @@ public enum DeltaMemorySize: Equatable, CustomStringConvertible {
     public var description: String {
         switch self {
         case let .lower(fileSize):
-            return "-\(fileSize.description)"
+            "-\(fileSize.description)"
         case let .greater(fileSize):
-            return "+\(fileSize.description)"
+            "+\(fileSize.description)"
         case .equal:
-            return "0"
+            "0"
         }
     }
 }

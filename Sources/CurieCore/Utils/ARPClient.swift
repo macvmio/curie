@@ -51,9 +51,9 @@ final class DefaultARPClient: ARPClient {
         }
         let normalizedComponents = components.map {
             if $0.count == 1 {
-                return "0\($0.lowercased())"
+                "0\($0.lowercased())"
             } else {
-                return $0.lowercased()
+                $0.lowercased()
             }
         }
         return normalizedComponents.joined(separator: ":")

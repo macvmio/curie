@@ -36,9 +36,9 @@ public final class TableRenderer {
     public func render(content: Content, config: Config) -> String {
         switch config.format {
         case .text:
-            return renderText(content: content, config: config)
+            renderText(content: content, config: config)
         case .json:
-            return renderJson(content: content, config: config)
+            renderJson(content: content, config: config)
         }
     }
 
