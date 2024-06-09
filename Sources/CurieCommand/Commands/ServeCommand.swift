@@ -19,7 +19,9 @@ struct ServeCommand: Command {
             self.console = console
         }
 
-        func execute(command _: ServeCommand) throws {}
+        func execute(command _: ServeCommand) throws {
+            try interactor.execute(with: .init())
+        }
     }
 
     final class Assembly: CommandAssembly {

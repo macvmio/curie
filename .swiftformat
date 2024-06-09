@@ -8,3 +8,4 @@
 --varattributes prev-line
 --wraparguments before-first
 --wrapparameters before-first
+--exclude Sources/CurieCRI/Generated/

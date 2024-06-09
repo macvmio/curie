@@ -9,7 +9,13 @@ public protocol ServeInteractor {
 }
 
 final class DefaultServeInteractor: ServeInteractor {
-    func execute(with _: ServeInteractorContext) throws {
-        print("hello world....")
+    private let server: CRIServer
+
+    init(server: CRIServer) {
+        self.server = server
+    }
+
+    func execute(with context: ServeInteractorContext) throws {
+        try server.start(config: .init())
     }
 }

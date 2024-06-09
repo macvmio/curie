@@ -12,14 +12,18 @@ public final class CRIAssembly: Assembly {
     // MARK: - Private
 
     private func assembleInteractors(_ registry: Registry) {
-        registry.register(ServeInteractor.self) { _ in
-            DefaultServeInteractor()
+        registry.register(ServeInteractor.self) { r in
+            DefaultServeInteractor(
+                server: r.resolve(CRIServer.self)
+            )
         }
     }
 
     private func assembleUtils(_ registry: Registry) {
-        registry.register(CRIServer.self) { _ in
-            DefaultCRIServer()
+        registry.register(CRIServer.self) { r in
+            DefaultCRIServer(
+                console: r.resolve(Console.self)
+            )
         }
     }
 }

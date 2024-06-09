@@ -1,13 +1,30 @@
 import Foundation
 import GRPC
 import NIO
+import CurieCommon
+
+public struct CRIServerConfig {
+    let host: String
+    let port: Int
+
+    public init(host: String, port: Int) {
+        self.host = host
+        self.port = port
+    }
+}
 
 public protocol CRIServer {
-    func start() throws
+    func start(config: CRIServerConfig) throws
 }
 
 final class DefaultCRIServer: CRIServer {
-    func start() throws {
+    private let console: Console
+
+    init(console: Console) {
+        self.console = console
+    }
+
+    func start(config: CRIServerConfig) throws {
         // Create an event loop group for the server to run on.
         let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
         defer {
@@ -15,18 +32,22 @@ final class DefaultCRIServer: CRIServer {
         }
 
         // Create a provider using the features we read.
-        let provider = DefaultRuntime_V1_RuntimeServiceProvider()
+        let runtimeServiceProvider = DefaultRuntime_V1_RuntimeServiceProvider()
 
         // Start the server and print its address once it has started.
         let server = Server.insecure(group: group)
-            .withServiceProviders([provider])
-            .bind(host: "localhost", port: 0)
+            .withServiceProviders([runtimeServiceProvider])
+            .bind(host: config.host, port: config.port)
 
-        server.map(\.channel.localAddress).whenSuccess { address in
-            print("server started on port \(address!.port!)")
+        server.map(\.channel.localAddress).whenSuccess { [console] address in
+            console.text("Server started on port \(address!.port!)")
         }
 
         // Wait on the server's `onClose` future to stop the program from exiting.
-        _ = try server.flatMap(\.onClose).wait()
+        do {
+            _ = try server.flatMap(\.onClose).wait()
+        } catch {
+            try group.syncShutdownGracefully()
+        }
     }
 }
