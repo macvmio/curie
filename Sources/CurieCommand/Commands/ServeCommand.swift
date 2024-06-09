@@ -10,6 +10,20 @@ struct ServeCommand: Command {
         abstract: "Start CRI server."
     )
 
+    @Option(
+        name: .long,
+        help: "Use host.",
+        completion: .default
+    )
+    var host: String = "localhost"
+
+    @Option(
+        name: .long,
+        help: "Use port.",
+        completion: .default
+    )
+    var port: Int = 0
+
     final class Executor: CommandExecutor {
         private let interactor: ServeInteractor
         private let console: Console
@@ -19,8 +33,13 @@ struct ServeCommand: Command {
             self.console = console
         }
 
-        func execute(command _: ServeCommand) throws {
-            try interactor.execute(with: .init())
+        func execute(command: ServeCommand) throws {
+            try interactor.execute(
+                with: .init(
+                    host: command.host,
+                    port: command.port
+                )
+            )
         }
     }
 

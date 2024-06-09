@@ -1,7 +1,7 @@
+import CurieCommon
 import Foundation
 import GRPC
 import NIO
-import CurieCommon
 
 public struct CRIServerConfig {
     let host: String

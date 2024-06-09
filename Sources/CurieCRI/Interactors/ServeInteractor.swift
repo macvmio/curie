@@ -1,7 +1,13 @@
 import Foundation
 
 public struct ServeInteractorContext {
-    public init() {}
+    public let host: String
+    public let port: Int
+
+    public init(host: String, port: Int) {
+        self.host = host
+        self.port = port
+    }
 }
 
 public protocol ServeInteractor {
@@ -16,6 +22,11 @@ final class DefaultServeInteractor: ServeInteractor {
     }
 
     func execute(with context: ServeInteractorContext) throws {
-        try server.start(config: .init())
+        try server.start(
+            config: .init(
+                host: context.host,
+                port: context.port
+            )
+        )
     }
 }
