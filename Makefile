@@ -2,7 +2,6 @@ mise := ~/.local/bin/mise
 
 setup:
 	curl "https://mise.run" | sh
-	@$(mise) install
 
 clean:
 	@$(mise) run clean
