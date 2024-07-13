@@ -41,7 +41,6 @@ public final class DefaultStartInteractor: StartInteractor {
     }
 
     public func execute(with context: StartInteractorContext) throws {
-        console.setQuiet(context.launch.quiet)
         console.text("Start \(context.reference) container")
 
         let sourceReference = try imageCache.findContainerReference(context.reference)
@@ -51,8 +50,7 @@ public final class DefaultStartInteractor: StartInteractor {
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
             startUpFromMacOSRecovery: context.launch.recoveryMode,
-            noWindow: context.launch.noWindow,
-            quiet: context.launch.quiet
+            noWindow: context.launch.noWindow
         )
 
         try imageRunner.run(vm: vm, bundle: bundle, options: options)

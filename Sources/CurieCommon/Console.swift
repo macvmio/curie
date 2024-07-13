@@ -1,7 +1,8 @@
 import Foundation
 
-public protocol Console {
+public protocol Console: AnyObject {
     var output: Output { get }
+    var quiet: Bool { get set }
 
     func text(_ message: String)
     func text(_ message: String, always: Bool)
@@ -9,24 +10,22 @@ public protocol Console {
     func clear()
     func progress(prompt: String, progress: Double)
     func progress(prompt: String, progress: Double, suffix: String?)
-    
-    func setQuiet(_ quiet: Bool)
 }
 
 public final class DefaultConsole: Console {
     public let output: Output
-    private var quiet: Bool = false
+    private let _quiet = Atomic<Bool>(value: false)
 
     public init(output: Output) {
         self.output = output
     }
-    
+
     public func text(_ message: String) {
         text(message, always: false)
     }
-    
+
     public func text(_ message: String, always: Bool = false) {
-        if !quiet || always {
+        if always || !quiet {
             output.write("\(message)\n", to: .stdout)
         }
     }
@@ -70,11 +69,16 @@ public final class DefaultConsole: Console {
             ] + makeSuffix(progress: progress, suffix: suffix)))
         }
     }
-    
-    public func setQuiet(_ quiet: Bool) {
-        self.quiet = quiet
+
+    public var quiet: Bool {
+        get {
+            _quiet.load()
+        }
+        set {
+            _quiet.update(newValue)
+        }
     }
-    
+
     // MARK: - Private
 
     private func makeSuffix(progress: Double?, suffix: String?) -> [RichText.Token] {

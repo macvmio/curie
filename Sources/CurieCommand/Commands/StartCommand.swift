@@ -30,7 +30,7 @@ struct StartCommand: Command {
 
     @Flag(name: .shortAndLong, help: "Print only CONTAINER ID.")
     var quiet: Bool = false
-    
+
     final class Executor: CommandExecutor {
         private let interactor: StartInteractor
         private let console: Console
@@ -41,6 +41,8 @@ struct StartCommand: Command {
         }
 
         func execute(command: StartCommand) throws {
+            console.quiet = command.quiet
+
             try interactor.execute(
                 with: .init(
                     reference: command.reference,
@@ -49,8 +51,7 @@ struct StartCommand: Command {
                         mainScreenResolution: command.mainScreenResolution,
                         recoveryMode: command.recoveryMode,
                         shareCurrentWorkingDirectory: command.shareCWD,
-                        pauseOnExit: command.pauseOnExit,
-                        quiet: command.quiet
+                        pauseOnExit: command.pauseOnExit
                     )
                 )
             )
