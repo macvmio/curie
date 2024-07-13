@@ -21,7 +21,7 @@ jobs:
     runs-on: macos-14
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependencies
+    - name: Run setup
       run: make setup
     - name: Run lint
       run: make lint
@@ -37,6 +37,8 @@ jobs:
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-spm-
+    - name: Run setup
+      run: make setup
     - name: Run build
       run: make build
 
@@ -51,5 +53,7 @@ jobs:
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-spm-
+    - name: Run setup
+      run: make setup
     - name: Run tests
       run: make test
