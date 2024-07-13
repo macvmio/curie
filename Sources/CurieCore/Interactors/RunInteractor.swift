@@ -42,8 +42,9 @@ public final class DefaultRunInteractor: RunInteractor {
     }
 
     public func execute(with context: RunInteractorContext) throws {
+        console.setQuiet(context.launch.quiet)
         console.text("Run image \(context.reference)")
-
+        
         let sourceReference = try imageCache.findImageReference(context.reference)
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
@@ -52,7 +53,8 @@ public final class DefaultRunInteractor: RunInteractor {
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
             startUpFromMacOSRecovery: context.launch.recoveryMode,
-            noWindow: context.launch.noWindow
+            noWindow: context.launch.noWindow,
+            quiet: context.launch.quiet
         )
 
         vm.events

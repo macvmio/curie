@@ -24,6 +24,9 @@ struct RunCommand: Command {
 
     @Flag(name: .shortAndLong, help: "Use main screen resolution.")
     var mainScreenResolution: Bool = false
+    
+    @Flag(name: .shortAndLong, help: "Print only CONTAINER ID.")
+    var quiet: Bool = false
 
     final class Executor: CommandExecutor {
         private let interactor: RunInteractor
@@ -43,7 +46,8 @@ struct RunCommand: Command {
                         mainScreenResolution: command.mainScreenResolution,
                         recoveryMode: command.recoveryMode,
                         shareCurrentWorkingDirectory: command.shareCWD,
-                        pauseOnExit: false
+                        pauseOnExit: false,
+                        quiet: command.quiet
                     )
                 )
             )

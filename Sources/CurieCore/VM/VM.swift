@@ -6,6 +6,7 @@ import Virtualization
 struct VMStartOptions {
     var startUpFromMacOSRecovery: Bool
     var noWindow: Bool
+    var quiet: Bool
 }
 
 final class VM: NSObject {

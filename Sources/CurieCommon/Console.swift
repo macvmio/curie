@@ -4,21 +4,31 @@ public protocol Console {
     var output: Output { get }
 
     func text(_ message: String)
+    func text(_ message: String, always: Bool)
     func error(_ message: String)
     func clear()
     func progress(prompt: String, progress: Double)
     func progress(prompt: String, progress: Double, suffix: String?)
+    
+    func setQuiet(_ quiet: Bool)
 }
 
 public final class DefaultConsole: Console {
     public let output: Output
+    private var quiet: Bool = false
 
     public init(output: Output) {
         self.output = output
     }
-
+    
     public func text(_ message: String) {
-        output.write("\(message)\n", to: .stdout)
+        text(message, always: false)
+    }
+    
+    public func text(_ message: String, always: Bool = false) {
+        if !quiet || always {
+            output.write("\(message)\n", to: .stdout)
+        }
     }
 
     public func error(_ message: String) {
@@ -60,6 +70,12 @@ public final class DefaultConsole: Console {
             ] + makeSuffix(progress: progress, suffix: suffix)))
         }
     }
+    
+    public func setQuiet(_ quiet: Bool) {
+        self.quiet = quiet
+    }
+    
+    // MARK: - Private
 
     private func makeSuffix(progress: Double?, suffix: String?) -> [RichText.Token] {
         [
