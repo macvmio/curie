@@ -20,7 +20,7 @@ jobs:
     name: Lint
     runs-on: macos-14
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Run setup
       run: make setup
     - name: Run lint
@@ -30,8 +30,8 @@ jobs:
     name: Build
     runs-on: macos-14
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
+    - uses: actions/checkout@v4
+    - uses: actions/cache@v4
       with:
         path: .build
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
@@ -46,8 +46,8 @@ jobs:
     name: Test
     runs-on: macos-14
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
+    - uses: actions/checkout@v4
+    - uses: actions/cache@v4
       with:
         path: .build
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
