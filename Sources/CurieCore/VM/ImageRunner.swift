@@ -60,7 +60,11 @@ final class DefaultImageRunner: ImageRunner {
             vm.start(options: options) { [console] result in
                 switch result {
                 case .success:
-                    console.text("Container \(info.metadata.id.description) started")
+                    if console.quiet {
+                        console.text(info.metadata.id.description, always: true)
+                    } else {
+                        console.text("Container \(info.metadata.id.description) started")
+                    }
                 case let .failure(error):
                     console.error("Failed to start container. \(error)")
                 }

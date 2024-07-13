@@ -28,6 +28,9 @@ struct StartCommand: Command {
     @Flag(name: .shortAndLong, help: "Use main screen resolution.")
     var mainScreenResolution: Bool = false
 
+    @Flag(name: .shortAndLong, help: "Print only CONTAINER ID.")
+    var quiet: Bool = false
+
     final class Executor: CommandExecutor {
         private let interactor: StartInteractor
         private let console: Console
@@ -38,6 +41,8 @@ struct StartCommand: Command {
         }
 
         func execute(command: StartCommand) throws {
+            console.quiet = command.quiet
+
             try interactor.execute(
                 with: .init(
                     reference: command.reference,
