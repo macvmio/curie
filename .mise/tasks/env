@@ -1,0 +1,9 @@
+#!/bin/bash
+# mise description="Show environment"
+set -euo pipefail
+
+source "$MISE_PROJECT_ROOT/.mise/helpers/common"
+
+xcrun sw_vers
+xcrun xcode-select -p
+xcrun xcodebuild -version

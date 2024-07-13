@@ -1,0 +1,7 @@
+#!/bin/bash
+# mise description="Clean build directory"
+set -euo pipefail
+
+source "$MISE_PROJECT_ROOT/.mise/helpers/common"
+
+swiftlint autocorrect --quiet

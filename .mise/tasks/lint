@@ -1,0 +1,8 @@
+#!/bin/bash
+# mise description="Lint the project"
+set -euo pipefail
+
+source "$MISE_PROJECT_ROOT/.mise/helpers/common"
+
+swiftlint --strict --quiet
+swiftformat . --lint

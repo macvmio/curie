@@ -1,31 +1,29 @@
-clean:
-	xcrun swift package clean
+mise := ~/.local/bin/mise
 
-env: 
-	xcrun sw_vers
-	xcrun xcode-select -p
-	xcrun xcodebuild -version
+setup:
+	curl "https://mise.run" | sh
+	@$(mise) install
+
+clean:
+	@$(mise) run clean
+
+env:
+	@$(mise) run env
 
 build: env
-	xcrun swift build
+	@$(mise) run build
 
 test:
-	xcrun swift test
+	@$(mise) run test
 
 sign:
-	codesign --sign - --entitlements Resources/curie.entitlements --force .build/debug/curie
+	@$(mise) run sign
 
 format:
-	swiftformat .
+	@$(mise) run format
 
-autocorrect:s
-	swiftlint autocorrect --quiet
+autocorrect:
+	@$(mise) run autocorrect
 
 lint:
-	swiftlint version
-	swiftformat --version
-	swiftlint --strict --quiet
-	swiftformat . --lint
-
-install_tools:
-	./Scripts/brew.sh
+	@$(mise) run lint
