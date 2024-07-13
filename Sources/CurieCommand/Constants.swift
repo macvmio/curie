@@ -8,7 +8,7 @@ final class Constants {
             debugVersionIdentifier(),
             gitHashVersionIdentifier(),
         ].compactMap { $0 }
-        return Version(0, 1, 0, buildMetadataIdentifiers: identifiers)
+        return Version(0, 2, 0, buildMetadataIdentifiers: identifiers)
     }()
 
     private static let gitHash = "#GIT_SHORT_HASH#"
