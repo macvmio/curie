@@ -1,0 +1,7 @@
+#!/bin/bash
+# mise description="Sign the project"
+set -euo pipefail
+
+source "$MISE_PROJECT_ROOT/.mise/helpers/common"
+
+codesign --sign - --entitlements Resources/curie.entitlements --force .build/debug/curie

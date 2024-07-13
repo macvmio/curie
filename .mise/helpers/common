@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Predefined variables
+readonly EXT_BUILD_DIR="$MISE_PROJECT_ROOT/.build"

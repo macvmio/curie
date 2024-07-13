@@ -1,0 +1,5 @@
+#!/bin/bash
+# mise description="Format the project"
+set -euo pipefail
+
+swiftformat $MISE_PROJECT_ROOT

@@ -64,8 +64,8 @@ public final class TableRenderer {
     private func renderText(content: Content, config: Config) -> String {
         let headersWidths: [Int] = content.headers.map(\.count)
         let valuesWidths: [Int] = content.rows.reduce(into: content.headers.map { _ in 0 }) { result, row in
-            row.enumerated().forEach {
-                result[$0.offset] = max(result[$0.offset], $0.element.count)
+            for item in row.enumerated() {
+                result[item.offset] = max(result[item.offset], item.element.count)
             }
         }
         let widths: [Int] = (0 ..< max(headersWidths.count, valuesWidths.count)).map {
@@ -74,18 +74,18 @@ public final class TableRenderer {
 
         var result = "\n"
         result.append(renderTextRow(content.headers.map { $0.uppercased() }, widths: widths, config: config))
-        content.rows.forEach {
-            result.append(renderTextRow($0, widths: widths, config: config))
+        for row in content.rows {
+            result.append(renderTextRow(row, widths: widths, config: config))
         }
         return result
     }
 
     private func renderTextRow(_ columns: [String], widths: [Int], config: Config) -> String {
         var result = ""
-        columns.enumerated().forEach {
-            result.append($0.element)
-            result.append(space(widths[$0.offset] - $0.element.count))
-            if $0.offset < widths.count - 1 {
+        for column in columns.enumerated() {
+            result.append(column.element)
+            result.append(space(widths[column.offset] - column.element.count))
+            if column.offset < widths.count - 1 {
                 result.append(space(config.columnPadding))
             }
         }
