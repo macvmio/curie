@@ -47,7 +47,7 @@ public final class DefaultRunInteractor: RunInteractor {
         let sourceReference = try imageCache.findImageReference(context.reference)
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
-        let bundle = VMBundle(path: imageCache.path(to: targetReference))
+        let bundle = try VMBundle(path: imageCache.path(to: targetReference))
         let overrideConfig = try context.launch.partialConfig()
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(

@@ -4,7 +4,7 @@ public struct SubprocessCoreError: Error {
     public let exitCode: Int32
 }
 
-public enum CoreError: LocalizedError {
+public enum CoreError: LocalizedError, Equatable {
     case generic(String)
 
     static func rethrow<T>(

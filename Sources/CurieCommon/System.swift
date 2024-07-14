@@ -36,6 +36,8 @@ public protocol System {
     func execute(_ arguments: [String]) throws
 
     func execute(_ arguments: [String], output: OutputType) throws
+
+    func environmentVariable(name: String) -> String?
 }
 
 final class DefaultSystem: System {
@@ -86,6 +88,10 @@ final class DefaultSystem: System {
             throw CoreError.generic(error.localizedDescription)
         }
         try result.throwIfErrored()
+    }
+
+    func environmentVariable(name: String) -> String? {
+        ProcessInfo.processInfo.environment[name]
     }
 
     // MARK: - Private

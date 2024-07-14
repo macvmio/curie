@@ -16,4 +16,6 @@ public enum Constants {
         sharedDirectory: .init(directories: []),
         shutdown: .init(behaviour: .stop)
     )
+
+    static let dataRootEnvironmentVariable = "CURIE_DATA_ROOT"
 }

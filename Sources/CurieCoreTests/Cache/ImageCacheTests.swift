@@ -10,7 +10,7 @@ final class ImageCacheTests: XCTestCase {
     private var fileSystem: CurieCommon.FileSystem!
     private var bundleParser: VMBundleParser!
     private var wallClock: MockWallClock!
-    private var system: System!
+    private var system: MockSystem!
 
     private var fixtures: Fixtures!
     private var environment: FileSystemEnvironment!
@@ -26,7 +26,7 @@ final class ImageCacheTests: XCTestCase {
             homeDirectory: environment.homeDirectory
         )))
         bundleParser = DefaultVMBundleParser(fileSystem: fileSystem)
-        system = DefaultSystem()
+        system = MockSystem()
         subject = DefaultImageCache(
             bundleParser: bundleParser,
             wallClock: wallClock,
@@ -207,6 +207,50 @@ final class ImageCacheTests: XCTestCase {
             .file(.init(path: .init("metadata.json"))),
         ])
         XCTAssertBundlesEqual(bundle, path: expectedBundlePath)
+    }
+
+    func testImportImageWithDataRoot() throws {
+        // Given
+        system.mockEnvironmentVariables = [
+            "CURIE_DATA_ROOT": environment.temporaryDirectory.appending(component: ".curie-custom").pathString,
+        ]
+        let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
+        let expectedBundlePath = environment.temporaryDirectory.appending(component: ".curie-custom")
+            .appending(RelativePath("images/\(anyReference)"))
+
+        // When
+        try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
+
+        // Then
+        let files = try fileSystem.list(at: expectedBundlePath)
+        XCTAssertEqual(files, [
+            .file(.init(path: .init("auxilary-storage.bin"))),
+            .file(.init(path: .init("config.json"))),
+            .file(.init(path: .init("disk.img"))),
+            .file(.init(path: .init("hardware-model.bin"))),
+            .file(.init(path: .init("machine-identifier.bin"))),
+            .file(.init(path: .init("metadata.json"))),
+        ])
+        XCTAssertBundlesEqual(bundle, path: expectedBundlePath)
+    }
+
+    func testImportImageWithInvalidDataRoot() throws {
+        // Given
+        system.mockEnvironmentVariables = [
+            "CURIE_DATA_ROOT": "%invalidpath/",
+        ]
+        let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
+
+        // When / Then
+        XCTAssertThrowsError(try subject.importImage(
+            sourcePath: bundle.path.pathString,
+            reference: anyReference
+        )) { error in
+            XCTAssertEqual(
+                error as? CoreError,
+                .generic("Invalid path to data root directory, please unset or correct CURIE_DATA_ROOT=%invalidpath/")
+            )
+        }
     }
 
     func testExportImageRaw() throws {
