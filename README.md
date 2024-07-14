@@ -322,6 +322,11 @@ Execute the commands below to run the project locally.
 .build/debug/curie --help
 ```
 
+## Data location
+
+By default, curie stores images and containers in `~/.curie` directory. You can change the location by setting `CURIE_DATA_ROOT` environment variable.
+
+
 ## Attributions
 
 We would like to thank the authors and contributors of the following projects:
