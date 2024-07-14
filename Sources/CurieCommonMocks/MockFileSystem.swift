@@ -96,12 +96,14 @@ public final class FileSystemEnvironment {
     public let currentWorkingDirectory: AbsolutePath
     public let homeDirectory: AbsolutePath
     public let fixtures: AbsolutePath
+    public let temporaryDirectory: AbsolutePath
 
     init(baseDirectory: TemporaryDirectory) {
         self.baseDirectory = baseDirectory
         currentWorkingDirectory = baseDirectory.path.appending(component: "currentWorkingDirectory")
         homeDirectory = baseDirectory.path.appending(component: "homeDirectory")
         fixtures = baseDirectory.path.appending(component: "fixtures")
+        temporaryDirectory = baseDirectory.path.appending(component: "temp")
     }
 
     public static func make() throws -> FileSystemEnvironment {
@@ -118,6 +120,6 @@ public final class FileSystemEnvironment {
     // MARK: - Private
 
     private func allDirectories() -> [AbsolutePath] {
-        [currentWorkingDirectory, homeDirectory, fixtures]
+        [currentWorkingDirectory, homeDirectory, fixtures, temporaryDirectory]
     }
 }

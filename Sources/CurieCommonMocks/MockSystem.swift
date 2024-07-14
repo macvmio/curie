@@ -8,6 +8,7 @@ public final class MockSystem: System {
 
     public private(set) var calls: [Call] = []
     public var mockExecuteOutput: String?
+    public var mockEnvironmentVariables: [String: String] = [:]
 
     public init() {}
 
@@ -43,5 +44,9 @@ public final class MockSystem: System {
                 output.write(mockExecuteOutput)
             }
         }
+    }
+
+    public func environmentVariable(name: String) -> String? {
+        mockEnvironmentVariables[name]
     }
 }

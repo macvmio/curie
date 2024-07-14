@@ -31,12 +31,13 @@ protocol ImageCache {
     @discardableResult
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference
     func moveImage(source: ImageReference, target: ImageReference) throws
-    func path(to reference: ImageReference) -> AbsolutePath
+    func path(to reference: ImageReference) throws -> AbsolutePath
 
     func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws
     func importImage(sourcePath: String, reference: String) throws
 }
 
+// swiftlint:disable:next type_body_length
 final class DefaultImageCache: ImageCache {
     let bundleParser: VMBundleParser
     let wallClock: WallClock
@@ -58,7 +59,7 @@ final class DefaultImageCache: ImageCache {
     func makeImageReference(_ reference: String) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
         let relativePath = RelativePath(reference)
-        let absolutePath = imagesAbsolutePath.appending(relativePath)
+        let absolutePath = try imagesAbsolutePath().appending(relativePath)
         guard !fileSystem.exists(at: absolutePath) else {
             throw CoreError
                 .generic(
@@ -85,29 +86,33 @@ final class DefaultImageCache: ImageCache {
     }
 
     func listImages() throws -> [ImageItem] {
-        let references = try listImages(at: imagesAbsolutePath, basePath: imagesAbsolutePath, type: .image)
+        let references = try listImages(at: imagesAbsolutePath(), basePath: imagesAbsolutePath(), type: .image)
         return try items(from: references)
     }
 
     func listContainers() throws -> [ImageItem] {
-        let references = try listImages(at: containersAbsolutePath, basePath: containersAbsolutePath, type: .container)
+        let references = try listImages(
+            at: containersAbsolutePath(),
+            basePath: containersAbsolutePath(),
+            type: .container
+        )
         return try items(from: references)
     }
 
     func removeImage(_ reference: ImageReference) throws {
-        let absolutePath = path(to: reference)
+        let absolutePath = try path(to: reference)
         try fileSystem.remove(at: absolutePath)
-        try removeEmptySubdirectories(of: imagesAbsolutePath)
-        try removeEmptySubdirectories(of: containersAbsolutePath)
+        try removeEmptySubdirectories(of: imagesAbsolutePath())
+        try removeEmptySubdirectories(of: containersAbsolutePath())
     }
 
     @discardableResult
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference {
-        let sourceAbsolutePath = path(to: source)
+        let sourceAbsolutePath = try path(to: source)
         let targetId = ImageID.make()
         let targetDescriptor = try target.imageDescriptor(source: source, imageId: targetId)
         let targetReference = ImageReference(id: targetId, descriptor: targetDescriptor, type: target.imageType())
-        let targetAbsolutePath = path(to: targetReference)
+        let targetAbsolutePath = try path(to: targetReference)
         guard sourceAbsolutePath != targetAbsolutePath else {
             throw CoreError.generic("Cannot clone, target reference is the same as source")
         }
@@ -124,8 +129,8 @@ final class DefaultImageCache: ImageCache {
     }
 
     func moveImage(source: ImageReference, target: ImageReference) throws {
-        let sourceAbsolutePath = path(to: source)
-        let targetAbsolutePath = path(to: target)
+        let sourceAbsolutePath = try path(to: source)
+        let targetAbsolutePath = try path(to: target)
 
         if fileSystem.exists(at: targetAbsolutePath) {
             try fileSystem.remove(at: targetAbsolutePath)
@@ -137,15 +142,15 @@ final class DefaultImageCache: ImageCache {
 
         try fileSystem.move(from: sourceAbsolutePath, to: targetAbsolutePath)
 
-        try removeEmptySubdirectories(of: containersAbsolutePath)
+        try removeEmptySubdirectories(of: containersAbsolutePath())
     }
 
-    func path(to reference: ImageReference) -> AbsolutePath {
-        storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
+    func path(to reference: ImageReference) throws -> AbsolutePath {
+        try storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
     }
 
     func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws {
-        let sourceAbsolutePath = path(to: source)
+        let sourceAbsolutePath = try path(to: source)
         let targetAbsolutePath = try fileSystem.absolutePath(from: destinationPath)
         if fileSystem.exists(at: targetAbsolutePath) {
             guard try fileSystem.list(at: targetAbsolutePath).isEmpty else {
@@ -169,7 +174,7 @@ final class DefaultImageCache: ImageCache {
 
     func importImage(sourcePath: String, reference: String) throws {
         defer {
-            _ = try? removeEmptySubdirectories(of: imagesAbsolutePath)
+            _ = try? removeEmptySubdirectories(of: imagesAbsolutePath())
         }
 
         let sourceAbsolutePath = try fileSystem.absolutePath(from: sourcePath)
@@ -179,7 +184,7 @@ final class DefaultImageCache: ImageCache {
         }
 
         let targetReference = try makeImageReference(reference)
-        let targetAbsolutePath = path(to: targetReference)
+        let targetAbsolutePath = try path(to: targetReference)
 
         try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
 
@@ -210,7 +215,7 @@ final class DefaultImageCache: ImageCache {
 
     private func items(from references: [ImageReference]) throws -> [ImageItem] {
         let items = try references.map {
-            let bundle = VMBundle(path: path(to: $0))
+            let bundle = try VMBundle(path: path(to: $0))
             let metadata = try bundleParser.readMetadata(from: bundle)
             return try ImageItem(
                 reference: $0,
@@ -223,30 +228,26 @@ final class DefaultImageCache: ImageCache {
         return items
     }
 
-    private func storeAbsolutePath(_ type: ImageType) -> AbsolutePath {
+    private func storeAbsolutePath(_ type: ImageType) throws -> AbsolutePath {
         switch type {
         case .container:
-            containersAbsolutePath
+            try containersAbsolutePath()
         case .image:
-            imagesAbsolutePath
+            try imagesAbsolutePath()
         }
     }
 
-    private var imagesAbsolutePath: AbsolutePath {
-        fileSystem.homeDirectory
-            .appending(component: ".curie")
-            .appending(component: "images")
+    private func imagesAbsolutePath() throws -> AbsolutePath {
+        try dataRootDirectory().appending(component: "images")
     }
 
-    private var containersAbsolutePath: AbsolutePath {
-        fileSystem.homeDirectory
-            .appending(component: ".curie")
-            .appending(component: "containers")
+    private func containersAbsolutePath() throws -> AbsolutePath {
+        try dataRootDirectory().appending(component: "containers")
     }
 
-    func findReference(_ reference: String, type: ImageType) throws -> ImageReference {
+    private func findReference(_ reference: String, type: ImageType) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
-        let absolutePath = storeAbsolutePath(type).appending(descriptor.relativePath())
+        let absolutePath = try storeAbsolutePath(type).appending(descriptor.relativePath())
         guard fileSystem.exists(at: absolutePath) else {
             switch type {
             case .container:
@@ -332,6 +333,21 @@ final class DefaultImageCache: ImageCache {
         try fileSystem.remove(at: path)
 
         return true
+    }
+
+    private func dataRootDirectory() throws -> AbsolutePath {
+        if let overrideDataRootString = system.environmentVariable(name: Constants.dataRootEnvironmentVariable) {
+            do {
+                return try AbsolutePath(validating: overrideDataRootString)
+            } catch {
+                throw CoreError
+                    .generic(
+                        "Invalid path to data root directory, please unset or correct " +
+                            "\(Constants.dataRootEnvironmentVariable)=\(overrideDataRootString)"
+                    )
+            }
+        }
+        return fileSystem.homeDirectory.appending(component: ".curie")
     }
 }
 

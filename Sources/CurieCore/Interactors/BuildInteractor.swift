@@ -54,7 +54,7 @@ final class DefaultBuildInteractor: BuildInteractor {
 
     func execute(with context: BuildInteractorContext) throws {
         let reference = try imageCache.makeImageReference(context.reference)
-        let bundlePath = imageCache.path(to: reference)
+        let bundlePath = try imageCache.path(to: reference)
         let bundle = VMBundle(path: bundlePath)
 
         try createImage(
