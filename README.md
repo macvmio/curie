@@ -1,6 +1,6 @@
 # Curie
 
-[![Build Status](https://github.com/getcurie/curie-vm/actions/workflows/curie.yml/badge.svg)](https://github.com/getcurie/curie-vm/actions/workflows/curie.yml)
+[![Build Status](https://github.com/mobileinf/curie/actions/workflows/curie.yml/badge.svg)](https://github.com/mobileinf/curie/actions/workflows/main.yml)
 
 ## Overview
 
