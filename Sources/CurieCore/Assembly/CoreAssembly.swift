@@ -116,6 +116,13 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
+        registry.register(ConfigInteractor.self) { r in
+            DefaultConfigInteractor(
+                imageCache: r.resolve(ImageCache.self),
+                bundleParser: r.resolve(VMBundleParser.self),
+                system: r.resolve(System.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
