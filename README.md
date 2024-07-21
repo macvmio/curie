@@ -299,6 +299,10 @@ mkdir -p shared
 mount_virtiofs curie shared
 ```
 
+### Data location
+
+By default, curie stores images and containers in `~/.curie` directory. You can change the location by setting `CURIE_DATA_ROOT` environment variable.
+
 ## Development
 
 ### Requirements
@@ -321,11 +325,6 @@ Execute the commands below to run the project locally.
 ```sh
 .build/debug/curie --help
 ```
-
-## Data location
-
-By default, curie stores images and containers in `~/.curie` directory. You can change the location by setting `CURIE_DATA_ROOT` environment variable.
-
 
 ## Attributions
 
