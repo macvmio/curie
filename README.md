@@ -178,6 +178,14 @@ Config:
 
 Inspect command supports `--format` (`-f`) parameter.
 
+#### Edit config of an image or a container
+
+The command will open the config file in the default text editor.
+
+```sh
+curie config myteam/myimage/ci/test:2.3
+```
+
 ### Config file
 
 `create` command allows to pass path to config file (`-c, --config-path <config-path>`). Config file describes basic properties of the virtual machine such as number of CPUs, RAM etc.

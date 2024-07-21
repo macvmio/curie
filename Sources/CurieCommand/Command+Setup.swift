@@ -7,6 +7,7 @@ private enum Setup {
     static let allSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (BuildCommand.self, BuildCommand.Assembly()),
         (CloneCommand.self, CloneCommand.Assembly()),
+        (ConfigCommand.self, ConfigCommand.Assembly()),
         (CreateCommand.self, CreateCommand.Assembly()),
         (CommitCommand.self, CommitCommand.Assembly()),
         (DownloadCommand.self, DownloadCommand.Assembly()),
