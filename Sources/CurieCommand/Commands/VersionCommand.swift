@@ -1,6 +1,7 @@
 import ArgumentParser
 import CurieCommon
 import Foundation
+import SCInject
 import TSCUtility
 
 struct VersionCommand: Command {

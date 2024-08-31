@@ -2,6 +2,7 @@ import ArgumentParser
 import CurieCommon
 import CurieCore
 import Foundation
+import SCInject
 import TSCBasic
 
 struct ExportCommand: Command {

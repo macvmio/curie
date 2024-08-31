@@ -1,5 +1,6 @@
 import CurieCommon
 import Foundation
+import SCInject
 
 // swiftlint:disable function_body_length
 public final class CoreAssembly: Assembly {

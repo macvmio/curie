@@ -1,6 +1,7 @@
 import ArgumentParser
 import CurieCommon
 import Foundation
+import SCInject
 
 protocol CommandExecutor {
     associatedtype Command

@@ -1,4 +1,5 @@
 import Foundation
+import SCInject
 
 public final class CommonAssembly: Assembly {
     public init() {}
