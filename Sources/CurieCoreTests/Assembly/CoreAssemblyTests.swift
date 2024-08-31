@@ -1,6 +1,7 @@
 import CurieCommon
 @testable import CurieCore
 import Foundation
+import SCInject
 import XCTest
 
 final class CoreAssemblyTests: XCTestCase {
@@ -19,12 +20,12 @@ final class CoreAssemblyTests: XCTestCase {
         container = nil
     }
 
-    func testValidate() {
+    func testValidate() throws {
         // Given
         let assembler = Assembler(container: container)
         _ = assembler.assemble([subject, CommonAssembly()])
 
         // When / Then
-        container.validate()
+        try container.validate()
     }
 }

@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v13),
     ],
     dependencies: [
+        .package(url: "https://github.com/mobileinf/SwiftCommons.git", .upToNextMajor(from: "0.2.0")),
         .package(url: "https://github.com/apple/swift-tools-support-core", .upToNextMajor(from: "0.5.2")),
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.2.3")),
     ],
@@ -27,6 +28,7 @@ let package = Package(
                 .target(name: "CurieCommon"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+                .product(name: "SCInject", package: "SwiftCommons"),
             ]
         ),
         .target(
@@ -34,6 +36,7 @@ let package = Package(
             dependencies: [
                 .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+                .product(name: "SCInject", package: "SwiftCommons"),
             ]
         ),
         .testTarget(
@@ -42,12 +45,14 @@ let package = Package(
                 .target(name: "CurieCore"),
                 .target(name: "CurieCommonMocks"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+                .product(name: "SCInject", package: "SwiftCommons"),
             ]
         ),
         .target(
             name: "CurieCommon",
             dependencies: [
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+                .product(name: "SCInject", package: "SwiftCommons"),
             ]
         ),
         .target(
@@ -55,6 +60,7 @@ let package = Package(
             dependencies: [
                 .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+                .product(name: "SCInject", package: "SwiftCommons"),
             ]
         ),
     ]

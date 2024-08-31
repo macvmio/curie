@@ -2,6 +2,7 @@ import ArgumentParser
 import CurieCommon
 import CurieCore
 import Foundation
+import SCInject
 
 private enum Setup {
     static let allSubcommands: [(ParsableCommand.Type, Assembly)] = [

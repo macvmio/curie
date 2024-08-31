@@ -26,6 +26,15 @@
         "revision" : "93784c59434dbca8e8a9e4b700d0d6d94551da6a",
         "version" : "0.5.2"
       }
+    },
+    {
+      "identity" : "swiftcommons",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mobileinf/SwiftCommons.git",
+      "state" : {
+        "revision" : "623d53c7a114f04830a0c526f1683e7645b05c93",
+        "version" : "0.2.0"
+      }
     }
   ],
   "version" : 2
