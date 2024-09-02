@@ -83,17 +83,22 @@ final class DefaultImageRunner: ImageRunner {
 
     private func launchConsole(with vm: VM, bundle: VMBundle) {
         withExtendedLifetime(vm) { _ in
-            system.keepAliveWithSIGINTEventHandler { exit in
+            system.keepAlive { exit in
                 vm.exit(machineStateURL: bundle.machineState.asURL, exit: exit)
             }
         }
     }
 
     private func launchWindow(with vm: VM, bundle: VMBundle) {
-        let sourceSignal = system.SIGINTEventHandler { exit in
+        let sigint = system.makeSIGINTSourceSignal { exit in
             vm.exit(machineStateURL: bundle.machineState.asURL, exit: exit)
         }
-        vm.addSourceSignal(sourceSignal)
+        vm.addSourceSignal(sigint)
+
+        let sigterm = system.makeSIGTERMSourceSignal { exit in
+            vm.exit(machineStateURL: bundle.machineState.asURL, exit: exit)
+        }
+        vm.addSourceSignal(sigterm)
 
         windowAppLauncher.launchWindow(with: vm, bundle: bundle)
     }

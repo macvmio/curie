@@ -12,12 +12,19 @@ public final class MockSystem: System {
 
     public init() {}
 
-    public func SIGINTEventHandler(signalHandler _: @escaping (@escaping (Int32) -> Never) -> Void)
-        -> DispatchSourceSignal {
+    public func makeSIGINTSourceSignal(
+        signalHandler _: @escaping (@escaping (Int32) -> Never) -> Void
+    ) -> DispatchSourceSignal {
         fatalError("Not implemented yet")
     }
 
-    public func keepAliveWithSIGINTEventHandler(signalHandler _: @escaping (@escaping (Int32) -> Never) -> Void) {
+    public func makeSIGTERMSourceSignal(
+        signalHandler _: @escaping (@escaping (Int32) -> Never) -> Void
+    ) -> DispatchSourceSignal {
+        fatalError("Not implemented yet")
+    }
+
+    public func keepAlive(signalHandler _: @escaping (@escaping (Int32) -> Never) -> Void) {
         fatalError("Not implemented yet")
     }
 
