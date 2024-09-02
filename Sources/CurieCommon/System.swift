@@ -20,11 +20,15 @@ public enum OutputType {
 }
 
 public protocol System {
-    func SIGINTEventHandler(
+    func makeSIGINTSourceSignal(
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     ) -> DispatchSourceSignal
 
-    func keepAliveWithSIGINTEventHandler(
+    func makeSIGTERMSourceSignal(
+        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+    ) -> DispatchSourceSignal
+
+    func keepAlive(
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     )
 
@@ -43,13 +47,31 @@ public protocol System {
 final class DefaultSystem: System {
     private let environment = ProcessInfo.processInfo.environment
 
-    func SIGINTEventHandler(
+    func makeSIGINTSourceSignal(
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     ) -> DispatchSourceSignal {
-        makeSIGINTSourceSignal(signalHandler: signalHandler)
+        signal(SIGINT, SIG_IGN)
+        let sourceSignal = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
+        sourceSignal.setEventHandler {
+            signalHandler(exit)
+        }
+        sourceSignal.resume()
+        return sourceSignal
     }
 
-    func keepAliveWithSIGINTEventHandler(
+    func makeSIGTERMSourceSignal(
+        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+    ) -> DispatchSourceSignal {
+        signal(SIGTERM, SIG_IGN)
+        let sourceSignal = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
+        sourceSignal.setEventHandler {
+            signalHandler(exit)
+        }
+        sourceSignal.resume()
+        return sourceSignal
+    }
+
+    func keepAlive(
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     ) {
         keepAliveWithSIGINTEventHandler(
@@ -62,8 +84,9 @@ final class DefaultSystem: System {
         cancellable: Cancellable,
         signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
     ) {
-        let signalSource = makeSIGINTSourceSignal(signalHandler: signalHandler)
-        withExtendedLifetime(signalSource) {
+        let sigint = makeSIGINTSourceSignal(signalHandler: signalHandler)
+        let sigterm = makeSIGTERMSourceSignal(signalHandler: signalHandler)
+        withExtendedLifetime([sigint, sigterm]) {
             while !cancellable.isCancelled() {
                 RunLoop.main.run(until: .now + 1)
             }
@@ -92,19 +115,6 @@ final class DefaultSystem: System {
 
     func environmentVariable(name: String) -> String? {
         ProcessInfo.processInfo.environment[name]
-    }
-
-    // MARK: - Private
-
-    private func makeSIGINTSourceSignal(signalHandler: @escaping (@escaping (Int32) -> Never) -> Void)
-        -> DispatchSourceSignal {
-        signal(SIGINT, SIG_IGN)
-        let sourceSignal = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
-        sourceSignal.setEventHandler {
-            signalHandler(exit)
-        }
-        sourceSignal.resume()
-        return sourceSignal
     }
 }
 
