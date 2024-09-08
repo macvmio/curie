@@ -88,7 +88,7 @@ final class DefaultSystem: System {
         let sigterm = makeSIGTERMSourceSignal(signalHandler: signalHandler)
         withExtendedLifetime([sigint, sigterm]) {
             while !cancellable.isCancelled() {
-                RunLoop.main.run(until: .now + 1)
+                Foundation.RunLoop.main.run(until: .now + 1)
             }
         }
     }

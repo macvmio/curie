@@ -11,11 +11,20 @@ public final class CommonAssembly: Assembly {
         registry.register(Console.self) { r in
             DefaultConsole(output: r.resolve(Output.self))
         }
+        registry.register(WallClock.self) { _ in
+            DefaultWallClock()
+        }
         registry.register(FileSystem.self) { _ in
             DefaultFileSystem()
         }
         registry.register(System.self) { _ in
             DefaultSystem()
+        }
+        registry.register(RunLoop.self, .container) { _ in
+            DefaultRunLoop()
+        }
+        registry.register(HTTPClient.self) { _ in
+            URLSessionHTTPClient()
         }
     }
 }

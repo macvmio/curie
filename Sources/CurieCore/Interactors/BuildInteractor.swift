@@ -30,8 +30,8 @@ final class DefaultBuildInteractor: BuildInteractor {
     private let configurator: VMConfigurator
     private let installer: VMInstaller
     private let imageCache: ImageCache
-    private let system: System
     private let fileSystem: CurieCommon.FileSystem
+    private let runLoop: CurieCommon.RunLoop
     private let console: Console
 
     init(
@@ -39,16 +39,16 @@ final class DefaultBuildInteractor: BuildInteractor {
         configurator: VMConfigurator,
         installer: VMInstaller,
         imageCache: ImageCache,
-        system: System,
         fileSystem: CurieCommon.FileSystem,
+        runLoop: CurieCommon.RunLoop,
         console: Console
     ) {
         self.downloader = downloader
         self.configurator = configurator
         self.installer = installer
         self.imageCache = imageCache
-        self.system = system
         self.fileSystem = fileSystem
+        self.runLoop = runLoop
         self.console = console
     }
 
@@ -73,38 +73,24 @@ final class DefaultBuildInteractor: BuildInteractor {
         context: BuildInteractorContext,
         restoreImagePath: String
     ) throws {
-        let cancellable = StateCancellable()
+        try runLoop.run { [self] _ in
+            // Get restore image path
+            let restoreImagePath = try prepareRestoreImagePath(path: restoreImagePath)
 
-        Task { [weak self] in
-            guard let self else { return }
-            do {
-                // Get restore image path
-                let restoreImagePath = try prepareRestoreImagePath(path: restoreImagePath)
+            // Create VM bundle
+            try await configurator.createVM(with: bundle, spec: .init(
+                reference: reference,
+                restoreImagePath: restoreImagePath,
+                diskSize: prepareDiskSize(context: context),
+                configPath: prepareConfigPath(context: context)
+            ))
 
-                // Create VM bundle
-                try await configurator.createVM(with: bundle, spec: .init(
-                    reference: reference,
-                    restoreImagePath: restoreImagePath,
-                    diskSize: prepareDiskSize(context: context),
-                    configPath: prepareConfigPath(context: context)
-                ))
+            // Load VM
+            let vm = try configurator.loadVM(with: bundle, overrideConfig: nil)
 
-                // Load VM
-                let vm = try configurator.loadVM(with: bundle, overrideConfig: nil)
-
-                // Install VM image
-                try await installer.install(vm: vm, restoreImagePath: restoreImagePath)
-
-                cancellable.cancel()
-            } catch {
-                console.error(error.localizedDescription)
-                cancellable.cancel()
-            }
+            // Install VM image
+            try await installer.install(vm: vm, restoreImagePath: restoreImagePath)
         }
-        system.keepAliveWithSIGINTEventHandler(cancellable: cancellable, signalHandler: { exit in
-            cancellable.cancel()
-            exit(0)
-        })
     }
 
     private func prepareDiskSize(context: BuildInteractorContext) throws -> MemorySize {

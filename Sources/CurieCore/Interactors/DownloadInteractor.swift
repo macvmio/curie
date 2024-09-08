@@ -18,18 +18,18 @@ public protocol DownloadInteractor {
 public final class DefaultDownloadInteractor: DownloadInteractor {
     private let downloader: RestoreImageDownloader
     private let fileSystem: CurieCommon.FileSystem
-    private let system: System
+    private let runLoop: CurieCommon.RunLoop
     private let console: Console
 
     init(
         downloader: RestoreImageDownloader,
         fileSystem: CurieCommon.FileSystem,
-        system: System,
+        runLoop: CurieCommon.RunLoop,
         console: Console
     ) {
         self.downloader = downloader
         self.fileSystem = fileSystem
-        self.system = system
+        self.runLoop = runLoop
         self.console = console
     }
 
@@ -41,11 +41,8 @@ public final class DefaultDownloadInteractor: DownloadInteractor {
             throw CoreError.generic("File already exists at path \"\(context.path)\"")
         }
 
-        downloader.download(to: path, completion: exit)
-
-        system.keepAlive { [console] exit in
-            console.text("Download has been cancelled")
-            exit(0)
+        try runLoop.run { [self] _ in
+            try await downloader.download(to: path)
         }
     }
 }

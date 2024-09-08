@@ -39,10 +39,18 @@ let package = Package(
                 .product(name: "SCInject", package: "SwiftCommons"),
             ]
         ),
+        .target(
+            name: "CurieCoreMocks",
+            dependencies: [
+                .target(name: "CurieCore"),
+                .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+            ]
+        ),
         .testTarget(
             name: "CurieCoreTests",
             dependencies: [
                 .target(name: "CurieCore"),
+                .target(name: "CurieCoreMocks"),
                 .target(name: "CurieCommonMocks"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
