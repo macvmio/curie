@@ -4,82 +4,42 @@ import TSCBasic
 import Virtualization
 
 protocol RestoreImageDownloader {
-    func download(to path: AbsolutePath, completion: @escaping (Int32) -> Never)
+    func download(to path: AbsolutePath) async throws
 }
 
 final class DefaultRestoreImageDownloader: NSObject, RestoreImageDownloader {
+    private let restoreImageService: RestoreImageService
+    private let httpClient: HTTPClient
     private let fileSystem: CurieCommon.FileSystem
     private let console: Console
-    private let urlSession = URLSession.shared
 
-    private var downloadObserver: NSKeyValueObservation?
-
-    init(fileSystem: CurieCommon.FileSystem, console: Console) {
+    init(
+        restoreImageService: RestoreImageService,
+        httpClient: HTTPClient,
+        fileSystem: CurieCommon.FileSystem,
+        console: Console
+    ) {
+        self.restoreImageService = restoreImageService
+        self.httpClient = httpClient
         self.fileSystem = fileSystem
         self.console = console
     }
 
-    func download(to path: AbsolutePath, completion: @escaping (Int32) -> Never) {
-        VZMacOSRestoreImage.fetchLatestSupported { [self] (result: Result<VZMacOSRestoreImage, Error>) in
-            switch result {
-            case let .failure(error):
-                fatalError(error.localizedDescription)
-            case let .success(restoreImage):
-                downloadRestoreImage(
-                    restoreImage: restoreImage,
-                    path: path,
-                    completion: completion
-                )
-            }
-        }
+    func download(to destinationPath: AbsolutePath) async throws {
+        let restoreImage = try await restoreImageService.latestSupported()
+        let (url, _) = try await httpClient.download(url: restoreImage.url, tracker: self)
+        let path = try AbsolutePath(validating: url.path)
+        try fileSystem.move(from: path, to: destinationPath)
+        console.clear()
     }
+}
 
-    // MARK: - Private
-
-    private func downloadRestoreImage(
-        restoreImage: VZMacOSRestoreImage,
-        path: AbsolutePath,
-        completion: @escaping (Int32) -> Never
-    ) {
-        let downloadTask = urlSession
-            .downloadTask(with: restoreImage.url) { [fileSystem, console] localURL, _, error in
-                if let error {
-                    console.error("Download failed - \(error.localizedDescription)")
-                    completion(1)
-                }
-
-                guard let localPath = try? localURL.map({ try AbsolutePath(validating: $0.path) }) else {
-                    console.error("Failed to locate the downloaded file")
-                    completion(1)
-                }
-
-                console.clear()
-
-                do {
-                    try fileSystem.move(from: localPath, to: path)
-                    console.text("Download completed")
-                    completion(0)
-                } catch {
-                    console.error(error.localizedDescription)
-                    completion(1)
-                }
-            }
-
-        downloadObserver = downloadTask.progress.observe(\.fractionCompleted, options: [
-            .initial,
-            .new,
-        ]) { [console] _, _ in
-            let receivedSize = MemorySize(bytes: UInt64(downloadTask.countOfBytesReceived))
-            let expectedToReceivesize = MemorySize(bytes: UInt64(downloadTask.countOfBytesExpectedToReceive))
-            let progress = expectedToReceivesize
-                .bytes > 0 ? Double(receivedSize.bytes) / Double(expectedToReceivesize.bytes) : 0.0
-            let suffix = "\(receivedSize)/\(expectedToReceivesize)"
-            console.progress(
-                prompt: "Downloading",
-                progress: progress,
-                suffix: suffix
-            )
-        }
-        downloadTask.resume()
+extension DefaultRestoreImageDownloader: HTTPClientDownloadTracker {
+    func httpClient(_: any HTTPClient, progress: HTTPClientDownloadProgress) {
+        console.progress(
+            prompt: "Downloading",
+            progress: progress.progress,
+            suffix: "\(progress.received)/\(progress.expected)"
+        )
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ProcessRunloop.swift
+//  RunLoop.swift
 //
 //
 //  Created by Marcin Iwanicki on 08/09/2024.
@@ -7,23 +7,32 @@
 
 import Foundation
 
-public protocol AccessProcessRunloop {
+public protocol RunLoopAccessor {
     func terminate()
     func error(_ error: CoreError)
 }
 
-public protocol ProcessRunloop: AccessProcessRunloop {
-    func run(_ closure: @escaping (ProcessRunloop) async throws -> Void) throws
+public protocol RunLoop: RunLoopAccessor {
+    func run(_ closure: @escaping (RunLoopAccessor) async throws -> Void) throws
 }
 
-public class DefaultProcessRunloop: ProcessRunloop {
+public class DefaultRunLoop: RunLoop {
+    public enum Interval: TimeInterval {
+        case `default` = 1.0
+        case short = 0.001
+    }
+
     private var terminated = false
     private let lock = NSLock()
     private(set) var error: CoreError?
 
-    init() {}
+    private let interval: Interval
 
-    public func run(_ closure: @escaping (any ProcessRunloop) async throws -> Void) throws {
+    public init(interval: Interval = .default) {
+        self.interval = interval
+    }
+
+    public func run(_ closure: @escaping (any RunLoopAccessor) async throws -> Void) throws {
         Task { [weak self] in
             guard let self else { return }
             do {
@@ -56,7 +65,7 @@ public class DefaultProcessRunloop: ProcessRunloop {
         let sigterm = makeSourceSignal(sig: SIGTERM, eventHandler: .init(block: { [unowned self] in terminate() }))
         try withExtendedLifetime([sigint, sigterm]) {
             while !isTerminated() {
-                RunLoop.main.run(until: .now + 1)
+                Foundation.RunLoop.main.run(until: .now + interval.rawValue)
             }
             try rethrow()
         }

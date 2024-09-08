@@ -31,7 +31,7 @@ final class DefaultBuildInteractor: BuildInteractor {
     private let installer: VMInstaller
     private let imageCache: ImageCache
     private let fileSystem: CurieCommon.FileSystem
-    private let runloop: ProcessRunloop
+    private let runLoop: CurieCommon.RunLoop
     private let console: Console
 
     init(
@@ -40,7 +40,7 @@ final class DefaultBuildInteractor: BuildInteractor {
         installer: VMInstaller,
         imageCache: ImageCache,
         fileSystem: CurieCommon.FileSystem,
-        runloop: ProcessRunloop,
+        runLoop: CurieCommon.RunLoop,
         console: Console
     ) {
         self.downloader = downloader
@@ -48,7 +48,7 @@ final class DefaultBuildInteractor: BuildInteractor {
         self.installer = installer
         self.imageCache = imageCache
         self.fileSystem = fileSystem
-        self.runloop = runloop
+        self.runLoop = runLoop
         self.console = console
     }
 
@@ -73,7 +73,7 @@ final class DefaultBuildInteractor: BuildInteractor {
         context: BuildInteractorContext,
         restoreImagePath: String
     ) throws {
-        try runloop.run { [self] _ in
+        try runLoop.run { [self] _ in
             // Get restore image path
             let restoreImagePath = try prepareRestoreImagePath(path: restoreImagePath)
 

@@ -52,51 +52,57 @@ public protocol FileSystem {
     func read(from path: AbsolutePath) throws -> Data
 }
 
-final class DefaultFileSystem: FileSystem {
-    struct Config {
+public final class DefaultFileSystem: FileSystem {
+    public struct Config {
         // swiftlint:disable:next nesting
-        struct Overrides {
+        public struct Overrides {
             var currentWorkingDirectory: AbsolutePath?
             var homeDirectory: AbsolutePath?
         }
 
         var overrides: Overrides = .init()
+
+        public init() {}
+
+        public init(overrides: Overrides) {
+            self.overrides = overrides
+        }
     }
 
     private let fileManager = FileManager.default
     private let config: Config
 
-    init(config: Config = .init()) {
+    public init(config: Config = .init()) {
         self.config = config
     }
 
-    var currentWorkingDirectory: AbsolutePath {
+    public var currentWorkingDirectory: AbsolutePath {
         // swiftlint:disable:next force_try
         try! config.overrides.currentWorkingDirectory ?? AbsolutePath(validating: fileManager.currentDirectoryPath)
     }
 
-    var homeDirectory: AbsolutePath {
+    public var homeDirectory: AbsolutePath {
         // swiftlint:disable:next force_try
         try! config.overrides.homeDirectory ?? AbsolutePath(validating: fileManager.homeDirectoryForCurrentUser.path())
     }
 
-    func exists(at path: AbsolutePath) -> Bool {
+    public func exists(at path: AbsolutePath) -> Bool {
         fileManager.fileExists(atPath: path.pathString)
     }
 
-    func move(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws {
+    public func move(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws {
         try fileManager.moveItem(at: fromPath.asURL, to: toPath.asURL)
     }
 
-    func copy(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws {
+    public func copy(from fromPath: AbsolutePath, to toPath: AbsolutePath) throws {
         try fileManager.copyItem(at: fromPath.asURL, to: toPath.asURL)
     }
 
-    func remove(at path: AbsolutePath) throws {
+    public func remove(at path: AbsolutePath) throws {
         try fileManager.removeItem(at: path.asURL)
     }
 
-    func list(at path: AbsolutePath) throws -> [FileSystemItem] {
+    public func list(at path: AbsolutePath) throws -> [FileSystemItem] {
         try fileManager.contentsOfDirectory(atPath: path.pathString)
             .sorted()
             .map { RelativePath($0) }
@@ -112,36 +118,36 @@ final class DefaultFileSystem: FileSystem {
             }
     }
 
-    func createDirectory(at path: AbsolutePath) throws {
+    public func createDirectory(at path: AbsolutePath) throws {
         try fileManager.createDirectory(at: path.asURL, withIntermediateDirectories: true)
     }
 
-    func isExecutable(at path: AbsolutePath) -> Bool {
+    public func isExecutable(at path: AbsolutePath) -> Bool {
         fileManager.isExecutableFile(atPath: path.pathString)
     }
 
-    func isFile(at path: AbsolutePath) -> Bool {
+    public func isFile(at path: AbsolutePath) -> Bool {
         var directory: ObjCBool = false
         let exists = fileManager.fileExists(atPath: path.pathString, isDirectory: &directory)
         return exists && !directory.boolValue
     }
 
-    func isDirectory(at path: AbsolutePath) -> Bool {
+    public func isDirectory(at path: AbsolutePath) -> Bool {
         var directory: ObjCBool = false
         let exists = fileManager.fileExists(atPath: path.pathString, isDirectory: &directory)
         return exists && directory.boolValue
     }
 
-    func makeTemporaryDirectory() throws -> TemporaryDirectory {
+    public func makeTemporaryDirectory() throws -> TemporaryDirectory {
         try TemporaryDirectory()
     }
 
-    func absolutePath(from string: String) throws -> AbsolutePath {
+    public func absolutePath(from string: String) throws -> AbsolutePath {
         string.hasPrefix("/") ? try AbsolutePath(validating: string) : currentWorkingDirectory
             .appending(RelativePath(string))
     }
 
-    func fileSize(at path: AbsolutePath) throws -> MemorySize {
+    public func fileSize(at path: AbsolutePath) throws -> MemorySize {
         let attributes = try fileManager.attributesOfItem(atPath: path.pathString)
         guard let size = attributes[FileAttributeKey.size] as? UInt64 else {
             throw CoreError.generic("Cannot calculate size of the file at path=\(path.pathString)")
@@ -149,7 +155,7 @@ final class DefaultFileSystem: FileSystem {
         return .init(bytes: size)
     }
 
-    func directorySize(at path: AbsolutePath) throws -> MemorySize {
+    public func directorySize(at path: AbsolutePath) throws -> MemorySize {
         guard let enumerator = fileManager.enumerator(at: path.asURL, includingPropertiesForKeys: [.fileSizeKey]) else {
             throw CoreError.generic("Cannot enumerate files at path=\(path.pathString)")
         }
@@ -163,7 +169,7 @@ final class DefaultFileSystem: FileSystem {
         )
     }
 
-    func temporaryDirectory(at existingPath: AbsolutePath?) throws -> Directory {
+    public func temporaryDirectory(at existingPath: AbsolutePath?) throws -> Directory {
         if let existingPath {
             let items = try list(at: existingPath)
             guard items.isEmpty else {
@@ -175,11 +181,11 @@ final class DefaultFileSystem: FileSystem {
         }
     }
 
-    func write(data: Data, to path: AbsolutePath) throws {
+    public func write(data: Data, to path: AbsolutePath) throws {
         try data.write(to: path.asURL)
     }
 
-    func read(from path: AbsolutePath) throws -> Data {
+    public func read(from path: AbsolutePath) throws -> Data {
         try Data(contentsOf: path.asURL)
     }
 }

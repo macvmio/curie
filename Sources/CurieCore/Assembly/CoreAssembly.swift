@@ -39,7 +39,7 @@ public final class CoreAssembly: Assembly {
                 installer: r.resolve(VMInstaller.self),
                 imageCache: r.resolve(ImageCache.self),
                 fileSystem: r.resolve(FileSystem.self),
-                runloop: r.resolve(ProcessRunloop.self),
+                runLoop: r.resolve(RunLoop.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -101,7 +101,7 @@ public final class CoreAssembly: Assembly {
             DefaultDownloadInteractor(
                 downloader: r.resolve(RestoreImageDownloader.self),
                 fileSystem: r.resolve(FileSystem.self),
-                system: r.resolve(System.self),
+                runLoop: r.resolve(RunLoop.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -145,6 +145,8 @@ public final class CoreAssembly: Assembly {
         }
         registry.register(RestoreImageDownloader.self) { r in
             DefaultRestoreImageDownloader(
+                restoreImageService: r.resolve(RestoreImageService.self),
+                httpClient: r.resolve(HTTPClient.self),
                 fileSystem: r.resolve(FileSystem.self),
                 console: r.resolve(Console.self)
             )
@@ -172,13 +174,13 @@ public final class CoreAssembly: Assembly {
                 console: r.resolve(Console.self)
             )
         }
-        registry.register(WallClock.self) { _ in
-            DefaultWallClock()
-        }
         registry.register(ARPClient.self) { r in
             DefaultARPClient(
                 system: r.resolve(System.self)
             )
+        }
+        registry.register(RestoreImageService.self) { _ in
+            DefaultRestoreImageService()
         }
     }
 }
