@@ -16,24 +16,35 @@
 
 import CurieCommon
 
-protocol AsyncInteractor: AnyObject {
-    associatedtype Context
-
-    func execute(context: Context, runLoop: RunLoopAccessor) async throws
+public enum Operation {
+    case download(DownloadParameters)
 }
 
-final class AsyncInteractorAdapter<Interactor: AsyncInteractor> {
-    private let interactor: Interactor
+public protocol Interactor {
+    func execute(_ operation: Operation) throws
+}
+
+protocol AsyncInteractor: AnyObject {
+    associatedtype Parameters
+
+    func execute(parameters: Parameters, runLoop: RunLoopAccessor) async throws
+}
+
+final class DefaultInteractor: Interactor {
+    private let downloadInteractor: DownloadInteractor
     private let runLoop: CurieCommon.RunLoop
 
-    init(interactor: Interactor, runLoop: CurieCommon.RunLoop) {
-        self.interactor = interactor
+    init(downloadInteractor: DownloadInteractor, runLoop: CurieCommon.RunLoop) {
+        self.downloadInteractor = downloadInteractor
         self.runLoop = runLoop
     }
 
-    func execute(context: Interactor.Context) throws {
-        try runLoop.run { [self] _ in
-            try await interactor.execute(context: context, runLoop: runLoop)
+    func execute(_ operation: Operation) throws {
+        try runLoop.run { [self] runLoop in
+            switch operation {
+            case let .download(parameters):
+                try await downloadInteractor.execute(parameters: parameters, runLoop: runLoop)
+            }
         }
     }
 }

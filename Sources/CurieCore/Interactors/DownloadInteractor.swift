@@ -19,7 +19,7 @@ import CurieCommon
 import Foundation
 import TSCBasic
 
-public struct DownloadInteractorContext {
+public struct DownloadParameters {
     public var path: String
 
     public init(path: String) {
@@ -27,13 +27,7 @@ public struct DownloadInteractorContext {
     }
 }
 
-public protocol DownloadInteractor {
-    func execute(context: DownloadInteractorContext) throws
-}
-
-public final class DefaultDownloadInteractor: AsyncInteractor {
-    typealias Context = DownloadInteractorContext
-
+final class DownloadInteractor: AsyncInteractor {
     private let restoreImageService: RestoreImageService
     private let httpClient: HTTPClient
     private let fileSystem: CurieCommon.FileSystem
@@ -51,12 +45,12 @@ public final class DefaultDownloadInteractor: AsyncInteractor {
         self.console = console
     }
 
-    public func execute(context: DownloadInteractorContext, runLoop _: any RunLoopAccessor) async throws {
-        guard let path = try? fileSystem.absolutePath(from: context.path) else {
-            throw CoreError.generic("Invalid path \"\(context.path)\"")
+    func execute(parameters: DownloadParameters, runLoop _: any RunLoopAccessor) async throws {
+        guard let path = try? fileSystem.absolutePath(from: parameters.path) else {
+            throw CoreError.generic("Invalid path \"\(parameters.path)\"")
         }
         guard !fileSystem.exists(at: path) else {
-            throw CoreError.generic("File already exists at path \"\(context.path)\"")
+            throw CoreError.generic("File already exists at path \"\(parameters.path)\"")
         }
         let restoreImage = try await restoreImageService.latestSupported()
         let (url, _) = try await httpClient.download(url: restoreImage.url, tracker: self)
@@ -66,7 +60,7 @@ public final class DefaultDownloadInteractor: AsyncInteractor {
     }
 }
 
-extension DefaultDownloadInteractor: HTTPClientDownloadTracker {
+extension DownloadInteractor: HTTPClientDownloadTracker {
     public func httpClient(_: any HTTPClient, progress: HTTPClientDownloadProgress) {
         console.progress(
             prompt: "Downloading",

@@ -18,64 +18,45 @@ import CurieCommon
 import CurieCommonMocks
 import CurieCoreMocks
 import Foundation
+import SCInject
 import XCTest
 
 @testable import CurieCore
 
 final class DownloadInteractorTests: XCTestCase {
-    private var subject: DefaultDownloadInteractor!
-    private var fileSystem: DefaultFileSystem!
-    private var restoreImageService: MockRestoreImageService!
-    private var runLoop: MockRunLoopAccessor!
-    private var httpClient: MockHTTPClient!
-    private var console: MockConsole!
-    private var directory: Directory!
+    private var subject: Interactor!
+    private var env: InteractorsTestsEnvironment!
+    private var directory: TemporaryDirectory!
 
     private let fileManager = FileManager.default
 
     override func setUpWithError() throws {
         super.setUp()
-        httpClient = MockHTTPClient()
-        console = MockConsole()
-        restoreImageService = MockRestoreImageService()
-        runLoop = MockRunLoopAccessor()
-        fileSystem = DefaultFileSystem()
-        subject = DefaultDownloadInteractor(
-            restoreImageService: restoreImageService,
-            httpClient: httpClient,
-            fileSystem: fileSystem,
-            console: console
-        )
-
-        try directory = fileSystem.makeTemporaryDirectory()
+        env = InteractorsTestsEnvironment()
+        directory = try TemporaryDirectory()
+        subject = env.resolveInteractor()
     }
 
     override func tearDown() {
         super.tearDown()
-        httpClient = nil
-        console = nil
-        restoreImageService = nil
-        runLoop = nil
-        fileSystem = nil
-        subject = nil
-
+        env = nil
         directory = nil
+        subject = nil
     }
 
-    func testExecute_validContext() async throws {
+    func testExecute_validContext() throws {
         // Given
         let destination = directory.path.appending(component: "destination.ipsw")
-        let context = DownloadInteractorContext(path: destination.pathString)
-        restoreImageService.mockLatestSupported = [anyRestoreImage]
-        httpClient.mockDownloadResult[anySourceURL] = try [anyDownload()]
+        let parameters = DownloadParameters(path: destination.pathString)
+        env.restoreImageService.mockLatestSupported = [anyRestoreImage]
+        env.httpClient.mockDownloadResult[anySourceURL] = try [anyDownload()]
 
         // When
-        try await subject.execute(context: context, runLoop: runLoop)
+        try subject.execute(.download(parameters))
 
         // Then
         XCTAssertTrue(fileManager.fileExists(atPath: destination.pathString))
         XCTAssertEqual(fileManager.contents(atPath: destination.pathString), anyContent.data(using: .utf8))
-        XCTAssertEqual(runLoop.calls, [])
     }
 
     // MARK: - Private

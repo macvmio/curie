@@ -30,6 +30,12 @@ public final class CoreAssembly: Assembly {
     // MARK: - Private
 
     private func assembleInteractors(_ registry: Registry) {
+        registry.register(Interactor.self) { r in
+            DefaultInteractor(
+                downloadInteractor: r.resolve(DownloadInteractor.self),
+                runLoop: r.resolve(CurieCommon.RunLoop.self)
+            )
+        }
         registry.register(RunInteractor.self) { r in
             DefaultRunInteractor(
                 configurator: r.resolve(VMConfigurator.self),
@@ -113,12 +119,12 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(DownloadInteractor.self) { r in
-            r.resolveAsyncInteractor(interactor: DefaultDownloadInteractor(
+            DownloadInteractor(
                 restoreImageService: r.resolve(RestoreImageService.self),
                 httpClient: r.resolve(HTTPClient.self),
                 fileSystem: r.resolve(FileSystem.self),
                 console: r.resolve(Console.self)
-            ))
+            )
         }
         registry.register(ExportInteractor.self) { r in
             DefaultExportInteractor(
@@ -193,14 +199,3 @@ public final class CoreAssembly: Assembly {
 }
 
 // swiftlint:enable function_body_length
-
-private extension Resolver {
-    func resolveAsyncInteractor<Interactor>(interactor: Interactor) -> AsyncInteractorAdapter<Interactor> {
-        AsyncInteractorAdapter(
-            interactor: interactor,
-            runLoop: resolve(RunLoop.self)
-        )
-    }
-}
-
-extension AsyncInteractorAdapter<DefaultDownloadInteractor>: DownloadInteractor {}

@@ -34,18 +34,16 @@ struct DownloadCommand: Command {
     var path: String
 
     final class Executor: CommandExecutor {
-        private let interactor: DownloadInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: DownloadInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: DownloadCommand) throws {
-            try interactor.execute(context: .init(
+            try interactor.execute(.download(.init(
                 path: command.path
-            ))
+            )))
         }
     }
 
@@ -53,8 +51,7 @@ struct DownloadCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(DownloadInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }
