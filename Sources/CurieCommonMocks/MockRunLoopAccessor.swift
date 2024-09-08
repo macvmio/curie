@@ -14,21 +14,24 @@
 // limitations under the License.
 //
 
+import CurieCommon
 import Foundation
 
-struct VMInfo: Codable {
-    let config: VMConfig
-    let metadata: VMMetadata
-}
+public final class MockRunLoopAccessor: RunLoopAccessor {
+    public enum Call: Equatable {
+        case terminate
+        case error(CurieCommon.CoreError)
+    }
 
-extension VMInfo: CustomStringConvertible {
-    var description: String {
-        """
+    public private(set) var calls: [Call] = []
 
-        \(metadata.description)
+    public init() {}
 
-        \(config.description)
+    public func terminate() {
+        calls.append(.terminate)
+    }
 
-        """
+    public func error(_ error: CurieCommon.CoreError) {
+        calls.append(.error(error))
     }
 }
