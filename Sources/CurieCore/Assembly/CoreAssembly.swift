@@ -38,8 +38,8 @@ public final class CoreAssembly: Assembly {
                 configurator: r.resolve(VMConfigurator.self),
                 installer: r.resolve(VMInstaller.self),
                 imageCache: r.resolve(ImageCache.self),
-                system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self),
+                runloop: r.resolve(ProcessRunloop.self),
                 console: r.resolve(Console.self)
             )
         }

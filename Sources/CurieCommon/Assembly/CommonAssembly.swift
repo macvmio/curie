@@ -17,5 +17,8 @@ public final class CommonAssembly: Assembly {
         registry.register(System.self) { _ in
             DefaultSystem()
         }
+        registry.register(ProcessRunloop.self, .container) { _ in
+            DefaultProcessRunloop()
+        }
     }
 }

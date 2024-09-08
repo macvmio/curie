@@ -30,8 +30,8 @@ final class DefaultBuildInteractor: BuildInteractor {
     private let configurator: VMConfigurator
     private let installer: VMInstaller
     private let imageCache: ImageCache
-    private let system: System
     private let fileSystem: CurieCommon.FileSystem
+    private let runloop: ProcessRunloop
     private let console: Console
 
     init(
@@ -39,16 +39,16 @@ final class DefaultBuildInteractor: BuildInteractor {
         configurator: VMConfigurator,
         installer: VMInstaller,
         imageCache: ImageCache,
-        system: System,
         fileSystem: CurieCommon.FileSystem,
+        runloop: ProcessRunloop,
         console: Console
     ) {
         self.downloader = downloader
         self.configurator = configurator
         self.installer = installer
         self.imageCache = imageCache
-        self.system = system
         self.fileSystem = fileSystem
+        self.runloop = runloop
         self.console = console
     }
 
@@ -73,8 +73,6 @@ final class DefaultBuildInteractor: BuildInteractor {
         context: BuildInteractorContext,
         restoreImagePath: String
     ) throws {
-        let cancellable = StateCancellable()
-
         Task { [weak self] in
             guard let self else { return }
             do {
@@ -95,16 +93,15 @@ final class DefaultBuildInteractor: BuildInteractor {
                 // Install VM image
                 try await installer.install(vm: vm, restoreImagePath: restoreImagePath)
 
-                cancellable.cancel()
+                runloop.terminate()
+            } catch let error as CoreError {
+                runloop.error(error)
             } catch {
-                console.error(error.localizedDescription)
-                cancellable.cancel()
+                runloop.error(.generic(error.localizedDescription))
             }
         }
-        system.keepAliveWithSIGINTEventHandler(cancellable: cancellable, signalHandler: { exit in
-            cancellable.cancel()
-            exit(0)
-        })
+
+        try runloop.run()
     }
 
     private func prepareDiskSize(context: BuildInteractorContext) throws -> MemorySize {
