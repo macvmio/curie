@@ -97,12 +97,14 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(DownloadInteractor.self) { r in
-            DefaultDownloadInteractor(
-                restoreImageService: r.resolve(RestoreImageService.self),
-                httpClient: r.resolve(HTTPClient.self),
-                fileSystem: r.resolve(FileSystem.self),
-                runLoop: r.resolve(RunLoop.self),
-                console: r.resolve(Console.self)
+            AsyncInteractorAdapter(
+                interactor: DefaultDownloadInteractor(
+                    restoreImageService: r.resolve(RestoreImageService.self),
+                    httpClient: r.resolve(HTTPClient.self),
+                    fileSystem: r.resolve(FileSystem.self),
+                    console: r.resolve(Console.self)
+                ),
+                runLoop: r.resolve(RunLoop.self)
             )
         }
         registry.register(ExportInteractor.self) { r in
@@ -178,3 +180,5 @@ public final class CoreAssembly: Assembly {
 }
 
 // swiftlint:enable function_body_length
+
+extension AsyncInteractorAdapter<DefaultDownloadInteractor>: DownloadInteractor {}
