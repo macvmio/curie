@@ -31,6 +31,17 @@ let package = Package(
                 .product(name: "SCInject", package: "SwiftCommons"),
             ]
         ),
+        .testTarget(
+            name: "CurieCommandTests",
+            dependencies: [
+                .target(name: "CurieCommand"),
+                .target(name: "CurieCore"),
+                .target(name: "CurieCommon"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+                .product(name: "SCInject", package: "SwiftCommons"),
+            ]
+        ),
         .target(
             name: "CurieCore",
             dependencies: [
