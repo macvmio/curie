@@ -34,7 +34,6 @@ public final class CoreAssembly: Assembly {
         }
         registry.register(BuildInteractor.self) { r in
             DefaultBuildInteractor(
-                downloader: r.resolve(RestoreImageDownloader.self),
                 configurator: r.resolve(VMConfigurator.self),
                 installer: r.resolve(VMInstaller.self),
                 imageCache: r.resolve(ImageCache.self),
@@ -98,12 +97,12 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(DownloadInteractor.self) { r in
-            DefaultDownloadInteractor(
-                downloader: r.resolve(RestoreImageDownloader.self),
+            r.resolveAsyncInteractor(interactor: DefaultDownloadInteractor(
+                restoreImageService: r.resolve(RestoreImageService.self),
+                httpClient: r.resolve(HTTPClient.self),
                 fileSystem: r.resolve(FileSystem.self),
-                runLoop: r.resolve(RunLoop.self),
                 console: r.resolve(Console.self)
-            )
+            ))
         }
         registry.register(ExportInteractor.self) { r in
             DefaultExportInteractor(
@@ -143,14 +142,6 @@ public final class CoreAssembly: Assembly {
         registry.register(MacOSWindowAppLauncher.self) { _ in
             MacOSWindowAppLauncher()
         }
-        registry.register(RestoreImageDownloader.self) { r in
-            DefaultRestoreImageDownloader(
-                restoreImageService: r.resolve(RestoreImageService.self),
-                httpClient: r.resolve(HTTPClient.self),
-                fileSystem: r.resolve(FileSystem.self),
-                console: r.resolve(Console.self)
-            )
-        }
         registry.register(VMInstaller.self) { r in
             DefaultVMInstaller(
                 console: r.resolve(Console.self)
@@ -186,3 +177,14 @@ public final class CoreAssembly: Assembly {
 }
 
 // swiftlint:enable function_body_length
+
+private extension Resolver {
+    func resolveAsyncInteractor<Interactor>(interactor: Interactor) -> AsyncInteractorAdapter<Interactor> {
+        AsyncInteractorAdapter(
+            interactor: interactor,
+            runLoop: resolve(RunLoop.self)
+        )
+    }
+}
+
+extension AsyncInteractorAdapter<DefaultDownloadInteractor>: DownloadInteractor {}

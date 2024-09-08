@@ -27,7 +27,7 @@ struct DownloadCommand: Command {
         }
 
         func execute(command: DownloadCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(context: .init(
                 path: command.path
             ))
         }

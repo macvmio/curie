@@ -8,10 +8,9 @@ import XCTest
 
 final class DownloadInteractorTests: XCTestCase {
     private var subject: DefaultDownloadInteractor!
-    private var downloader: DefaultRestoreImageDownloader!
     private var fileSystem: DefaultFileSystem!
-    private var runLoop: DefaultRunLoop!
     private var restoreImageService: MockRestoreImageService!
+    private var runLoop: MockRunLoopAccessor!
     private var httpClient: MockHTTPClient!
     private var console: MockConsole!
     private var directory: Directory!
@@ -23,18 +22,12 @@ final class DownloadInteractorTests: XCTestCase {
         httpClient = MockHTTPClient()
         console = MockConsole()
         restoreImageService = MockRestoreImageService()
+        runLoop = MockRunLoopAccessor()
         fileSystem = DefaultFileSystem()
-        downloader = DefaultRestoreImageDownloader(
+        subject = DefaultDownloadInteractor(
             restoreImageService: restoreImageService,
             httpClient: httpClient,
             fileSystem: fileSystem,
-            console: console
-        )
-        runLoop = DefaultRunLoop(interval: .short)
-        subject = DefaultDownloadInteractor(
-            downloader: downloader,
-            fileSystem: fileSystem,
-            runLoop: runLoop,
             console: console
         )
 
@@ -46,15 +39,14 @@ final class DownloadInteractorTests: XCTestCase {
         httpClient = nil
         console = nil
         restoreImageService = nil
-        fileSystem = nil
-        downloader = nil
         runLoop = nil
+        fileSystem = nil
         subject = nil
 
         directory = nil
     }
 
-    func testExecute_validContext() throws {
+    func testExecute_validContext() async throws {
         // Given
         let destination = directory.path.appending(component: "destination.ipsw")
         let context = DownloadInteractorContext(path: destination.pathString)
@@ -62,11 +54,12 @@ final class DownloadInteractorTests: XCTestCase {
         httpClient.mockDownloadResult[anySourceURL] = try [anyDownload()]
 
         // When
-        try subject.execute(with: context)
+        try await subject.execute(context: context, runLoop: runLoop)
 
         // Then
         XCTAssertTrue(fileManager.fileExists(atPath: destination.pathString))
         XCTAssertEqual(fileManager.contents(atPath: destination.pathString), anyContent.data(using: .utf8))
+        XCTAssertEqual(runLoop.calls, [])
     }
 
     // MARK: - Private
