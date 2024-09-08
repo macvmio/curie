@@ -17,7 +17,7 @@ public protocol DownloadInteractor {
 
 public final class DefaultDownloadInteractor: AsyncInteractor {
     typealias Context = DownloadInteractorContext
-    
+
     private let restoreImageService: RestoreImageService
     private let httpClient: HTTPClient
     private let fileSystem: CurieCommon.FileSystem
@@ -34,7 +34,7 @@ public final class DefaultDownloadInteractor: AsyncInteractor {
         self.fileSystem = fileSystem
         self.console = console
     }
-    
+
     public func execute(context: DownloadInteractorContext, runLoop _: any RunLoopAccessor) async throws {
         guard let path = try? fileSystem.absolutePath(from: context.path) else {
             throw CoreError.generic("Invalid path \"\(context.path)\"")
