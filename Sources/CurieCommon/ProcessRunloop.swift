@@ -13,7 +13,7 @@ public protocol AccessProcessRunloop {
 }
 
 public protocol ProcessRunloop: AccessProcessRunloop {
-    func run() throws
+    func run(_ closure: @escaping (ProcessRunloop) async throws -> Void) throws
 }
 
 public class DefaultProcessRunloop: ProcessRunloop {
@@ -21,17 +21,21 @@ public class DefaultProcessRunloop: ProcessRunloop {
     private let lock = NSLock()
     private(set) var error: CoreError?
 
-    public init() {}
+    init() {}
 
-    public func run() throws {
-        let sigint = makeSourceSignal(sig: SIGINT, eventHandler: .init(block: { [unowned self] in terminate() }))
-        let sigterm = makeSourceSignal(sig: SIGTERM, eventHandler: .init(block: { [unowned self] in terminate() }))
-        try withExtendedLifetime([sigint, sigterm]) {
-            while !isTerminated() {
-                RunLoop.main.run(until: .now + 1)
+    public func run(_ closure: @escaping (any ProcessRunloop) async throws -> Void) throws {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await closure(self)
+                terminate()
+            } catch let error as CoreError {
+                self.error(error)
+            } catch {
+                self.error(.generic(error.localizedDescription))
             }
-            try rethrow()
         }
+        try run()
     }
 
     public func terminate() {
@@ -46,6 +50,17 @@ public class DefaultProcessRunloop: ProcessRunloop {
     }
 
     // MARK: - Private
+
+    private func run() throws {
+        let sigint = makeSourceSignal(sig: SIGINT, eventHandler: .init(block: { [unowned self] in terminate() }))
+        let sigterm = makeSourceSignal(sig: SIGTERM, eventHandler: .init(block: { [unowned self] in terminate() }))
+        try withExtendedLifetime([sigint, sigterm]) {
+            while !isTerminated() {
+                RunLoop.main.run(until: .now + 1)
+            }
+            try rethrow()
+        }
+    }
 
     private func isTerminated() -> Bool {
         lock.lock(); defer { lock.unlock() }

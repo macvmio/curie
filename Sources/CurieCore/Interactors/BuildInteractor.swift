@@ -73,35 +73,24 @@ final class DefaultBuildInteractor: BuildInteractor {
         context: BuildInteractorContext,
         restoreImagePath: String
     ) throws {
-        Task { [weak self] in
-            guard let self else { return }
-            do {
-                // Get restore image path
-                let restoreImagePath = try prepareRestoreImagePath(path: restoreImagePath)
+        try runloop.run { [self] _ in
+            // Get restore image path
+            let restoreImagePath = try prepareRestoreImagePath(path: restoreImagePath)
 
-                // Create VM bundle
-                try await configurator.createVM(with: bundle, spec: .init(
-                    reference: reference,
-                    restoreImagePath: restoreImagePath,
-                    diskSize: prepareDiskSize(context: context),
-                    configPath: prepareConfigPath(context: context)
-                ))
+            // Create VM bundle
+            try await configurator.createVM(with: bundle, spec: .init(
+                reference: reference,
+                restoreImagePath: restoreImagePath,
+                diskSize: prepareDiskSize(context: context),
+                configPath: prepareConfigPath(context: context)
+            ))
 
-                // Load VM
-                let vm = try configurator.loadVM(with: bundle, overrideConfig: nil)
+            // Load VM
+            let vm = try configurator.loadVM(with: bundle, overrideConfig: nil)
 
-                // Install VM image
-                try await installer.install(vm: vm, restoreImagePath: restoreImagePath)
-
-                runloop.terminate()
-            } catch let error as CoreError {
-                runloop.error(error)
-            } catch {
-                runloop.error(.generic(error.localizedDescription))
-            }
+            // Install VM image
+            try await installer.install(vm: vm, restoreImagePath: restoreImagePath)
         }
-
-        try runloop.run()
     }
 
     private func prepareDiskSize(context: BuildInteractorContext) throws -> MemorySize {
