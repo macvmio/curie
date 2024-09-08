@@ -20,7 +20,7 @@ import CurieCore
 import Foundation
 import SCInject
 
-private enum Setup {
+enum Setup {
     static let allSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (BuildCommand.self, BuildCommand.Assembly()),
         (CloneCommand.self, CloneCommand.Assembly()),
@@ -39,11 +39,10 @@ private enum Setup {
         (StartCommand.self, StartCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
-}
 
-extension Command {
-    var resolver: Resolver {
-        Assembler(container: DefaultContainer())
+    @discardableResult
+    static func resolver(with container: DefaultContainer) -> Resolver {
+        Assembler(container: container)
             .assemble(commonAssemblies)
             .assemble(commandAssemblies)
             .assemble(coreAssemblies)
@@ -52,20 +51,26 @@ extension Command {
 
     // MARK: - Assemblies
 
-    private var commonAssemblies: [Assembly] {
+    private static var commonAssemblies: [Assembly] {
         [
             CommonAssembly(),
         ]
     }
 
-    private var commandAssemblies: [Assembly] {
+    private static var commandAssemblies: [Assembly] {
         Setup.allSubcommands.map(\.1)
     }
 
-    private var coreAssemblies: [Assembly] {
+    private static var coreAssemblies: [Assembly] {
         [
             CoreAssembly(),
         ]
+    }
+}
+
+extension Command {
+    var resolver: Resolver {
+        Setup.resolver(with: DefaultContainer())
     }
 }
 
