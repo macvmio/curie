@@ -20,8 +20,20 @@ public struct SubprocessCoreError: Error {
     public let exitCode: Int32
 }
 
-public enum CoreError: LocalizedError, Equatable {
-    case generic(String)
+public struct CoreError: LocalizedError, Equatable {
+    public let exitCode: Int32
+    public let message: String
+    public let metadata: [String: String]
+
+    public init(exitCode: Int32 = 1, message: String, metadata: [String: String] = [:]) {
+        self.exitCode = exitCode
+        self.message = message
+        self.metadata = metadata
+    }
+
+    public static func generic(_ message: String) -> CoreError {
+        .init(message: message)
+    }
 
     static func rethrow<T>(
         _ closure: @autoclosure () throws -> T,
@@ -73,9 +85,10 @@ public enum CoreError: LocalizedError, Equatable {
     }
 
     public var errorDescription: String? {
-        switch self {
-        case let .generic(message):
-            message
+        if metadata.isEmpty {
+            return message
         }
+        let metadataString = metadata.map { "\($0.key.uppercased())=\"\($0.value)\"" }.joined(separator: " ")
+        return "\(message) -- \(metadataString)"
     }
 }

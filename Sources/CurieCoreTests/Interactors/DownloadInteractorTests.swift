@@ -44,7 +44,7 @@ final class DownloadInteractorTests: XCTestCase {
         subject = nil
     }
 
-    func testExecute_validContext() throws {
+    func testExecute_validParameters() throws {
         // Given
         let destination = directory.path.appending(component: "destination.ipsw")
         let parameters = DownloadParameters(path: destination.pathString)
@@ -57,6 +57,47 @@ final class DownloadInteractorTests: XCTestCase {
         // Then
         XCTAssertTrue(fileManager.fileExists(atPath: destination.pathString))
         XCTAssertEqual(fileManager.contents(atPath: destination.pathString), anyContent.data(using: .utf8))
+    }
+
+    func testExecute_existingDirectory() throws {
+        // Given
+        let parameters = DownloadParameters(path: "/")
+
+        // When / Then
+        try XCTAssertError(subject.execute(.download(parameters)), .init(
+            message: "Directory already exists at path",
+            metadata: ["PATH": "/"]
+        ))
+    }
+
+    func testExecute_existingFile() throws {
+        // Given
+        let destination = directory.path.appending(component: "destination.ipsw")
+        let parameters = DownloadParameters(path: destination.pathString)
+        try "file".write(to: destination.asURL, atomically: true, encoding: .utf8)
+
+        // When / Then
+        try XCTAssertError(subject.execute(.download(parameters)), .init(
+            message: "File already exists at path",
+            metadata: ["PATH": destination.pathString]
+        ))
+    }
+
+    func testExecute_unsupportedImage() throws {
+        // Given
+        var storeImage = anyRestoreImage
+        storeImage.isSupported = false
+
+        let destination = directory.path.appending(component: "destination.ipsw")
+        let parameters = DownloadParameters(path: destination.pathString)
+        env.restoreImageService.mockLatestSupported = [storeImage]
+        env.httpClient.mockDownloadResult[anySourceURL] = try [anyDownload()]
+
+        // When / Then
+        try XCTAssertError(subject.execute(.download(parameters)), .init(
+            message: "Latest image is not supported",
+            metadata: ["OS_VERSION": "14.5", "BUILD_VERSION": "E10A"]
+        ))
     }
 
     // MARK: - Private
