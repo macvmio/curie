@@ -47,16 +47,28 @@ final class DownloadInteractor: AsyncInteractor {
 
     func execute(parameters: DownloadParameters, runLoop _: any RunLoopAccessor) async throws {
         guard let path = try? fileSystem.absolutePath(from: parameters.path) else {
-            throw CoreError.generic("Invalid path \"\(parameters.path)\"")
+            throw CoreError(message: "Invalid path", metadata: ["PATH": parameters.path])
+        }
+        guard !fileSystem.isDirectory(at: path) else {
+            throw CoreError(message: "Directory already exists at path", metadata: ["PATH": parameters.path])
         }
         guard !fileSystem.exists(at: path) else {
-            throw CoreError.generic("File already exists at path \"\(parameters.path)\"")
+            throw CoreError(message: "File already exists at path", metadata: ["PATH": parameters.path])
         }
         let restoreImage = try await restoreImageService.latestSupported()
+        guard restoreImage.isSupported else {
+            throw CoreError(message: "Latest image is not supported", metadata: [
+                "BUILD_VERSION": restoreImage.buildVersion,
+                "OS_VERSION": restoreImage.operatingSystemVersion,
+            ])
+        }
+        console
+            .text("Will download restore image (\(restoreImage.buildVersion), \(restoreImage.operatingSystemVersion))")
         let (url, _) = try await httpClient.download(url: restoreImage.url, tracker: self)
         let fromPath = try AbsolutePath(validating: url.path)
         try fileSystem.move(from: fromPath, to: path)
         console.clear()
+        console.text("Download completed")
     }
 }
 

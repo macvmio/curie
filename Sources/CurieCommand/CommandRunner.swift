@@ -107,11 +107,8 @@ private final class ErrorHandler {
     // MARK: - Private
 
     private func handleCoreError(_ error: CoreError) -> Int32 {
-        switch error {
-        case let .generic(message):
-            console.error(message)
-            return 1
-        }
+        console.error(error.localizedDescription)
+        return error.exitCode
     }
 
     private func handleCommandError(_ error: CommandError) -> Int32 {
