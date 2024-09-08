@@ -16,18 +16,21 @@ public protocol DownloadInteractor {
 }
 
 public final class DefaultDownloadInteractor: DownloadInteractor {
-    private let downloader: RestoreImageDownloader
+    private let restoreImageService: RestoreImageService
+    private let httpClient: HTTPClient
     private let fileSystem: CurieCommon.FileSystem
     private let runLoop: CurieCommon.RunLoop
     private let console: Console
 
     init(
-        downloader: RestoreImageDownloader,
+        restoreImageService: RestoreImageService,
+        httpClient: HTTPClient,
         fileSystem: CurieCommon.FileSystem,
         runLoop: CurieCommon.RunLoop,
         console: Console
     ) {
-        self.downloader = downloader
+        self.restoreImageService = restoreImageService
+        self.httpClient = httpClient
         self.fileSystem = fileSystem
         self.runLoop = runLoop
         self.console = console
@@ -42,7 +45,21 @@ public final class DefaultDownloadInteractor: DownloadInteractor {
         }
 
         try runLoop.run { [self] _ in
-            try await downloader.download(to: path)
+            let restoreImage = try await restoreImageService.latestSupported()
+            let (url, _) = try await httpClient.download(url: restoreImage.url, tracker: self)
+            let fromPath = try AbsolutePath(validating: url.path)
+            try fileSystem.move(from: fromPath, to: path)
+            console.clear()
         }
+    }
+}
+
+extension DefaultDownloadInteractor: HTTPClientDownloadTracker {
+    public func httpClient(_: any HTTPClient, progress: HTTPClientDownloadProgress) {
+        console.progress(
+            prompt: "Downloading",
+            progress: progress.progress,
+            suffix: "\(progress.received)/\(progress.expected)"
+        )
     }
 }

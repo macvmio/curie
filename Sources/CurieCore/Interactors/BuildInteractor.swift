@@ -26,7 +26,6 @@ public protocol BuildInteractor {
 }
 
 final class DefaultBuildInteractor: BuildInteractor {
-    private let downloader: RestoreImageDownloader
     private let configurator: VMConfigurator
     private let installer: VMInstaller
     private let imageCache: ImageCache
@@ -35,7 +34,6 @@ final class DefaultBuildInteractor: BuildInteractor {
     private let console: Console
 
     init(
-        downloader: RestoreImageDownloader,
         configurator: VMConfigurator,
         installer: VMInstaller,
         imageCache: ImageCache,
@@ -43,7 +41,6 @@ final class DefaultBuildInteractor: BuildInteractor {
         runLoop: CurieCommon.RunLoop,
         console: Console
     ) {
-        self.downloader = downloader
         self.configurator = configurator
         self.installer = installer
         self.imageCache = imageCache

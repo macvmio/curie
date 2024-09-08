@@ -8,7 +8,6 @@ import XCTest
 
 final class DownloadInteractorTests: XCTestCase {
     private var subject: DefaultDownloadInteractor!
-    private var downloader: DefaultRestoreImageDownloader!
     private var fileSystem: DefaultFileSystem!
     private var runLoop: DefaultRunLoop!
     private var restoreImageService: MockRestoreImageService!
@@ -24,15 +23,10 @@ final class DownloadInteractorTests: XCTestCase {
         console = MockConsole()
         restoreImageService = MockRestoreImageService()
         fileSystem = DefaultFileSystem()
-        downloader = DefaultRestoreImageDownloader(
-            restoreImageService: restoreImageService,
-            httpClient: httpClient,
-            fileSystem: fileSystem,
-            console: console
-        )
         runLoop = DefaultRunLoop(interval: .short)
         subject = DefaultDownloadInteractor(
-            downloader: downloader,
+            restoreImageService: restoreImageService,
+            httpClient: httpClient,
             fileSystem: fileSystem,
             runLoop: runLoop,
             console: console
@@ -47,7 +41,6 @@ final class DownloadInteractorTests: XCTestCase {
         console = nil
         restoreImageService = nil
         fileSystem = nil
-        downloader = nil
         runLoop = nil
         subject = nil
 
