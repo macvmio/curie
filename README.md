@@ -16,12 +16,6 @@ It allows users to run and manage isolated environments, making it easier to dev
 
 * **Image Management**: Users can create, modify, abd clone images. Images can be stored locally and reused across multiple  containers.
 
-## Limitations
-
-* **Lack of Support**: As a hobby project, the tool does not offer formal support.
-
-* **Development Status**: The tool may not receive regular updates or bug fixes, as its development is driven by the creators' interest and availability.
-
 ## Usage
 
 ### Commands
