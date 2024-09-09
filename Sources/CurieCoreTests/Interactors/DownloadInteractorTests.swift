@@ -57,17 +57,29 @@ final class DownloadInteractorTests: XCTestCase {
         // Then
         XCTAssertTrue(fileManager.fileExists(atPath: destination.pathString))
         XCTAssertEqual(fileManager.contents(atPath: destination.pathString), anyContent.data(using: .utf8))
+        XCTAssertEqual(env.console.calls, [
+            .text("Restore image macOS 14.5 (E10A)"),
+            .progress("Downloading", 0.1, "10 B/100 B"),
+            .progress("Downloading", 0.7, "70 B/100 B"),
+            .progress("Downloading", 0.9, "90 B/100 B"),
+            .clear,
+            .text("Download completed"),
+        ])
     }
 
     func testExecute_existingDirectory() throws {
         // Given
         let parameters = DownloadParameters(path: "/")
 
-        // When / Then
-        try XCTAssertError(subject.execute(.download(parameters)), .init(
+        // When
+        let error = try XCTError(subject.execute(.download(parameters)))
+
+        // Then
+        XCTAssertEqual(error, .init(
             message: "Directory already exists at path",
             metadata: ["PATH": "/"]
         ))
+        XCTAssertEqual(env.console.calls, [])
     }
 
     func testExecute_existingFile() throws {
@@ -76,11 +88,15 @@ final class DownloadInteractorTests: XCTestCase {
         let parameters = DownloadParameters(path: destination.pathString)
         try "file".write(to: destination.asURL, atomically: true, encoding: .utf8)
 
-        // When / Then
-        try XCTAssertError(subject.execute(.download(parameters)), .init(
+        // When
+        let error = try XCTError(subject.execute(.download(parameters)))
+
+        // Then
+        XCTAssertEqual(error, .init(
             message: "File already exists at path",
             metadata: ["PATH": destination.pathString]
         ))
+        XCTAssertEqual(env.console.calls, [])
     }
 
     func testExecute_unsupportedImage() throws {
@@ -93,11 +109,15 @@ final class DownloadInteractorTests: XCTestCase {
         env.restoreImageService.mockLatestSupported = [storeImage]
         env.httpClient.mockDownloadResult[anySourceURL] = try [anyDownload()]
 
-        // When / Then
-        try XCTAssertError(subject.execute(.download(parameters)), .init(
+        // When
+        let error = try XCTError(subject.execute(.download(parameters)))
+
+        // Then
+        XCTAssertEqual(error, .init(
             message: "Latest image is not supported",
             metadata: ["OS_VERSION": "14.5", "BUILD_VERSION": "E10A"]
         ))
+        XCTAssertEqual(env.console.calls, [])
     }
 
     // MARK: - Private

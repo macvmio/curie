@@ -19,14 +19,16 @@ import Foundation
 import XCTest
 
 extension XCTestCase {
-    func XCTAssertError(_ expression: @autoclosure () throws -> Void, _ expectedError: CoreError) {
+    func XCTError(_ expression: @autoclosure () throws -> Void) -> CoreError? {
         do {
             try expression()
-            XCTFail("No error, expected=\(expectedError)")
+            XCTFail("No error thrown")
+            return nil
         } catch let error as CoreError {
-            XCTAssertEqual(error, expectedError)
+            return error
         } catch {
-            XCTFail("Unexpected error=\(error), expected=\(expectedError)")
+            XCTFail("Unexpected error type throw, error=\(error)")
+            return nil
         }
     }
 }
