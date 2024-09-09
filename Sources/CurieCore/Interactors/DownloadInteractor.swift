@@ -62,8 +62,7 @@ final class DownloadInteractor: AsyncInteractor {
                 "OS_VERSION": restoreImage.operatingSystemVersion,
             ])
         }
-        console
-            .text("Will download restore image (\(restoreImage.buildVersion), \(restoreImage.operatingSystemVersion))")
+        console.text("Restore image macOS \(restoreImage.operatingSystemVersion) (\(restoreImage.buildVersion))")
         let (url, _) = try await httpClient.download(url: restoreImage.url, tracker: self)
         let fromPath = try AbsolutePath(validating: url.path)
         try fileSystem.move(from: fromPath, to: path)
