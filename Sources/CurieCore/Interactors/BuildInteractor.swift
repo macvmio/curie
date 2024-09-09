@@ -88,7 +88,7 @@ final class BuildInteractor: AsyncInteractor {
             return Constants.defaultDiskSize
         }
         guard let diskSize = MemorySize(string: diskSize) else {
-            throw CoreError.generic("Invalid disk size '\(diskSize)'")
+            throw CoreError(message: "Invalid disk size", metadata: ["SIZE": diskSize])
         }
         return diskSize
     }
