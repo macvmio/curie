@@ -71,8 +71,11 @@ final class DownloadInteractorTests: XCTestCase {
         // Given
         let parameters = DownloadParameters(path: "/")
 
-        // When / Then
-        try XCTAssertError(subject.execute(.download(parameters)), .init(
+        // When
+        let error = try XCTError(subject.execute(.download(parameters)))
+
+        // Then
+        XCTAssertEqual(error, .init(
             message: "Directory already exists at path",
             metadata: ["PATH": "/"]
         ))
@@ -85,8 +88,11 @@ final class DownloadInteractorTests: XCTestCase {
         let parameters = DownloadParameters(path: destination.pathString)
         try "file".write(to: destination.asURL, atomically: true, encoding: .utf8)
 
-        // When / Then
-        try XCTAssertError(subject.execute(.download(parameters)), .init(
+        // When
+        let error = try XCTError(subject.execute(.download(parameters)))
+
+        // Then
+        XCTAssertEqual(error, .init(
             message: "File already exists at path",
             metadata: ["PATH": destination.pathString]
         ))
@@ -103,8 +109,11 @@ final class DownloadInteractorTests: XCTestCase {
         env.restoreImageService.mockLatestSupported = [storeImage]
         env.httpClient.mockDownloadResult[anySourceURL] = try [anyDownload()]
 
-        // When / Then
-        try XCTAssertError(subject.execute(.download(parameters)), .init(
+        // When
+        let error = try XCTError(subject.execute(.download(parameters)))
+
+        // Then
+        XCTAssertEqual(error, .init(
             message: "Latest image is not supported",
             metadata: ["OS_VERSION": "14.5", "BUILD_VERSION": "E10A"]
         ))
