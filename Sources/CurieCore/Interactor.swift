@@ -28,7 +28,7 @@ public protocol Interactor {
 protocol AsyncInteractor: AnyObject {
     associatedtype Parameters
 
-    func execute(parameters: Parameters, runLoop: RunLoopAccessor) async throws
+    func execute(parameters: Parameters) async throws
 }
 
 final class DefaultInteractor: Interactor {
@@ -47,12 +47,12 @@ final class DefaultInteractor: Interactor {
     }
 
     func execute(_ operation: Operation) throws {
-        try runLoop.run { [self] runLoop in
+        try runLoop.run { [self] _ in
             switch operation {
             case let .build(parameters):
-                try await buildInteractor.execute(parameters: parameters, runLoop: runLoop)
+                try await buildInteractor.execute(parameters: parameters)
             case let .download(parameters):
-                try await downloadInteractor.execute(parameters: parameters, runLoop: runLoop)
+                try await downloadInteractor.execute(parameters: parameters)
             }
         }
     }
