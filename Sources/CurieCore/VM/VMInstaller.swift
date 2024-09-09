@@ -26,34 +26,31 @@ protocol VMInstaller {
 final class DefaultVMInstaller: VMInstaller {
     private let console: Console
     private let queue: DispatchQueue = .main
-    private var observer: NSKeyValueObservation?
 
     init(console: Console) {
         self.console = console
     }
 
     func install(vm: VM, restoreImagePath: AbsolutePath) async throws {
+        let installer = VZMacOSInstaller(
+            virtualMachine: vm.virtualMachine,
+            restoringFromImageAt: restoreImagePath.asURL
+        )
+        let observer: NSKeyValueObservation = installer.progress.observe(
+            \.fractionCompleted,
+            options: [.initial, .new]
+        ) { [console] _, change in
+            console.progress(prompt: "Building", progress: change.newValue ?? 0)
+        }
         let result = await withCheckedContinuation { continuation in
-            queue.async { [weak self] in
-                guard let self else { return }
-                let installer = VZMacOSInstaller(
-                    virtualMachine: vm.virtualMachine,
-                    restoringFromImageAt: restoreImagePath.asURL
-                )
-
-                observer = installer.progress.observe(
-                    \.fractionCompleted,
-                    options: [.initial, .new]
-                ) { [console] _, change in
-                    console.progress(prompt: "Building", progress: change.newValue ?? 0)
-                }
-
-                installer.install { [console] result in
+            queue.async { [console] in
+                installer.install { result in
                     console.clear()
                     continuation.resume(returning: result)
                 }
             }
         }
+        withExtendedLifetime(observer) {}
 
         switch result {
         case .success:
