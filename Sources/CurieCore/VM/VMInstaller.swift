@@ -32,25 +32,25 @@ final class DefaultVMInstaller: VMInstaller {
     }
 
     func install(vm: VM, restoreImagePath: AbsolutePath) async throws {
-        let installer = VZMacOSInstaller(
-            virtualMachine: vm.virtualMachine,
-            restoringFromImageAt: restoreImagePath.asURL
-        )
-        let observer: NSKeyValueObservation = installer.progress.observe(
-            \.fractionCompleted,
-            options: [.initial, .new]
-        ) { [console] _, change in
-            console.progress(prompt: "Building", progress: change.newValue ?? 0)
-        }
         let result = await withCheckedContinuation { continuation in
             queue.async { [console] in
+                let installer = VZMacOSInstaller(
+                    virtualMachine: vm.virtualMachine,
+                    restoringFromImageAt: restoreImagePath.asURL
+                )
+                let observer: NSKeyValueObservation = installer.progress.observe(
+                    \.fractionCompleted,
+                    options: [.initial, .new]
+                ) { [console] _, change in
+                    console.progress(prompt: "Building", progress: change.newValue ?? 0)
+                }
                 installer.install { result in
+                    withExtendedLifetime(observer) {}
                     console.clear()
                     continuation.resume(returning: result)
                 }
             }
         }
-        withExtendedLifetime(observer) {}
 
         switch result {
         case .success:
