@@ -63,14 +63,14 @@ final class BuildInteractor: AsyncInteractor {
         let bundle = imageCache.bundle(for: reference)
 
         // Get restore image path
-        let restoreImagePath = prepareRestoreImagePath(path: parameters.ipwsPath)
+        let restoreImagePath = fileSystem.absolutePath(from: parameters.ipwsPath)
 
         // Create VM bundle
         try await configurator.createVM(with: bundle, spec: .init(
             reference: reference,
             restoreImagePath: restoreImagePath,
             diskSize: prepareDiskSize(parameters: parameters),
-            configPath: prepareConfigPath(parameters: parameters)
+            configPath: parameters.configPath.map(fileSystem.absolutePath(from:))
         ))
 
         // Load VM
@@ -90,13 +90,5 @@ final class BuildInteractor: AsyncInteractor {
             throw CoreError(message: "Invalid disk size", metadata: ["SIZE": diskSize])
         }
         return diskSize
-    }
-
-    private func prepareConfigPath(parameters: BuildParameters) -> AbsolutePath? {
-        parameters.configPath.map(fileSystem.absolutePath(from:))
-    }
-
-    private func prepareRestoreImagePath(path: String) -> AbsolutePath {
-        fileSystem.absolutePath(from: path)
     }
 }
