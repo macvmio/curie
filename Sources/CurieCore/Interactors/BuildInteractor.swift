@@ -64,7 +64,7 @@ final class BuildInteractor: AsyncInteractor {
         let bundle = VMBundle(path: bundlePath)
 
         // Get restore image path
-        let restoreImagePath = try prepareRestoreImagePath(path: parameters.ipwsPath)
+        let restoreImagePath = prepareRestoreImagePath(path: parameters.ipwsPath)
 
         // Create VM bundle
         try await configurator.createVM(with: bundle, spec: .init(
@@ -93,8 +93,8 @@ final class BuildInteractor: AsyncInteractor {
         return diskSize
     }
 
-    private func prepareConfigPath(context: BuildInteractorContext) -> AbsolutePath? {
-        context.configPath.map(fileSystem.absolutePath(from:))
+    private func prepareConfigPath(parameters: BuildParameters) -> AbsolutePath? {
+        parameters.configPath.map(fileSystem.absolutePath(from:))
     }
 
     private func prepareRestoreImagePath(path: String) -> AbsolutePath {
