@@ -60,8 +60,7 @@ final class BuildInteractor: AsyncInteractor {
 
     func execute(parameters: BuildParameters) async throws {
         let reference = try imageCache.makeImageReference(parameters.reference)
-        let bundlePath = try imageCache.path(to: reference)
-        let bundle = VMBundle(path: bundlePath)
+        let bundle = imageCache.bundle(for: reference)
 
         // Get restore image path
         let restoreImagePath = prepareRestoreImagePath(path: parameters.ipwsPath)

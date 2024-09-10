@@ -48,7 +48,7 @@ public final class DefaultConfigInteractor: ConfigInteractor {
 
     public func execute(with context: ConfigInteractorContext) throws {
         let reference = try imageCache.findReference(context.reference)
-        let bundle = try VMBundle(path: imageCache.path(to: reference))
+        let bundle = imageCache.bundle(for: reference)
         try system.execute(["open", "-t", bundle.config.pathString])
     }
 }
