@@ -55,7 +55,7 @@ public protocol FileSystem {
 
     func makeTemporaryDirectory() throws -> TemporaryDirectory
 
-    func absolutePath(from string: String) throws -> AbsolutePath
+    func absolutePath(from string: String) -> AbsolutePath
 
     func fileSize(at path: AbsolutePath) throws -> MemorySize
 
@@ -158,9 +158,8 @@ public final class DefaultFileSystem: FileSystem {
         try TemporaryDirectory()
     }
 
-    public func absolutePath(from string: String) throws -> AbsolutePath {
-        string.hasPrefix("/") ? try AbsolutePath(validating: string) : currentWorkingDirectory
-            .appending(RelativePath(string))
+    public func absolutePath(from string: String) -> AbsolutePath {
+        try! AbsolutePath(validating: string, relativeTo: currentWorkingDirectory)
     }
 
     public func fileSize(at path: AbsolutePath) throws -> MemorySize {

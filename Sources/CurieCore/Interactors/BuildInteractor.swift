@@ -88,7 +88,7 @@ final class DefaultBuildInteractor: BuildInteractor {
     ) throws {
         try runLoop.run { [self] _ in
             // Get restore image path
-            let restoreImagePath = try prepareRestoreImagePath(path: restoreImagePath)
+            let restoreImagePath = prepareRestoreImagePath(path: restoreImagePath)
 
             // Create VM bundle
             try await configurator.createVM(with: bundle, spec: .init(
@@ -116,14 +116,11 @@ final class DefaultBuildInteractor: BuildInteractor {
         return diskSize
     }
 
-    private func prepareConfigPath(context: BuildInteractorContext) throws -> AbsolutePath? {
-        guard let path = context.configPath else {
-            return nil
-        }
-        return try fileSystem.absolutePath(from: path)
+    private func prepareConfigPath(context: BuildInteractorContext) -> AbsolutePath? {
+        context.configPath.map(fileSystem.absolutePath(from:))
     }
 
-    private func prepareRestoreImagePath(path: String) throws -> AbsolutePath {
-        try fileSystem.absolutePath(from: path)
+    private func prepareRestoreImagePath(path: String) -> AbsolutePath {
+        fileSystem.absolutePath(from: path)
     }
 }

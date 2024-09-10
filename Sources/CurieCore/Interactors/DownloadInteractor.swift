@@ -46,9 +46,7 @@ final class DownloadInteractor: AsyncInteractor {
     }
 
     func execute(parameters: DownloadParameters, runLoop _: any RunLoopAccessor) async throws {
-        guard let path = try? fileSystem.absolutePath(from: parameters.path) else {
-            throw CoreError(message: "Invalid path", metadata: ["PATH": parameters.path])
-        }
+        let path = fileSystem.absolutePath(from: parameters.path)
         guard !fileSystem.isDirectory(at: path) else {
             throw CoreError(message: "Directory already exists at path", metadata: ["PATH": parameters.path])
         }

@@ -82,7 +82,7 @@ public final class MockFileSystem: CurieCommon.FileSystem {
         fatalError("Not implemented yet")
     }
 
-    public func absolutePath(from _: String) throws -> TSCBasic.AbsolutePath {
+    public func absolutePath(from _: String) -> TSCBasic.AbsolutePath {
         fatalError("Not implemented yet")
     }
 

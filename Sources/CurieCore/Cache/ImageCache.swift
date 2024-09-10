@@ -53,7 +53,6 @@ protocol ImageCache {
     func importImage(sourcePath: String, reference: String) throws
 }
 
-// swiftlint:disable:next type_body_length
 final class DefaultImageCache: ImageCache {
     let bundleParser: VMBundleParser
     let wallClock: WallClock
@@ -75,7 +74,7 @@ final class DefaultImageCache: ImageCache {
     func makeImageReference(_ reference: String) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
         let relativePath = RelativePath(reference)
-        let absolutePath = try imagesAbsolutePath().appending(relativePath)
+        let absolutePath = imagesAbsolutePath().appending(relativePath)
         guard !fileSystem.exists(at: absolutePath) else {
             throw CoreError
                 .generic(
@@ -167,7 +166,7 @@ final class DefaultImageCache: ImageCache {
 
     func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws {
         let sourceAbsolutePath = try path(to: source)
-        let targetAbsolutePath = try fileSystem.absolutePath(from: destinationPath)
+        let targetAbsolutePath = fileSystem.absolutePath(from: destinationPath)
         if fileSystem.exists(at: targetAbsolutePath) {
             guard try fileSystem.list(at: targetAbsolutePath).isEmpty else {
                 throw CoreError.generic("Failed to export image, directory at \(targetAbsolutePath) isn't empty")
@@ -193,7 +192,7 @@ final class DefaultImageCache: ImageCache {
             _ = try? removeEmptySubdirectories(of: imagesAbsolutePath())
         }
 
-        let sourceAbsolutePath = try fileSystem.absolutePath(from: sourcePath)
+        let sourceAbsolutePath = fileSystem.absolutePath(from: sourcePath)
 
         guard fileSystem.exists(at: sourceAbsolutePath) else {
             throw CoreError.generic("Failed to import image, exported image at \(sourcePath) does not exist")
@@ -247,18 +246,18 @@ final class DefaultImageCache: ImageCache {
     private func storeAbsolutePath(_ type: ImageType) throws -> AbsolutePath {
         switch type {
         case .container:
-            try containersAbsolutePath()
+            containersAbsolutePath()
         case .image:
-            try imagesAbsolutePath()
+            imagesAbsolutePath()
         }
     }
 
-    private func imagesAbsolutePath() throws -> AbsolutePath {
-        try dataRootDirectory().appending(component: "images")
+    private func imagesAbsolutePath() -> AbsolutePath {
+        dataRootDirectory().appending(component: "images")
     }
 
-    private func containersAbsolutePath() throws -> AbsolutePath {
-        try dataRootDirectory().appending(component: "containers")
+    private func containersAbsolutePath() -> AbsolutePath {
+        dataRootDirectory().appending(component: "containers")
     }
 
     private func findReference(_ reference: String, type: ImageType) throws -> ImageReference {
@@ -351,17 +350,9 @@ final class DefaultImageCache: ImageCache {
         return true
     }
 
-    private func dataRootDirectory() throws -> AbsolutePath {
+    private func dataRootDirectory() -> AbsolutePath {
         if let overrideDataRootString = system.environmentVariable(name: Constants.dataRootEnvironmentVariable) {
-            do {
-                return try AbsolutePath(validating: overrideDataRootString)
-            } catch {
-                throw CoreError
-                    .generic(
-                        "Invalid path to data root directory, please unset or correct " +
-                            "\(Constants.dataRootEnvironmentVariable)=\(overrideDataRootString)"
-                    )
-            }
+            return fileSystem.absolutePath(from: overrideDataRootString)
         }
         return fileSystem.homeDirectory.appending(component: ".curie")
     }
