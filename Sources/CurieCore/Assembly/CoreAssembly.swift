@@ -39,6 +39,7 @@ public final class CoreAssembly: Assembly {
                 createInteractor: r.resolve(CreateInteractor.self),
                 downloadInteractor: r.resolve(DownloadInteractor.self),
                 exportInteractor: r.resolve(ExportInteractor.self),
+                imagesInteractor: r.resolve(ImagesInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
         }
@@ -69,7 +70,7 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(ImagesInteractor.self) { r in
-            DefaultImagesInteractor(
+            ImagesInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 wallClock: r.resolve(WallClock.self),
                 console: r.resolve(Console.self)
