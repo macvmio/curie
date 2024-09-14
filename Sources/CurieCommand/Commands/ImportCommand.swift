@@ -37,19 +37,17 @@ struct ImportCommand: Command {
     var path: String
 
     final class Executor: CommandExecutor {
-        private let interactor: ImportInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: ImportInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: ImportCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.import(.init(
                 reference: command.reference,
                 path: command.path
-            ))
+            )))
         }
     }
 
@@ -57,8 +55,7 @@ struct ImportCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(ImportInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }
