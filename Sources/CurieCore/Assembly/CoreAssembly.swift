@@ -44,6 +44,7 @@ public final class CoreAssembly: Assembly {
                 inspectInteractor: r.resolve(InspectInteractor.self),
                 psInteractor: r.resolve(PsInteractor.self),
                 rmiInteractor: r.resolve(RmiInteractor.self),
+                rmInteractor: r.resolve(RmInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
         }
@@ -81,7 +82,7 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(RmInteractor.self) { r in
-            DefaultRmInteractor(
+            RmInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 console: r.resolve(Console.self)
             )

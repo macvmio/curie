@@ -31,18 +31,16 @@ struct RmCommand: Command {
     var reference: String
 
     final class Executor: CommandExecutor {
-        private let interactor: RmInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: RmInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: RmCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.rm(.init(
                 reference: command.reference
-            ))
+            )))
         }
     }
 
@@ -50,8 +48,7 @@ struct RmCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(RmInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }
