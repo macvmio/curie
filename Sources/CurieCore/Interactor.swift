@@ -18,6 +18,7 @@ import CurieCommon
 
 public enum Operation {
     case build(BuildParameters)
+    case clone(CloneParameters)
     case download(DownloadParameters)
 }
 
@@ -33,15 +34,18 @@ protocol AsyncInteractor: AnyObject {
 
 final class DefaultInteractor: Interactor {
     private let buildInteractor: BuildInteractor
+    private let cloneInteractor: CloneInteractor
     private let downloadInteractor: DownloadInteractor
     private let runLoop: CurieCommon.RunLoop
 
     init(
         buildInteractor: BuildInteractor,
+        cloneInteractor: CloneInteractor,
         downloadInteractor: DownloadInteractor,
         runLoop: CurieCommon.RunLoop
     ) {
         self.buildInteractor = buildInteractor
+        self.cloneInteractor = cloneInteractor
         self.downloadInteractor = downloadInteractor
         self.runLoop = runLoop
     }
@@ -51,6 +55,8 @@ final class DefaultInteractor: Interactor {
             switch operation {
             case let .build(parameters):
                 try await buildInteractor.execute(parameters: parameters)
+            case let .clone(parameters):
+                try await cloneInteractor.execute(parameters: parameters)
             case let .download(parameters):
                 try await downloadInteractor.execute(parameters: parameters)
             }
