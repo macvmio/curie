@@ -16,7 +16,7 @@
 
 import Foundation
 
-public final class Atomic<T> {
+public final class Atomic<T>: @unchecked Sendable {
     private var value: T
     private let lock = NSLock()
 

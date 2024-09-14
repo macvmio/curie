@@ -64,10 +64,7 @@ final class DefaultVMConfigurator: VMConfigurator {
         try createMetadata(bundle: bundle, reference: spec.reference)
 
         // Create disk image
-        try createDiskImage(
-            atPath: bundle.diskImage,
-            size: spec.diskSize
-        )
+        try createDiskImage(atPath: bundle.diskImage, size: spec.diskSize)
 
         // Create platform configuration
         let restoreImage = try await loadRestoreImage(spec: spec)

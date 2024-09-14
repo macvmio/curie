@@ -61,7 +61,7 @@ final class DefaultInspectInteractor: InspectInteractor {
 
     func execute(with context: InspectInteractorContext) throws {
         let reference = try imageCache.findReference(context.reference)
-        let bundle = try VMBundle(path: imageCache.path(to: reference))
+        let bundle = imageCache.bundle(for: reference)
         let info = try bundleParser.readInfo(from: bundle)
         let arpItems = try aprClient.executeARPQuery()
         let macAddresses = Set(info.metadata.network.flatMap { $0.devices.map(\.value.MACAddress) } ?? [])

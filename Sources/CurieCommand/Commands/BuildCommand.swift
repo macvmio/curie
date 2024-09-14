@@ -49,21 +49,19 @@ struct BuildCommand: Command {
     var configPath: String?
 
     final class Executor: CommandExecutor {
-        private let interactor: BuildInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: BuildInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: BuildCommand) throws {
-            try interactor.execute(with: .init(
-                ipwsPath: command.ipswPath,
+            try interactor.execute(.build(.init(
+                ipswPath: command.ipswPath,
                 reference: command.reference,
                 diskSize: command.diskSize,
                 configPath: command.configPath
-            ))
+            )))
         }
     }
 
@@ -71,8 +69,7 @@ struct BuildCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(BuildInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }

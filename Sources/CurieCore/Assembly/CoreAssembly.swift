@@ -32,6 +32,7 @@ public final class CoreAssembly: Assembly {
     private func assembleInteractors(_ registry: Registry) {
         registry.register(Interactor.self) { r in
             DefaultInteractor(
+                buildInteractor: r.resolve(BuildInteractor.self),
                 downloadInteractor: r.resolve(DownloadInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
@@ -55,13 +56,11 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(BuildInteractor.self) { r in
-            DefaultBuildInteractor(
+            BuildInteractor(
                 configurator: r.resolve(VMConfigurator.self),
                 installer: r.resolve(VMInstaller.self),
                 imageCache: r.resolve(ImageCache.self),
-                fileSystem: r.resolve(FileSystem.self),
-                runLoop: r.resolve(RunLoop.self),
-                console: r.resolve(Console.self)
+                fileSystem: r.resolve(FileSystem.self)
             )
         }
         registry.register(ImagesInteractor.self) { r in

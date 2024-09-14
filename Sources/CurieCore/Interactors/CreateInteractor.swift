@@ -56,7 +56,7 @@ public final class DefaultCreateInteractor: CreateInteractor {
         let sourceReference = try imageCache.findImageReference(context.reference)
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
-        let bundle = try VMBundle(path: imageCache.path(to: targetReference))
+        let bundle = imageCache.bundle(for: targetReference)
         try bundleParser.updateMetadata(bundle: bundle) { metadata in
             metadata.name = context.name
         }
