@@ -18,7 +18,7 @@ import Combine
 import CurieCommon
 import Foundation
 
-public struct CommitInteractorContext {
+public struct CommitParameters {
     public var containerReference: String
     public var imageReference: String?
 
@@ -28,16 +28,10 @@ public struct CommitInteractorContext {
     }
 }
 
-public protocol CommitInteractor {
-    func execute(with context: CommitInteractorContext) throws
-}
-
-public final class DefaultCommitInteractor: CommitInteractor {
+final class CommitInteractor: AsyncInteractor {
     private let configurator: VMConfigurator
     private let imageCache: ImageCache
     private let console: Console
-
-    private var cancellables = Set<AnyCancellable>()
 
     init(
         configurator: VMConfigurator,
@@ -49,9 +43,9 @@ public final class DefaultCommitInteractor: CommitInteractor {
         self.console = console
     }
 
-    public func execute(with context: CommitInteractorContext) throws {
-        let sourceReference = try imageCache.findContainerReference(context.containerReference)
-        let targetReference = try context.imageReference.map { try ImageReference(
+    func execute(parameters: CommitParameters) async throws {
+        let sourceReference = try imageCache.findContainerReference(parameters.containerReference)
+        let targetReference = try parameters.imageReference.map { try ImageReference(
             id: sourceReference.id,
             descriptor: .init(reference: $0),
             type: .image
