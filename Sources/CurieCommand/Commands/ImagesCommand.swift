@@ -35,18 +35,16 @@ struct ImagesCommand: Command, HasFormatOption {
     var format: String = Options.format.defaultValue
 
     final class Executor: CommandExecutor {
-        private let interactor: ImagesInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: ImagesInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: ImagesCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.images(.init(
                 format: command.parseFormatOption()
-            ))
+            )))
         }
     }
 
@@ -54,8 +52,7 @@ struct ImagesCommand: Command, HasFormatOption {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(ImagesInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }

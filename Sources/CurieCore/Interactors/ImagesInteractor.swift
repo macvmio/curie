@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct ImagesInteractorContext {
+public struct ImagesParameters {
     public let format: OutputFormat
 
     public init(format: OutputFormat) {
@@ -25,11 +25,7 @@ public struct ImagesInteractorContext {
     }
 }
 
-public protocol ImagesInteractor {
-    func execute(with context: ImagesInteractorContext) throws
-}
-
-final class DefaultImagesInteractor: ImagesInteractor {
+final class ImagesInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let wallClock: WallClock
     private let console: Console
@@ -51,7 +47,7 @@ final class DefaultImagesInteractor: ImagesInteractor {
         self.console = console
     }
 
-    func execute(with context: ImagesInteractorContext) throws {
+    func execute(parameters: ImagesParameters) async throws {
         let items = try imageCache.listImages()
         let images = items.sorted { $0.createAt > $1.createAt }
 
@@ -72,7 +68,7 @@ final class DefaultImagesInteractor: ImagesInteractor {
                 $0.size.description,
             ] }
         )
-        let config = TableRenderer.Config(format: context.format.rendererFormat())
+        let config = TableRenderer.Config(format: parameters.format.rendererFormat())
         let text = rendered.render(content: content, config: config)
 
         console.text(text)
