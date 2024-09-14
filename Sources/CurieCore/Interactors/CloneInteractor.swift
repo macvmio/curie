@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct CloneInteractorContext {
+public struct CloneParameters {
     public var sourceReference: String
     public var targetReference: String
 
@@ -27,11 +27,7 @@ public struct CloneInteractorContext {
     }
 }
 
-public protocol CloneInteractor {
-    func execute(with context: CloneInteractorContext) throws
-}
-
-final class DefaultCloneInteractor: CloneInteractor {
+final class CloneInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
@@ -43,10 +39,10 @@ final class DefaultCloneInteractor: CloneInteractor {
         self.console = console
     }
 
-    func execute(with context: CloneInteractorContext) throws {
-        let source = try imageCache.findImageReference(context.sourceReference)
+    func execute(parameters: CloneParameters) async throws {
+        let source = try imageCache.findImageReference(parameters.sourceReference)
 
-        try imageCache.cloneImage(source: source, target: .reference(context.targetReference))
+        try imageCache.cloneImage(source: source, target: .reference(parameters.targetReference))
 
         console.text("Image has been cloned")
     }

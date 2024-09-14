@@ -33,6 +33,7 @@ public final class CoreAssembly: Assembly {
         registry.register(Interactor.self) { r in
             DefaultInteractor(
                 buildInteractor: r.resolve(BuildInteractor.self),
+                cloneInteractor: r.resolve(CloneInteractor.self),
                 downloadInteractor: r.resolve(DownloadInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
@@ -83,7 +84,7 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(CloneInteractor.self) { r in
-            DefaultCloneInteractor(
+            CloneInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 console: r.resolve(Console.self)
             )

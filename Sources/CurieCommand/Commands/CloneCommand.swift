@@ -34,19 +34,17 @@ struct CloneCommand: Command {
     var targetReference: String
 
     final class Executor: CommandExecutor {
-        private let interactor: CloneInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: CloneInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: CloneCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.clone(.init(
                 sourceReference: command.sourceReference,
                 targetReference: command.targetReference
-            ))
+            )))
         }
     }
 
@@ -54,8 +52,7 @@ struct CloneCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(CloneInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }
