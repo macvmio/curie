@@ -40,20 +40,18 @@ struct ExportCommand: Command {
     var compress: Bool = false
 
     final class Executor: CommandExecutor {
-        private let interactor: ExportInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: ExportInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: ExportCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.export(.init(
                 reference: command.reference,
                 path: command.path,
                 compress: command.compress
-            ))
+            )))
         }
     }
 
@@ -61,8 +59,7 @@ struct ExportCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(ExportInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }
