@@ -41,6 +41,7 @@ public final class CoreAssembly: Assembly {
                 exportInteractor: r.resolve(ExportInteractor.self),
                 imagesInteractor: r.resolve(ImagesInteractor.self),
                 importInteractor: r.resolve(ImportInteractor.self),
+                inspectInteractor: r.resolve(InspectInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
         }
@@ -96,7 +97,7 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(InspectInteractor.self) { r in
-            DefaultInspectInteractor(
+            InspectInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 bundleParser: r.resolve(VMBundleParser.self),
                 aprClient: r.resolve(ARPClient.self),

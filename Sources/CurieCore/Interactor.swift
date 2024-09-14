@@ -26,6 +26,7 @@ public enum Operation {
     case export(ExportParameters)
     case images(ImagesParameters)
     case `import`(ImportParameters)
+    case inspect(InspectParameters)
 }
 
 public protocol Interactor {
@@ -48,6 +49,7 @@ final class DefaultInteractor: Interactor {
     private let exportInteractor: ExportInteractor
     private let imagesInteractor: ImagesInteractor
     private let importInteractor: ImportInteractor
+    private let inspectInteractor: InspectInteractor
     private let runLoop: CurieCommon.RunLoop
 
     init(
@@ -60,6 +62,7 @@ final class DefaultInteractor: Interactor {
         exportInteractor: ExportInteractor,
         imagesInteractor: ImagesInteractor,
         importInteractor: ImportInteractor,
+        inspectInteractor: InspectInteractor,
         runLoop: CurieCommon.RunLoop
     ) {
         self.buildInteractor = buildInteractor
@@ -71,6 +74,7 @@ final class DefaultInteractor: Interactor {
         self.exportInteractor = exportInteractor
         self.imagesInteractor = imagesInteractor
         self.importInteractor = importInteractor
+        self.inspectInteractor = inspectInteractor
         self.runLoop = runLoop
     }
 
@@ -95,6 +99,8 @@ final class DefaultInteractor: Interactor {
                 try await imagesInteractor.execute(parameters: parameters)
             case let .import(parameters):
                 try await importInteractor.execute(parameters: parameters)
+            case let .inspect(parameters):
+                try await inspectInteractor.execute(parameters: parameters)
             }
         }
     }

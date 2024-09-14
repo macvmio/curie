@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct InspectInteractorContext {
+public struct InspectParameters {
     public var reference: String
     public let format: OutputFormat
 
@@ -30,11 +30,7 @@ public struct InspectInteractorContext {
     }
 }
 
-public protocol InspectInteractor {
-    func execute(with context: InspectInteractorContext) throws
-}
-
-final class DefaultInspectInteractor: InspectInteractor {
+final class InspectInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let bundleParser: VMBundleParser
     private let aprClient: ARPClient
@@ -59,8 +55,8 @@ final class DefaultInspectInteractor: InspectInteractor {
         self.console = console
     }
 
-    func execute(with context: InspectInteractorContext) throws {
-        let reference = try imageCache.findReference(context.reference)
+    func execute(parameters: InspectParameters) async throws {
+        let reference = try imageCache.findReference(parameters.reference)
         let bundle = imageCache.bundle(for: reference)
         let info = try bundleParser.readInfo(from: bundle)
         let arpItems = try aprClient.executeARPQuery()
@@ -69,7 +65,7 @@ final class DefaultInspectInteractor: InspectInteractor {
 
         let item = Item(info: info, arp: filteredArpaRows)
 
-        switch context.format {
+        switch parameters.format {
         case .text:
             renderText(item)
         case .json:
