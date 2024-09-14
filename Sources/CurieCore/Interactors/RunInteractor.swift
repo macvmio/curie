@@ -20,7 +20,7 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-public struct RunInteractorContext {
+public struct RunParameters {
     public var reference: String
     public var launch: LaunchParameters
 
@@ -30,11 +30,7 @@ public struct RunInteractorContext {
     }
 }
 
-public protocol RunInteractor {
-    func execute(with context: RunInteractorContext) throws
-}
-
-public final class DefaultRunInteractor: RunInteractor {
+final class RunInteractor: AsyncInteractor {
     private let configurator: VMConfigurator
     private let imageRunner: ImageRunner
     private let imageCache: ImageCache
@@ -57,18 +53,18 @@ public final class DefaultRunInteractor: RunInteractor {
         self.console = console
     }
 
-    public func execute(with context: RunInteractorContext) throws {
-        console.text("Run image \(context.reference)")
+    func execute(parameters: RunParameters) async throws {
+        console.text("Run image \(parameters.reference)")
 
-        let sourceReference = try imageCache.findImageReference(context.reference)
+        let sourceReference = try imageCache.findImageReference(parameters.reference)
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
         let bundle = imageCache.bundle(for: targetReference)
-        let overrideConfig = try context.launch.partialConfig()
+        let overrideConfig = try parameters.launch.partialConfig()
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
-            startUpFromMacOSRecovery: context.launch.recoveryMode,
-            noWindow: context.launch.noWindow
+            startUpFromMacOSRecovery: parameters.launch.recoveryMode,
+            noWindow: parameters.launch.noWindow
         )
 
         vm.events

@@ -46,10 +46,13 @@ struct RunCommand: Command {
     var quiet: Bool = false
 
     final class Executor: CommandExecutor {
-        private let interactor: RunInteractor
+        private let interactor: Interactor
         private let console: Console
 
-        init(interactor: RunInteractor, console: Console) {
+        init(
+            interactor: Interactor,
+            console: Console
+        ) {
             self.interactor = interactor
             self.console = console
         }
@@ -57,18 +60,16 @@ struct RunCommand: Command {
         func execute(command: RunCommand) throws {
             console.quiet = command.quiet
 
-            try interactor.execute(
-                with: .init(
-                    reference: command.reference,
-                    launch: .init(
-                        noWindow: command.noWindow,
-                        mainScreenResolution: command.mainScreenResolution,
-                        recoveryMode: command.recoveryMode,
-                        shareCurrentWorkingDirectory: command.shareCWD,
-                        pauseOnExit: false
-                    )
+            try interactor.execute(.run(.init(
+                reference: command.reference,
+                launch: .init(
+                    noWindow: command.noWindow,
+                    mainScreenResolution: command.mainScreenResolution,
+                    recoveryMode: command.recoveryMode,
+                    shareCurrentWorkingDirectory: command.shareCWD,
+                    pauseOnExit: false
                 )
-            )
+            )))
         }
     }
 
@@ -76,7 +77,7 @@ struct RunCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(RunInteractor.self),
+                    interactor: r.resolve(Interactor.self),
                     console: r.resolve(Console.self)
                 )
             }

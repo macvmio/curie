@@ -45,11 +45,12 @@ public final class CoreAssembly: Assembly {
                 psInteractor: r.resolve(PsInteractor.self),
                 rmiInteractor: r.resolve(RmiInteractor.self),
                 rmInteractor: r.resolve(RmInteractor.self),
+                runInteractor: r.resolve(RunInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
         }
         registry.register(RunInteractor.self) { r in
-            DefaultRunInteractor(
+            RunInteractor(
                 configurator: r.resolve(VMConfigurator.self),
                 imageRunner: r.resolve(ImageRunner.self),
                 imageCache: r.resolve(ImageCache.self),
