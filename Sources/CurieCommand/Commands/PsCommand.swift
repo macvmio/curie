@@ -35,18 +35,16 @@ struct PsCommand: Command, HasFormatOption {
     var format: String = Options.format.defaultValue
 
     final class Executor: CommandExecutor {
-        private let interactor: PsInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: PsInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: PsCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.ps(.init(
                 format: command.parseFormatOption()
-            ))
+            )))
         }
     }
 
@@ -54,8 +52,7 @@ struct PsCommand: Command, HasFormatOption {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(PsInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }

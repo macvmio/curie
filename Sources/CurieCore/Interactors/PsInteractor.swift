@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct PsInteractorContext {
+public struct PsParameters {
     public let format: OutputFormat
 
     public init(format: OutputFormat) {
@@ -25,11 +25,7 @@ public struct PsInteractorContext {
     }
 }
 
-public protocol PsInteractor {
-    func execute(with context: PsInteractorContext) throws
-}
-
-final class DefaultPsInteractor: PsInteractor {
+final class PsInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let wallClock: WallClock
     private let console: Console
@@ -51,7 +47,7 @@ final class DefaultPsInteractor: PsInteractor {
         self.console = console
     }
 
-    func execute(with context: PsInteractorContext) throws {
+    func execute(parameters: PsParameters) async throws {
         let items = try imageCache.listContainers()
         let images = items.sorted { $0.createAt > $1.createAt }
 
@@ -74,7 +70,7 @@ final class DefaultPsInteractor: PsInteractor {
                 $0.name ?? "<none>",
             ] }
         )
-        let config = TableRenderer.Config(format: context.format.rendererFormat())
+        let config = TableRenderer.Config(format: parameters.format.rendererFormat())
         let text = rendered.render(content: content, config: config)
 
         console.text(text)
