@@ -17,37 +17,28 @@
 import CurieCommon
 import Foundation
 
-public struct ConfigInteractorContext {
+public struct ConfigParameters {
     public var reference: String
 
-    public init(
-        reference: String
-    ) {
+    public init(reference: String) {
         self.reference = reference
     }
 }
 
-public protocol ConfigInteractor {
-    func execute(with context: ConfigInteractorContext) throws
-}
-
-public final class DefaultConfigInteractor: ConfigInteractor {
+final class ConfigInteractor: AsyncInteractor {
     private let imageCache: ImageCache
-    private let bundleParser: VMBundleParser
     private let system: System
 
     init(
         imageCache: ImageCache,
-        bundleParser: VMBundleParser,
         system: System
     ) {
         self.imageCache = imageCache
-        self.bundleParser = bundleParser
         self.system = system
     }
 
-    public func execute(with context: ConfigInteractorContext) throws {
-        let reference = try imageCache.findReference(context.reference)
+    func execute(parameters: ConfigParameters) async throws {
+        let reference = try imageCache.findReference(parameters.reference)
         let bundle = imageCache.bundle(for: reference)
         try system.execute(["open", "-t", bundle.config.pathString])
     }

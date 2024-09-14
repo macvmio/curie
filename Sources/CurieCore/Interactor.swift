@@ -20,6 +20,7 @@ public enum Operation {
     case build(BuildParameters)
     case clone(CloneParameters)
     case commit(CommitParameters)
+    case config(ConfigParameters)
     case download(DownloadParameters)
 }
 
@@ -37,6 +38,7 @@ final class DefaultInteractor: Interactor {
     private let buildInteractor: BuildInteractor
     private let cloneInteractor: CloneInteractor
     private let commitInteractor: CommitInteractor
+    private let configInteractor: ConfigInteractor
     private let downloadInteractor: DownloadInteractor
     private let runLoop: CurieCommon.RunLoop
 
@@ -44,12 +46,14 @@ final class DefaultInteractor: Interactor {
         buildInteractor: BuildInteractor,
         cloneInteractor: CloneInteractor,
         commitInteractor: CommitInteractor,
+        configInteractor: ConfigInteractor,
         downloadInteractor: DownloadInteractor,
         runLoop: CurieCommon.RunLoop
     ) {
         self.buildInteractor = buildInteractor
         self.cloneInteractor = cloneInteractor
         self.commitInteractor = commitInteractor
+        self.configInteractor = configInteractor
         self.downloadInteractor = downloadInteractor
         self.runLoop = runLoop
     }
@@ -63,6 +67,8 @@ final class DefaultInteractor: Interactor {
                 try await cloneInteractor.execute(parameters: parameters)
             case let .commit(parameters):
                 try await commitInteractor.execute(parameters: parameters)
+            case let .config(parameters):
+                try await configInteractor.execute(parameters: parameters)
             case let .download(parameters):
                 try await downloadInteractor.execute(parameters: parameters)
             }
