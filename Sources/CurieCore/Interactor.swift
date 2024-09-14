@@ -23,6 +23,7 @@ public enum Operation {
     case config(ConfigParameters)
     case create(CreateParameters)
     case download(DownloadParameters)
+    case export(ExportParameters)
 }
 
 public protocol Interactor {
@@ -42,6 +43,7 @@ final class DefaultInteractor: Interactor {
     private let configInteractor: ConfigInteractor
     private let createInteractor: CreateInteractor
     private let downloadInteractor: DownloadInteractor
+    private let exportInteractor: ExportInteractor
     private let runLoop: CurieCommon.RunLoop
 
     init(
@@ -51,6 +53,7 @@ final class DefaultInteractor: Interactor {
         configInteractor: ConfigInteractor,
         createInteractor: CreateInteractor,
         downloadInteractor: DownloadInteractor,
+        exportInteractor: ExportInteractor,
         runLoop: CurieCommon.RunLoop
     ) {
         self.buildInteractor = buildInteractor
@@ -59,6 +62,7 @@ final class DefaultInteractor: Interactor {
         self.configInteractor = configInteractor
         self.createInteractor = createInteractor
         self.downloadInteractor = downloadInteractor
+        self.exportInteractor = exportInteractor
         self.runLoop = runLoop
     }
 
@@ -77,6 +81,8 @@ final class DefaultInteractor: Interactor {
                 try await createInteractor.execute(parameters: parameters)
             case let .download(parameters):
                 try await downloadInteractor.execute(parameters: parameters)
+            case let .export(parameters):
+                try await exportInteractor.execute(parameters: parameters)
             }
         }
     }

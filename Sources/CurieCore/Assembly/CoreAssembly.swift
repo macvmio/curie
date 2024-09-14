@@ -38,6 +38,7 @@ public final class CoreAssembly: Assembly {
                 configInteractor: r.resolve(ConfigInteractor.self),
                 createInteractor: r.resolve(CreateInteractor.self),
                 downloadInteractor: r.resolve(DownloadInteractor.self),
+                exportInteractor: r.resolve(ExportInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
         }
@@ -130,7 +131,7 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(ExportInteractor.self) { r in
-            DefaultExportInteractor(
+            ExportInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 console: r.resolve(Console.self)
             )

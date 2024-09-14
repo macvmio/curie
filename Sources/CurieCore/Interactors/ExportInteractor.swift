@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct ExportInteractorContext {
+public struct ExportParameters {
     public var reference: String
     public var path: String
     public var compress: Bool
@@ -29,11 +29,7 @@ public struct ExportInteractorContext {
     }
 }
 
-public protocol ExportInteractor {
-    func execute(with context: ExportInteractorContext) throws
-}
-
-public final class DefaultExportInteractor: ExportInteractor {
+final class ExportInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
@@ -45,17 +41,17 @@ public final class DefaultExportInteractor: ExportInteractor {
         self.console = console
     }
 
-    public func execute(with context: ExportInteractorContext) throws {
-        let reference = try imageCache.findImageReference(context.reference)
+    func execute(parameters: ExportParameters) async throws {
+        let reference = try imageCache.findImageReference(parameters.reference)
 
-        if context.compress {
+        if parameters.compress {
             console.text("Compressing... (might take several minutes)")
         }
 
         try imageCache.exportImage(
             source: reference,
-            destinationPath: context.path,
-            mode: context.compress ? .compress : .raw
+            destinationPath: parameters.path,
+            mode: parameters.compress ? .compress : .raw
         )
 
         console.text("Image has been exported")
