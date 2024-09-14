@@ -23,8 +23,6 @@ import XCTest
 
 @testable import CurieCore
 
-// swiftlint:disable line_length
-
 final class BuildInteractorTests: XCTestCase {
     private var subject: Interactor!
     private var env: InteractorsTestsEnvironment!
@@ -57,7 +55,7 @@ final class BuildInteractorTests: XCTestCase {
             error,
             .init(
                 exitCode: 1,
-                message: "Cannot create empty reference, image with given reference (<repository>[:<tag>]) already exists"
+                message: "Cannot create empty reference, please use (<repository>[:<tag>]) format"
             )
         )
     }
@@ -79,5 +77,3 @@ final class BuildInteractorTests: XCTestCase {
         )
     }
 }
-
-// swiftlint:enable line_length

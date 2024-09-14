@@ -74,6 +74,10 @@ final class DefaultImageCache: ImageCache {
     }
 
     func makeImageReference(_ reference: String) throws -> ImageReference {
+        guard !reference.isEmpty else {
+            throw CoreError
+                .generic("Cannot create empty reference, please use (\(CurieCore.Constants.referenceFormat)) format")
+        }
         let descriptor = try ImageDescriptor(reference: reference)
         let relativePath = RelativePath(reference)
         let absolutePath = imagesAbsolutePath().appending(relativePath)
