@@ -14,6 +14,7 @@ SUBCOMMANDS:
   format                  Format source code.
   autocorrect             Autocorrect lint issues if possible.
   lint                    Lint source code.
+  ready                   Perform all CI checks locally.
 
 endef
 export HELP_BODY
@@ -50,3 +51,10 @@ autocorrect:
 lint:
 	@$(mise) install
 	@$(mise) run lint
+
+ready:
+	make format
+	make lint
+	make build
+	make sign
+	make test
