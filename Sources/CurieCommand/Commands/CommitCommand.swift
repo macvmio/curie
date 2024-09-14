@@ -34,19 +34,17 @@ struct CommitCommand: Command {
     var imageReference: String?
 
     final class Executor: CommandExecutor {
-        private let interactor: CommitInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: CommitInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: CommitCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.commit(.init(
                 containerReference: command.containerReference,
                 imageReference: command.imageReference
-            ))
+            )))
         }
     }
 
@@ -54,8 +52,7 @@ struct CommitCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(CommitInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }
