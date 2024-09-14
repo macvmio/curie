@@ -42,6 +42,7 @@ public final class CoreAssembly: Assembly {
                 imagesInteractor: r.resolve(ImagesInteractor.self),
                 importInteractor: r.resolve(ImportInteractor.self),
                 inspectInteractor: r.resolve(InspectInteractor.self),
+                psInteractor: r.resolve(PsInteractor.self),
                 runLoop: r.resolve(CurieCommon.RunLoop.self)
             )
         }
@@ -119,7 +120,7 @@ public final class CoreAssembly: Assembly {
             )
         }
         registry.register(PsInteractor.self) { r in
-            DefaultPsInteractor(
+            PsInteractor(
                 imageCache: r.resolve(ImageCache.self),
                 wallClock: r.resolve(WallClock.self),
                 console: r.resolve(Console.self)

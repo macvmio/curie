@@ -27,6 +27,7 @@ public enum Operation {
     case images(ImagesParameters)
     case `import`(ImportParameters)
     case inspect(InspectParameters)
+    case ps(PsParameters)
 }
 
 public protocol Interactor {
@@ -50,6 +51,7 @@ final class DefaultInteractor: Interactor {
     private let imagesInteractor: ImagesInteractor
     private let importInteractor: ImportInteractor
     private let inspectInteractor: InspectInteractor
+    private let psInteractor: PsInteractor
     private let runLoop: CurieCommon.RunLoop
 
     init(
@@ -63,6 +65,7 @@ final class DefaultInteractor: Interactor {
         imagesInteractor: ImagesInteractor,
         importInteractor: ImportInteractor,
         inspectInteractor: InspectInteractor,
+        psInteractor: PsInteractor,
         runLoop: CurieCommon.RunLoop
     ) {
         self.buildInteractor = buildInteractor
@@ -75,9 +78,11 @@ final class DefaultInteractor: Interactor {
         self.imagesInteractor = imagesInteractor
         self.importInteractor = importInteractor
         self.inspectInteractor = inspectInteractor
+        self.psInteractor = psInteractor
         self.runLoop = runLoop
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func execute(_ operation: Operation) throws {
         try runLoop.run { [self] _ in
             switch operation {
@@ -101,6 +106,8 @@ final class DefaultInteractor: Interactor {
                 try await importInteractor.execute(parameters: parameters)
             case let .inspect(parameters):
                 try await inspectInteractor.execute(parameters: parameters)
+            case let .ps(parameters):
+                try await psInteractor.execute(parameters: parameters)
             }
         }
     }
