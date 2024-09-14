@@ -38,19 +38,17 @@ struct InspectCommand: Command, HasFormatOption {
     var format: String = Options.format.defaultValue
 
     final class Executor: CommandExecutor {
-        private let interactor: InspectInteractor
-        private let console: Console
+        private let interactor: Interactor
 
-        init(interactor: InspectInteractor, console: Console) {
+        init(interactor: Interactor) {
             self.interactor = interactor
-            self.console = console
         }
 
         func execute(command: InspectCommand) throws {
-            try interactor.execute(with: .init(
+            try interactor.execute(.inspect(.init(
                 reference: command.reference,
                 format: command.parseFormatOption()
-            ))
+            )))
         }
     }
 
@@ -58,8 +56,7 @@ struct InspectCommand: Command, HasFormatOption {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
-                    interactor: r.resolve(InspectInteractor.self),
-                    console: r.resolve(Console.self)
+                    interactor: r.resolve(Interactor.self)
                 )
             }
         }
