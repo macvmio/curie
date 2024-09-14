@@ -18,7 +18,7 @@ import Combine
 import CurieCommon
 import Foundation
 
-public struct CreateInteractorContext {
+public struct CreateParameters {
     public var reference: String
     public var name: String?
 
@@ -31,16 +31,10 @@ public struct CreateInteractorContext {
     }
 }
 
-public protocol CreateInteractor {
-    func execute(with context: CreateInteractorContext) throws
-}
-
-public final class DefaultCreateInteractor: CreateInteractor {
+final class CreateInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let bundleParser: VMBundleParser
     private let console: Console
-
-    private var cancellables = Set<AnyCancellable>()
 
     init(
         imageCache: ImageCache,
@@ -52,13 +46,13 @@ public final class DefaultCreateInteractor: CreateInteractor {
         self.console = console
     }
 
-    public func execute(with context: CreateInteractorContext) throws {
-        let sourceReference = try imageCache.findImageReference(context.reference)
+    func execute(parameters: CreateParameters) async throws {
+        let sourceReference = try imageCache.findImageReference(parameters.reference)
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
         let bundle = imageCache.bundle(for: targetReference)
         try bundleParser.updateMetadata(bundle: bundle) { metadata in
-            metadata.name = context.name
+            metadata.name = parameters.name
         }
 
         console.text(targetReference.id.description)
