@@ -20,7 +20,7 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-public struct StartInteractorContext {
+public struct StartParameters {
     public var reference: String
     public var launch: LaunchParameters
 
@@ -30,17 +30,12 @@ public struct StartInteractorContext {
     }
 }
 
-public protocol StartInteractor {
-    func execute(with context: StartInteractorContext) throws
-}
-
-public final class DefaultStartInteractor: StartInteractor {
+final class StartInteractor: AsyncInteractor {
     private let configurator: VMConfigurator
     private let imageRunner: ImageRunner
     private let imageCache: ImageCache
     private let system: System
     private let console: Console
-    private var cancellables = Set<AnyCancellable>()
 
     init(
         configurator: VMConfigurator,
@@ -56,17 +51,17 @@ public final class DefaultStartInteractor: StartInteractor {
         self.console = console
     }
 
-    public func execute(with context: StartInteractorContext) throws {
-        console.text("Start \(context.reference) container")
+    func execute(parameters: StartParameters) async throws {
+        console.text("Start \(parameters.reference) container")
 
-        let sourceReference = try imageCache.findContainerReference(context.reference)
+        let sourceReference = try imageCache.findContainerReference(parameters.reference)
 
         let bundle = imageCache.bundle(for: sourceReference)
-        let overrideConfig = try context.launch.partialConfig()
+        let overrideConfig = try parameters.launch.partialConfig()
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
-            startUpFromMacOSRecovery: context.launch.recoveryMode,
-            noWindow: context.launch.noWindow
+            startUpFromMacOSRecovery: parameters.launch.recoveryMode,
+            noWindow: parameters.launch.noWindow
         )
 
         try imageRunner.run(vm: vm, bundle: bundle, options: options)

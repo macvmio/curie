@@ -31,6 +31,7 @@ public enum Operation {
     case rmi(RmiParameters)
     case rm(RmParameters)
     case run(RunParameters)
+    case start(StartParameters)
 }
 
 public protocol Interactor {
@@ -58,6 +59,7 @@ final class DefaultInteractor: Interactor {
     private let rmiInteractor: RmiInteractor
     private let rmInteractor: RmInteractor
     private let runInteractor: RunInteractor
+    private let startInteractor: StartInteractor
     private let runLoop: CurieCommon.RunLoop
 
     init(
@@ -75,6 +77,7 @@ final class DefaultInteractor: Interactor {
         rmiInteractor: RmiInteractor,
         rmInteractor: RmInteractor,
         runInteractor: RunInteractor,
+        startInteractor: StartInteractor,
         runLoop: CurieCommon.RunLoop
     ) {
         self.buildInteractor = buildInteractor
@@ -91,6 +94,7 @@ final class DefaultInteractor: Interactor {
         self.rmiInteractor = rmiInteractor
         self.rmInteractor = rmInteractor
         self.runInteractor = runInteractor
+        self.startInteractor = startInteractor
         self.runLoop = runLoop
     }
 
@@ -126,6 +130,8 @@ final class DefaultInteractor: Interactor {
                 try await rmInteractor.execute(parameters: parameters)
             case let .run(parameters):
                 try await runInteractor.execute(parameters: parameters)
+            case let .start(parameters):
+                try await startInteractor.execute(parameters: parameters)
             }
         }
     }
