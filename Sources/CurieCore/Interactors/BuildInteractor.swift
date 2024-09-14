@@ -25,12 +25,12 @@ public struct BuildParameters {
     var configPath: String?
 
     public init(
-        ipwsPath: String,
+        ipswPath: String,
         reference: String,
         diskSize: String?,
         configPath: String?
     ) {
-        self.ipwsPath = ipwsPath
+        ipwsPath = ipswPath
         self.reference = reference
         self.diskSize = diskSize
         self.configPath = configPath
@@ -42,20 +42,17 @@ final class BuildInteractor: AsyncInteractor {
     private let installer: VMInstaller
     private let imageCache: ImageCache
     private let fileSystem: CurieCommon.FileSystem
-    private let console: Console
 
     init(
         configurator: VMConfigurator,
         installer: VMInstaller,
         imageCache: ImageCache,
-        fileSystem: CurieCommon.FileSystem,
-        console: Console
+        fileSystem: CurieCommon.FileSystem
     ) {
         self.configurator = configurator
         self.installer = installer
         self.imageCache = imageCache
         self.fileSystem = fileSystem
-        self.console = console
     }
 
     func execute(parameters: BuildParameters) async throws {

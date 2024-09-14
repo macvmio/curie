@@ -57,7 +57,7 @@ struct BuildCommand: Command {
 
         func execute(command: BuildCommand) throws {
             try interactor.execute(.build(.init(
-                ipwsPath: command.ipswPath,
+                ipswPath: command.ipswPath,
                 reference: command.reference,
                 diskSize: command.diskSize,
                 configPath: command.configPath

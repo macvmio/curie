@@ -60,8 +60,7 @@ public final class CoreAssembly: Assembly {
                 configurator: r.resolve(VMConfigurator.self),
                 installer: r.resolve(VMInstaller.self),
                 imageCache: r.resolve(ImageCache.self),
-                fileSystem: r.resolve(FileSystem.self),
-                console: r.resolve(Console.self)
+                fileSystem: r.resolve(FileSystem.self)
             )
         }
         registry.register(ImagesInteractor.self) { r in
