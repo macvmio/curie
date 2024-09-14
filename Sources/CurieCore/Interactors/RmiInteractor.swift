@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct RmiInteractorContext {
+public struct RmiParameters {
     public var reference: String
 
     public init(reference: String) {
@@ -25,11 +25,7 @@ public struct RmiInteractorContext {
     }
 }
 
-public protocol RmiInteractor {
-    func execute(with context: RmiInteractorContext) throws
-}
-
-final class DefaultRmiInteractor: RmiInteractor {
+final class RmiInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
@@ -41,8 +37,8 @@ final class DefaultRmiInteractor: RmiInteractor {
         self.console = console
     }
 
-    func execute(with context: RmiInteractorContext) throws {
-        let reference = try imageCache.findImageReference(context.reference)
+    func execute(parameters: RmiParameters) async throws {
+        let reference = try imageCache.findImageReference(parameters.reference)
 
         try imageCache.removeImage(reference)
 

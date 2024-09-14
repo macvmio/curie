@@ -27,6 +27,7 @@ public enum Operation {
     case images(ImagesParameters)
     case `import`(ImportParameters)
     case inspect(InspectParameters)
+    case rmi(RmiParameters)
     case ps(PsParameters)
 }
 
@@ -52,6 +53,7 @@ final class DefaultInteractor: Interactor {
     private let importInteractor: ImportInteractor
     private let inspectInteractor: InspectInteractor
     private let psInteractor: PsInteractor
+    private let rmiInteractor: RmiInteractor
     private let runLoop: CurieCommon.RunLoop
 
     init(
@@ -66,6 +68,7 @@ final class DefaultInteractor: Interactor {
         importInteractor: ImportInteractor,
         inspectInteractor: InspectInteractor,
         psInteractor: PsInteractor,
+        rmiInteractor: RmiInteractor,
         runLoop: CurieCommon.RunLoop
     ) {
         self.buildInteractor = buildInteractor
@@ -79,6 +82,7 @@ final class DefaultInteractor: Interactor {
         self.importInteractor = importInteractor
         self.inspectInteractor = inspectInteractor
         self.psInteractor = psInteractor
+        self.rmiInteractor = rmiInteractor
         self.runLoop = runLoop
     }
 
@@ -108,6 +112,8 @@ final class DefaultInteractor: Interactor {
                 try await inspectInteractor.execute(parameters: parameters)
             case let .ps(parameters):
                 try await psInteractor.execute(parameters: parameters)
+            case let .rmi(parameters):
+                try await rmiInteractor.execute(parameters: parameters)
             }
         }
     }
