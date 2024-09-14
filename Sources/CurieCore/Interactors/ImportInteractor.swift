@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct ImportInteractorContext {
+public struct ImportParameters {
     public var reference: String
     public var path: String
 
@@ -27,11 +27,7 @@ public struct ImportInteractorContext {
     }
 }
 
-public protocol ImportInteractor {
-    func execute(with context: ImportInteractorContext) throws
-}
-
-public final class DefaultImportInteractor: ImportInteractor {
+final class ImportInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
@@ -43,8 +39,8 @@ public final class DefaultImportInteractor: ImportInteractor {
         self.console = console
     }
 
-    public func execute(with context: ImportInteractorContext) throws {
-        try imageCache.importImage(sourcePath: context.path, reference: context.reference)
+    func execute(parameters: ImportParameters) async throws {
+        try imageCache.importImage(sourcePath: parameters.path, reference: parameters.reference)
 
         console.text("Image has been imported")
     }
