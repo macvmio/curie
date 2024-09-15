@@ -55,7 +55,7 @@ public final class CoreAssembly: Assembly {
                 configurator: r.resolve(VMConfigurator.self),
                 imageRunner: r.resolve(ImageRunner.self),
                 imageCache: r.resolve(ImageCache.self),
-                system: r.resolve(System.self),
+                runLoop: r.resolve(RunLoopAccessor.self),
                 console: r.resolve(Console.self)
             )
         }

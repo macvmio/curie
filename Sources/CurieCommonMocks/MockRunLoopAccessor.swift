@@ -27,6 +27,10 @@ public final class MockRunLoopAccessor: RunLoopAccessor {
 
     public init() {}
 
+    public var keepAlive: Bool = false
+    
+    public var exitInterceptor: (() async throws -> Void)?
+
     public func terminate() {
         calls.append(.terminate)
     }

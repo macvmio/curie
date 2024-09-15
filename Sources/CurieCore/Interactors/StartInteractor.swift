@@ -64,6 +64,6 @@ final class StartInteractor: AsyncInteractor {
             noWindow: parameters.launch.noWindow
         )
 
-        try imageRunner.run(vm: vm, bundle: bundle, options: options)
+        try await imageRunner.run(vm: vm, bundle: bundle, options: options)
     }
 }

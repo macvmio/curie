@@ -16,7 +16,9 @@
 
 import Foundation
 
-public protocol RunLoopAccessor {
+public protocol RunLoopAccessor: AnyObject {
+    var keepAlive: Bool { get set }
+    var exitInterceptor: (() async throws -> Void)? { get set }
     func terminate()
     func error(_ error: CoreError)
 }
@@ -31,9 +33,10 @@ public class DefaultRunLoop: RunLoop {
         case short = 0.001
     }
 
-    private var terminated = false
-    private let lock = NSLock()
-    private(set) var error: CoreError?
+    private var _terminated = Atomic<Bool>(value: false)
+    private var _keepAlive = Atomic<Bool>(value: false)
+    private var _error = Atomic<CoreError?>(value: nil)
+    private var _exitInterceptor = Atomic < (() async throws -> Void)? > (value: nil)
 
     private let interval: Interval
 
@@ -46,7 +49,9 @@ public class DefaultRunLoop: RunLoop {
             guard let self else { return }
             do {
                 try await closure(self)
-                terminate()
+                if !keepAlive {
+                    terminate()
+                }
             } catch let error as CoreError {
                 self.error(error)
             } catch {
@@ -56,15 +61,31 @@ public class DefaultRunLoop: RunLoop {
         try run()
     }
 
+    public var exitInterceptor: (() async throws -> Void)? {
+        get {
+            _exitInterceptor.load()
+        }
+        set {
+            _exitInterceptor.update(newValue)
+        }
+    }
+
+    public var keepAlive: Bool {
+        get {
+            _keepAlive.load()
+        }
+        set {
+            _keepAlive.update(newValue)
+        }
+    }
+
     public func terminate() {
-        lock.lock(); defer { lock.unlock() }
-        terminated = true
+        _terminated.update(true)
     }
 
     public func error(_ error: CoreError) {
-        lock.lock(); defer { lock.unlock() }
-        self.error = error
-        terminated = true
+        _error.update(error)
+        _terminated.update(true)
     }
 
     // MARK: - Private
@@ -72,22 +93,34 @@ public class DefaultRunLoop: RunLoop {
     private func run() throws {
         let sigint = makeSourceSignal(sig: SIGINT, eventHandler: .init(block: { [unowned self] in terminate() }))
         let sigterm = makeSourceSignal(sig: SIGTERM, eventHandler: .init(block: { [unowned self] in terminate() }))
-        try withExtendedLifetime([sigint, sigterm]) {
-            while !isTerminated() {
-                Foundation.RunLoop.main.run(until: .now + interval.rawValue)
-            }
-            try rethrow()
+        withExtendedLifetime([sigint, sigterm], waitForTermination)
+        _terminated.update(false)
+        Task {
+            try await runExitInterceptor() // TODO: Log error
+            _terminated.update(true)
+        }
+        waitForTermination()
+        try rethrow()
+    }
+
+    private func waitForTermination() {
+        while !isTerminated() {
+            Foundation.RunLoop.main.run(until: .now + interval.rawValue)
         }
     }
 
     private func isTerminated() -> Bool {
-        lock.lock(); defer { lock.unlock() }
-        return terminated
+        _terminated.load()
+    }
+
+    private func runExitInterceptor() async throws {
+        if let exitInterceptor {
+            try await exitInterceptor()
+        }
     }
 
     private func rethrow() throws {
-        lock.lock(); defer { lock.unlock() }
-        if let error {
+        if let error = _error.load() {
             throw error
         }
     }

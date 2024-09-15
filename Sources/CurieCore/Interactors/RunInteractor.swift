@@ -34,7 +34,7 @@ final class RunInteractor: AsyncInteractor {
     private let configurator: VMConfigurator
     private let imageRunner: ImageRunner
     private let imageCache: ImageCache
-    private let system: System
+    private let runLoop: RunLoopAccessor
     private let console: Console
 
     private var cancellables = Set<AnyCancellable>()
@@ -43,13 +43,13 @@ final class RunInteractor: AsyncInteractor {
         configurator: VMConfigurator,
         imageRunner: ImageRunner,
         imageCache: ImageCache,
-        system: System,
+        runLoop: RunLoopAccessor,
         console: Console
     ) {
         self.configurator = configurator
         self.imageRunner = imageRunner
         self.imageCache = imageCache
-        self.system = system
+        self.runLoop = runLoop
         self.console = console
     }
 
@@ -67,17 +67,13 @@ final class RunInteractor: AsyncInteractor {
             noWindow: parameters.launch.noWindow
         )
 
-        vm.events
-            .filter { $0 == .imageDidStop || $0 == .imageStopFailed }
-            .sink { [imageCache, console] _ in
-                do {
-                    try imageCache.removeImage(targetReference)
-                } catch {
-                    console.error(error.localizedDescription)
-                }
-            }
-            .store(in: &cancellables)
-
-        try imageRunner.run(vm: vm, bundle: bundle, options: options)
+        runLoop.keepAlive = true
+        runLoop.exitInterceptor = { [imageCache] in
+            try imageCache.removeImage(targetReference)
+        }
+        
+        try await Task.sleep(nanoseconds: 5_000_000_000)
+        
+        try await imageRunner.run(vm: vm, bundle: bundle, options: options)
     }
 }

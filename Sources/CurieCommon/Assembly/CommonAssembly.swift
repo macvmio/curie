@@ -39,6 +39,9 @@ public final class CommonAssembly: Assembly {
         registry.register(RunLoop.self, .container) { _ in
             DefaultRunLoop()
         }
+        registry.register(RunLoopAccessor.self) { r in
+            r.resolve(CurieCommon.RunLoop.self)
+        }
         registry.register(HTTPClient.self) { _ in
             URLSessionHTTPClient()
         }

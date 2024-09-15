@@ -36,23 +36,6 @@ public enum OutputType {
 }
 
 public protocol System {
-    func makeSIGINTSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    ) -> DispatchSourceSignal
-
-    func makeSIGTERMSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    ) -> DispatchSourceSignal
-
-    func keepAlive(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    )
-
-    func keepAliveWithSIGINTEventHandler(
-        cancellable: Cancellable,
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    )
-
     func execute(_ arguments: [String]) throws
 
     func execute(_ arguments: [String], output: OutputType) throws
@@ -62,52 +45,6 @@ public protocol System {
 
 final class DefaultSystem: System {
     private let environment = ProcessInfo.processInfo.environment
-
-    func makeSIGINTSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    ) -> DispatchSourceSignal {
-        signal(SIGINT, SIG_IGN)
-        let sourceSignal = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
-        sourceSignal.setEventHandler {
-            signalHandler(exit)
-        }
-        sourceSignal.resume()
-        return sourceSignal
-    }
-
-    func makeSIGTERMSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    ) -> DispatchSourceSignal {
-        signal(SIGTERM, SIG_IGN)
-        let sourceSignal = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
-        sourceSignal.setEventHandler {
-            signalHandler(exit)
-        }
-        sourceSignal.resume()
-        return sourceSignal
-    }
-
-    func keepAlive(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    ) {
-        keepAliveWithSIGINTEventHandler(
-            cancellable: StateCancellable(),
-            signalHandler: signalHandler
-        )
-    }
-
-    func keepAliveWithSIGINTEventHandler(
-        cancellable: Cancellable,
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
-    ) {
-        let sigint = makeSIGINTSourceSignal(signalHandler: signalHandler)
-        let sigterm = makeSIGTERMSourceSignal(signalHandler: signalHandler)
-        withExtendedLifetime([sigint, sigterm]) {
-            while !cancellable.isCancelled() {
-                Foundation.RunLoop.main.run(until: .now + 1)
-            }
-        }
-    }
 
     func execute(_ arguments: [String]) throws {
         try execute(arguments, output: .default)

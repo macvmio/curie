@@ -59,96 +59,148 @@ final class VM: NSObject {
         vm.delegate = self
     }
 
-    public func start(options: VMStartOptions, completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        console.text("Will start container")
+    func start(options: VMStartOptions) async throws {
         let startOptions = VZMacOSVirtualMachineStartOptions()
         startOptions.startUpFromMacOSRecovery = options.startUpFromMacOSRecovery
-        vm.start(options: startOptions) { error in
-            if let error {
-                completionHandler(.failure(error))
-            } else {
-                completionHandler(.success(()))
-            }
-        }
+        try await vm.start() // TODO: Map the error "Failed to start container."
     }
 
-    public func pause(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+//
+//    func start(options: VMStartOptions, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+//        console.text("Will start container")
+//        let startOptions = VZMacOSVirtualMachineStartOptions()
+//        startOptions.startUpFromMacOSRecovery = options.startUpFromMacOSRecovery
+//        vm.start(options: startOptions) { error in
+//            if let error {
+//                completionHandler(.failure(error))
+//            } else {
+//                completionHandler(.success(()))
+//            }
+//        }
+//    }
+//
+    func pause(machineStateURL: URL) async throws {
         console.text("Will pause container")
-        vm.pause { [vm] result in
-            switch result {
-            case .success:
-                if #available(macOS 14.0, *) {
-                    vm.saveMachineStateTo(url: machineStateURL) { error in
-                        if let error {
-                            completionHandler(.failure(error))
-                        } else {
-                            completionHandler(.success(()))
-                        }
-                    }
-                } else {
-                    completionHandler(.success(()))
-                }
-            case let .failure(error):
-                completionHandler(.failure(error))
-            }
+        try await vm.pause()
+        if #available(macOS 14.0, *) {
+            try await vm.saveMachineStateTo(url: machineStateURL)
         }
     }
 
-    public func resume(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+//    func pause(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+//        console.text("Will pause container")
+//        vm.pause { [vm] result in
+//            switch result {
+//            case .success:
+//                if #available(macOS 14.0, *) {
+//                    vm.saveMachineStateTo(url: machineStateURL) { error in
+//                        if let error {
+//                            completionHandler(.failure(error))
+//                        } else {
+//                            completionHandler(.success(()))
+//                        }
+//                    }
+//                } else {
+//                    completionHandler(.success(()))
+//                }
+//            case let .failure(error):
+//                completionHandler(.failure(error))
+//            }
+//        }
+//    }
+
+    func resume(machineStateURL: URL) async throws {
         console.text("Will start paused container")
         if #available(macOS 14.0, *) {
-            vm.restoreMachineStateFrom(url: machineStateURL) { [vm] error in
-                if let error {
-                    completionHandler(.failure(error))
-                } else {
-                    vm.resume(completionHandler: completionHandler)
-                }
-            }
+            try await vm.restoreMachineStateFrom(url: machineStateURL)
         } else {
-            completionHandler(.failure(CoreError.generic("TODO - FIXME")))
+            throw CoreError.generic("Failed to resume paused container, unsupported OS")
         }
     }
 
-    public func stop(completionHandler: @escaping (Result<Void, Error>) -> Void) {
+//
+//    func resume(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+//        console.text("Will start paused container")
+//        if #available(macOS 14.0, *) {
+//            vm.restoreMachineStateFrom(url: machineStateURL) { [vm] error in
+//                if let error {
+//                    completionHandler(.failure(error))
+//                } else {
+//                    vm.resume(completionHandler: completionHandler)
+//                }
+//            }
+//        } else {
+//            completionHandler(.failure(CoreError.generic("TODO - FIXME")))
+//        }
+//    }
+
+    func stop() async throws {
         guard vm.state != .stopped else {
-            completionHandler(.success(()))
             return
         }
 
         console.text("Will stop container")
-        // swiftlint:disable:next identifier_name
-        vm.stop { [_events] error in
-            if let error {
-                _events.send(.imageStopFailed)
-                completionHandler(.failure(error))
-            } else {
-                _events.send(.imageDidStop)
-                completionHandler(.success(()))
-            }
+        do {
+            try await vm.stop()
+            _events.send(.imageDidStop)
+        } catch {
+            _events.send(.imageStopFailed)
+            throw error
         }
     }
 
-    public func exit(machineStateURL: URL, exit: @escaping (Int32) -> Never) {
-        console.text("Will exit container")
-        let completion = { [console, config] (result: Result<Void, Error>) in
-            switch result {
-            case .success:
-                console.text("Did \(config.shutdown.behaviour.description) container")
-                exit(0)
-            case let .failure(error):
-                console.error("Failed to \(config.shutdown.behaviour.description) container, \(error)")
-                exit(1)
+//
+//    func stop(completionHandler: @escaping (Result<Void, Error>) -> Void) {
+//        guard vm.state != .stopped else {
+//            completionHandler(.success(()))
+//            return
+//        }
+//
+//        console.text("Will stop container")
+//        // swiftlint:disable:next identifier_name
+//        vm.stop { [_events] error in
+//            if let error {
+//                _events.send(.imageStopFailed)
+//                completionHandler(.failure(error))
+//            } else {
+//                _events.send(.imageDidStop)
+//                completionHandler(.success(()))
+//            }
+//        }
+//    }
+
+    func exit(machineStateURL: URL) async throws {
+        do {
+            switch config.shutdown.behaviour {
+            case .stop:
+                try await stop()
+            case .pause:
+                try await pause(machineStateURL: machineStateURL)
             }
-        }
-        switch config.shutdown.behaviour {
-        case .stop:
-            stop(completionHandler: completion)
-        case .pause:
-            pause(machineStateURL: machineStateURL, completionHandler: completion)
+            console.text("Did \(config.shutdown.behaviour.description) container")
+        } catch {
+            throw CoreError(
+                message: "Failed to \(config.shutdown.behaviour.description) container",
+                metadata: ["ERROR": "\(error)"]
+            )
         }
     }
 
-    public var virtualMachine: VZVirtualMachine {
+//    func exit(machineStateURL: URL, exit: @escaping (Int32) -> Never) {
+//        console.text("Will exit container")
+//        let completion = { [console, config] (result: Result<Void, Error>) in
+//            switch result {
+//            case .success:
+//                console.text("Did \(config.shutdown.behaviour.description) container")
+//                exit(0)
+//            case let .failure(error):
+//                console.error("Failed to \(config.shutdown.behaviour.description) container, \(error)")
+//                exit(1)
+//            }
+//        }
+//    }
+
+    var virtualMachine: VZVirtualMachine {
         vm
     }
 
