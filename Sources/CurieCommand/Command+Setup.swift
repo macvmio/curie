@@ -39,6 +39,10 @@ enum Setup {
         (StartCommand.self, StartCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
+    
+    static let allRuntimeCommands: [(ParsableCommand.Type, Assembly)] = [
+        (PullCommand.self, PullCommand.Assembly())
+    ]
 
     @discardableResult
     static func resolver(with container: DefaultContainer) -> Resolver {
@@ -70,12 +74,20 @@ enum Setup {
 
 extension Command {
     var resolver: Resolver {
-        Setup.resolver(with: DefaultContainer())
+        Shared.resolver
     }
 }
 
 extension ParsableCommand {
     static var allSubcommands: [ParsableCommand.Type] {
-        Setup.allSubcommands.map(\.0)
+        (Setup.allSubcommands.map(\.0) + runtimeSubcommands).sorted { $0._commandName < $1._commandName }
     }
+    
+    static var runtimeSubcommands: [ParsableCommand.Type] {
+        Setup.allRuntimeCommands.filter { $0.0._commandName == "Test" }.map { $0.0 }
+    }
+}
+
+private enum Shared {
+    static let resolver = Setup.resolver(with: DefaultContainer())
 }
