@@ -55,3 +55,7 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             --data-binary @".build/curie-${{ env.VERSION }}.pkg" \
             "${{ steps.release.outputs.upload_url}}?name=curie-${{ env.VERSION }}.pkg&label=curie-${{ env.VERSION }}.pkg"
+          curl -H "Content-Type: text/plain" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            --data-binary @".build/checksums.txt" \
+            "${{ steps.release.outputs.upload_url}}?name=checksums.txt&label=checksums.txt"
