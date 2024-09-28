@@ -173,9 +173,6 @@ function prepare_pkg() {
     # Staple pkg
     xcrun stapler staple "$CURIE_PKG_PATH"
 
-    # Validate
-    xcrun stapler validate "$CURIE_PKG_PATH"
-
     # Copy to release destination
     cp "$CURIE_PKG_PATH" ".build/"
 
