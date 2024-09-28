@@ -34,7 +34,7 @@ private struct MainCommand: ParsableCommand {
         commandName: "curie",
         subcommands: MainCommand.allSubcommands
     )
-    
+
     func run() throws {
         _ = MainCommand.run(with: ["--help"])
     }

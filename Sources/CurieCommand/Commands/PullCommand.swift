@@ -30,7 +30,6 @@ struct PullCommand: Command {
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
-
     final class Executor: CommandExecutor {
         private let interactor: Interactor
 
@@ -38,14 +37,12 @@ struct PullCommand: Command {
             self.interactor = interactor
         }
 
-        func execute(command: PullCommand) throws {
+        func execute(command _: PullCommand) throws {
             print("Pull...")
         }
     }
 
     final class Assembly: CommandAssembly {
-        func assemble(_ registry: Registry) {
-            
-        }
+        func assemble(_: Registry) {}
     }
 }
