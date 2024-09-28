@@ -124,7 +124,7 @@ function sign_executable() {
         .build/release/curie
 
     # Verify signature
-    xcrun codesign -dv --verbose=4 ".build/release/curie"
+    xcrun codesign -dvvvv ".build/release/curie"
 }
 
 function prepare_pkg() {

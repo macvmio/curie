@@ -1,0 +1,57 @@
+name: Release
+on:
+  workflow_dispatch:
+
+env:
+  DEVELOPER_DIR: "/Applications/Xcode_15.4.app/Contents/Developer"
+
+# Limit GITHUB_TOKEN permissions to read-only for repo contents
+# https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run setup
+        run: make setup
+      - name: Run release
+        env:
+          CURIE_DEVELOPER_ID_APPLICATION_P12_BASE64: ${{ secrets.CURIE_DEVELOPER_ID_APPLICATION_P12_BASE64 }}
+          CURIE_DEVELOPER_ID_APPLICATION_P12_PASSWORD: ${{ secrets.CURIE_DEVELOPER_ID_APPLICATION_P12_PASSWORD }}
+          CURIE_DEVELOPER_ID_APPLICATION_SIGNING_IDENTITY: ${{ secrets.CURIE_DEVELOPER_ID_APPLICATION_SIGNING_IDENTITY }}
+          CURIE_DEVELOPER_ID_INSTALLER_P12_BASE64: ${{ secrets.CURIE_DEVELOPER_ID_INSTALLER_P12_BASE64 }}
+          CURIE_DEVELOPER_ID_INSTALLER_P12_PASSWORD: ${{ secrets.CURIE_DEVELOPER_ID_INSTALLER_P12_PASSWORD }}
+          CURIE_DEVELOPER_ID_INSTALLER_SIGNING_IDENTITY: ${{ secrets.CURIE_DEVELOPER_ID_INSTALLER_SIGNING_IDENTITY }}
+          CURIE_APPSTORE_CONNECT_KEY_ID: ${{ secrets.CURIE_APPSTORE_CONNECT_KEY_ID }}
+          CURIE_APPSTORE_CONNECT_P8_BASE64: ${{ secrets.CURIE_APPSTORE_CONNECT_P8_BASE64 }}
+          CURIE_APPSTORE_CONNECT_ISSUER: ${{ secrets.CURIE_APPSTORE_CONNECT_ISSUER }}
+          CURIE_TEMP_KEYCHAIN_PASSWORD: ${{ secrets.CURIE_TEMP_KEYCHAIN_PASSWORD }}
+        run: |
+          make release
+          VERSION=$(.build/release/curie version | cut -d '+' -f 1)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Release
+        id: release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releaseResult = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              generate_release_notes: true,
+              prerelease: false,
+              name: '${{ env.VERSION }}',
+              tag_name: '${{ env.VERSION }}',
+            });
+            core.setOutput("upload_url", releaseResult['data']['upload_url'].replace('{?name,label}', ''));
+      - name: Upload .pkg
+        if: steps.release.outputs.upload_url != ''
+        run: |
+          curl -H "Content-Type: application/octet-stream" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            --data-binary @".build/curie-${{ env.VERSION }}.pkg" \
+            "${{ steps.release.outputs.upload_url}}?name=curie-${{ env.VERSION }}.pkg&label=curie-${{ env.VERSION }}.pkg"
