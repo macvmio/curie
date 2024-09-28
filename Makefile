@@ -8,8 +8,9 @@ SUBCOMMANDS:
   setup                   Set up development environment.
   clean                   Clean build folder.
   env                     Show build environment.
-  build                   Build.
+  build                   Build (debug).
   test                    Run tests.
+  release                 Build (release), sign, notarize, and staple executable.
   sign                    Sign executable.
   format                  Format source code.
   autocorrect             Autocorrect lint issues if possible.
@@ -39,6 +40,9 @@ test:
 
 sign:
 	@$(mise) run sign
+
+release:
+	@$(mise) run release
 
 format:
 	@$(mise) install
