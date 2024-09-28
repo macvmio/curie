@@ -4,3 +4,11 @@ set -euo pipefail
 
 # Predefined variables
 readonly EXT_BUILD_DIR="$MISE_PROJECT_ROOT/.build"
+
+function log_error() {
+    echo "Error: $1"
+}
+
+function log() {
+    echo "$1"
+}
