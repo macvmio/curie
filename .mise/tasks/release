@@ -1,0 +1,191 @@
+#!/bin/bash
+# mise description="Prepare release build"
+set -euo pipefail
+source "$MISE_PROJECT_ROOT/.mise/helpers/common"
+
+# Required environment variables
+REQUIRED_ENVVARS=(
+    "CURIE_DEVELOPER_ID_APPLICATION_P12_BASE64"
+    "CURIE_DEVELOPER_ID_APPLICATION_P12_PASSWORD"
+    "CURIE_DEVELOPER_ID_APPLICATION_SIGNING_IDENTITY"
+    "CURIE_DEVELOPER_ID_INSTALLER_P12_BASE64"
+    "CURIE_DEVELOPER_ID_INSTALLER_P12_PASSWORD"
+    "CURIE_DEVELOPER_ID_INSTALLER_SIGNING_IDENTITY"
+    "CURIE_APPSTORE_CONNECT_KEY_ID"
+    "CURIE_APPSTORE_CONNECT_P8_BASE64"
+    "CURIE_APPSTORE_CONNECT_ISSUER"
+    "CURIE_TEMP_KEYCHAIN_PASSWORD"
+)
+
+# Local variables
+CURIE_TEMP_DIR=$(mktemp -d)
+CURIE_TEMP_KEYCHAIN_IDENTIFIER="curie-credentials"
+CURIE_DEVELOPER_ID_APPLICATION_P12_PATH="$CURIE_TEMP_DIR/curie-developer-id-application.p12"
+CURIE_DEVELOPER_ID_INSTALLER_P12_PATH="$CURIE_TEMP_DIR/curie-developer-id-installer.p12"
+CURIE_P8_PATH="$CURIE_TEMP_DIR/curie-authkey.p8"
+CURIE_PKG_BUNDLE_ID="com.curievm.curie"
+CURIE_PKG_DIR="$CURIE_TEMP_DIR/pkg-package"
+
+function load_envvars_if_possible() {
+    CURIE_CREDENTIALS_PATH="$MISE_PROJECT_ROOT/.credentials/release-credentials"
+    if [ -e "$CURIE_CREDENTIALS_PATH" ]; then
+        source "$CURIE_CREDENTIALS_PATH"
+    fi
+}
+
+function validate_envvar() {
+    local ENVVAR="$1"
+    if [ -z "${!ENVVAR+x}" ]; then
+        log_error "Release failed, environment variable '$ENVVAR' is not set. Please ensure all requires variables are set (${REQUIRED_ENVVARS[*]})"
+        exit 1
+    fi
+}
+
+function validate_envvars() {
+    log "Validate relase environment variables"
+    for ENVVAR in "${REQUIRED_ENVVARS[@]}"; do
+        validate_envvar "$ENVVAR"
+    done
+}
+
+function set_up() {
+    log "Set up release environment"
+
+    # Set up trap
+    trap 'rm -rf "$CURIE_TEMP_DIR"; tear_down' EXIT
+
+    # Decode p12 files
+    echo $CURIE_DEVELOPER_ID_APPLICATION_P12_BASE64 | base64 --decode > "$CURIE_DEVELOPER_ID_APPLICATION_P12_PATH"
+    echo $CURIE_DEVELOPER_ID_INSTALLER_P12_BASE64 | base64 --decode > "$CURIE_DEVELOPER_ID_INSTALLER_P12_PATH"
+
+    # Create temporary keychain
+    xcrun security create-keychain -p "$CURIE_TEMP_KEYCHAIN_PASSWORD" "$CURIE_TEMP_KEYCHAIN_IDENTIFIER"
+
+    # Update the new keychaing to the search path
+    xcrun security list-keychains -d user -s "$CURIE_TEMP_KEYCHAIN_IDENTIFIER" $(security list-keychains -d user | sed -e s/\"//g)
+
+    # Unlock keychain
+    xcrun security unlock-keychain -p "$CURIE_TEMP_KEYCHAIN_PASSWORD" "$CURIE_TEMP_KEYCHAIN_IDENTIFIER"
+
+    # Update settings
+    xcrun security set-keychain-settings "$CURIE_TEMP_KEYCHAIN_IDENTIFIER"
+
+    # Import application certificate
+    xcrun security import "$CURIE_DEVELOPER_ID_APPLICATION_P12_PATH" \
+        -P "$CURIE_DEVELOPER_ID_APPLICATION_P12_PASSWORD" \
+        -k "$CURIE_TEMP_KEYCHAIN_IDENTIFIER" \
+        -A
+
+    # Import installer certificate
+    xcrun security import "$CURIE_DEVELOPER_ID_INSTALLER_P12_PATH" \
+        -P "$CURIE_DEVELOPER_ID_INSTALLER_P12_PASSWORD" \
+        -k "$CURIE_TEMP_KEYCHAIN_IDENTIFIER" \
+        -A
+
+    # http://stackoverflow.com/questions/39868578/security-codesign-in-sierra-keychain-ignores-access-control-settings-and-ui-p
+    xcrun security set-key-partition-list -S apple-tool:,apple: -s -k "$CURIE_TEMP_KEYCHAIN_PASSWORD" "$CURIE_TEMP_KEYCHAIN_IDENTIFIER" > /dev/null 2>&1
+
+    # Remove p12 files
+    rm "$CURIE_DEVELOPER_ID_APPLICATION_P12_PATH"
+    rm "$CURIE_DEVELOPER_ID_INSTALLER_P12_PATH"
+
+    # Decode p8 file
+    echo $CURIE_APPSTORE_CONNECT_P8_BASE64 | base64 --decode > "$CURIE_P8_PATH"
+}
+
+function tear_down() {
+    log "Tear down release environment"
+    
+    # Delete keychain
+    xcrun security delete-keychain "$CURIE_TEMP_KEYCHAIN_IDENTIFIER"
+
+    # Delete temp directory
+    rm -rf "$CURIE_TEMP_DIR"
+}
+
+function sign_executable() {
+    log "Build executable"
+
+    # Update hash in the "curie version" output
+    GIT_SHORT_HASH=$(git rev-parse --short HEAD)
+    sed -i "" "s/#GIT_SHORT_HASH#/$GIT_SHORT_HASH/" Sources/CurieCommand/Constants.swift
+
+    # Build with release configuration
+    xcrun swift build -c release
+
+    # Code sign
+    log "Sign executable"
+    xcrun codesign \
+        --timestamp \
+        --options=runtime \
+        --force \
+        --sign "$CURIE_DEVELOPER_ID_APPLICATION_SIGNING_IDENTITY" \
+        --entitlements Resources/curie.entitlements \
+        .build/release/curie
+
+    # Verify signature
+    xcrun codesign -dvvvv ".build/release/curie"
+}
+
+function prepare_pkg() {
+    log "Build .pkg"
+
+    # Prepare package directory
+    mkdir -p "$CURIE_PKG_DIR"
+
+    # Copy executable
+    cp ".build/release/curie" "$CURIE_PKG_DIR/"
+
+    # Get version
+    CURIE_VERSION=$(.build/release/curie version | cut -d '+' -f 1)
+    CURIE_PKG_FILENAME="curie-$CURIE_VERSION.pkg"
+    CURIE_PKG_PATH="$CURIE_TEMP_DIR/$CURIE_PKG_FILENAME"
+    CURIE_UNSIGNED_PKG_PATH="$CURIE_TEMP_DIR/curie-$CURIE_VERSION.unsigned.pkg"
+
+    # Build pkg
+    xcrun pkgbuild --timestamp \
+        --install-location "/usr/local/bin" \
+        --root "$CURIE_PKG_DIR" \
+        --version "$CURIE_VERSION" \
+        --identifier "$CURIE_PKG_BUNDLE_ID" \
+        "$CURIE_UNSIGNED_PKG_PATH"
+
+    # Sign pkg
+    log "Sign .pkg"
+    xcrun productsign \
+        --timestamp \
+        --sign "$CURIE_DEVELOPER_ID_INSTALLER_SIGNING_IDENTITY" \
+        "$CURIE_UNSIGNED_PKG_PATH" \
+        "$CURIE_PKG_PATH"
+    
+    # Verify signature
+    xcrun pkgutil --check-signature "$CURIE_PKG_PATH"
+
+    # Notarize pkg
+    log "Notarize $CURIE_PKG_PATH"
+    xcrun notarytool submit \
+        --key "$CURIE_P8_PATH" \
+        --key-id "$CURIE_APPSTORE_CONNECT_KEY_ID" \
+        --issuer "$CURIE_APPSTORE_CONNECT_ISSUER" \
+        --wait \
+        "$CURIE_PKG_PATH"
+
+    # Staple pkg
+    xcrun stapler staple "$CURIE_PKG_PATH"
+
+    # Copy to release destination
+    cp "$CURIE_PKG_PATH" ".build/"
+
+    # Validate the product
+    xcrun spctl -a -t install -vvvv "$CURIE_PKG_PATH"
+}
+
+function main() {
+    load_envvars_if_possible
+    validate_envvars
+    set_up
+    sign_executable
+    prepare_pkg
+}
+
+main "$@"
