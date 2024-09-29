@@ -27,6 +27,8 @@ public enum Operation {
     case images(ImagesParameters)
     case `import`(ImportParameters)
     case inspect(InspectParameters)
+    case pull(PullParameters)
+    case push(PushParameters)
     case ps(PsParameters)
     case rmi(RmiParameters)
     case rm(RmParameters)
@@ -53,6 +55,8 @@ final class DefaultInteractor: Interactor {
     private let imagesInteractor: ImagesInteractor
     private let importInteractor: ImportInteractor
     private let inspectInteractor: InspectInteractor
+    private let pullInteractor: PullInteractor
+    private let pushInteractor: PushInteractor
     private let psInteractor: PsInteractor
     private let rmiInteractor: RmiInteractor
     private let rmInteractor: RmInteractor
@@ -69,6 +73,8 @@ final class DefaultInteractor: Interactor {
         imagesInteractor: ImagesInteractor,
         importInteractor: ImportInteractor,
         inspectInteractor: InspectInteractor,
+        pullInteractor: PullInteractor,
+        pushInteractor: PushInteractor,
         psInteractor: PsInteractor,
         rmiInteractor: RmiInteractor,
         rmInteractor: RmInteractor,
@@ -84,6 +90,8 @@ final class DefaultInteractor: Interactor {
         self.imagesInteractor = imagesInteractor
         self.importInteractor = importInteractor
         self.inspectInteractor = inspectInteractor
+        self.pullInteractor = pullInteractor
+        self.pushInteractor = pushInteractor
         self.psInteractor = psInteractor
         self.rmiInteractor = rmiInteractor
         self.rmInteractor = rmInteractor
@@ -114,6 +122,10 @@ final class DefaultInteractor: Interactor {
                 try await importInteractor.execute(parameters: parameters)
             case let .inspect(parameters):
                 try await inspectInteractor.execute(parameters: parameters)
+            case let .pull(parameters):
+                try await pullInteractor.execute(parameters: parameters)
+            case let .push(parameters):
+                try await pushInteractor.execute(parameters: parameters)
             case let .ps(parameters):
                 try await psInteractor.execute(parameters: parameters)
             case let .rmi(parameters):

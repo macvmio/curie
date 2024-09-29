@@ -19,6 +19,7 @@ import Foundation
 
 public final class MockSystem: System {
     public enum Call: Equatable {
+        case execute([String])
         case executeWithOutput([String])
     }
 
@@ -51,8 +52,8 @@ public final class MockSystem: System {
         fatalError("Not implemented yet")
     }
 
-    public func execute(_: [String]) throws {
-        fatalError("Not implemented yet")
+    public func execute(_ arguments: [String]) throws {
+        calls.append(.execute(arguments))
     }
 
     public func execute(_ arguments: [String], output: CurieCommon.OutputType) throws {

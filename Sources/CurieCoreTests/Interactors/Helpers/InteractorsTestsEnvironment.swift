@@ -23,9 +23,29 @@ import SCInject
 
 final class InteractorsTestsEnvironment {
     let restoreImageService = MockRestoreImageService()
+    let directory: TemporaryDirectory
+    let system = MockSystem()
+    let fileSystem: FileSystem
     let httpClient = MockHTTPClient()
     let console = MockConsole()
     let runLoop = DefaultRunLoop(interval: .short)
+
+    let fileManager = FileManager.default
+
+    init() {
+        let directory = try! TemporaryDirectory()
+        self.directory = directory
+        fileSystem = DefaultFileSystem(
+            config: .init(
+                overrides: .init(
+                    currentWorkingDirectory: directory.path.appending(component: "currentWorkingDirectory"),
+                    homeDirectory: directory.path.appending(component: "home")
+                )
+            )
+        )
+        try! fileSystem.createDirectory(at: fileSystem.homeDirectory.appending(components: [".curie", "plugins"]))
+        try! fileSystem.createDirectory(at: fileSystem.currentWorkingDirectory)
+    }
 
     func resolveInteractor() -> Interactor {
         let systemContainer = DefaultContainer()
@@ -35,9 +55,31 @@ final class InteractorsTestsEnvironment {
         ])
         let testContainer = DefaultContainer(parent: systemContainer)
         testContainer.register(RestoreImageService.self) { [restoreImageService] _ in restoreImageService }
+        testContainer.register(System.self) { [system] _ in system }
+        testContainer.register(FileSystem.self) { [fileSystem] _ in fileSystem }
         testContainer.register(HTTPClient.self) { [httpClient] _ in httpClient }
         testContainer.register(Console.self) { [console] _ in console }
         testContainer.register(CurieCommon.RunLoop.self) { [runLoop] _ in runLoop }
         return testContainer.resolve(Interactor.self)
+    }
+}
+
+extension FileManager {
+    func markAsExecuable(atPath path: String) throws {
+        // Get current file attributes
+        let attributes = try attributesOfItem(atPath: path)
+
+        // Extract the current file permissions
+        if let filePermissions = attributes[FileAttributeKey.posixPermissions] as? NSNumber {
+            // Convert current permissions to integer
+            var permissions = filePermissions.intValue
+
+            // Add execute permission for the owner (User) by using bitwise OR
+            // 0o100 (octal) adds the execute permission for the owner
+            permissions |= 0o100
+
+            // Set the new permissions
+            try setAttributes([.posixPermissions: permissions], ofItemAtPath: path)
+        }
     }
 }

@@ -21,10 +21,10 @@ import Foundation
 import SCInject
 import TSCBasic
 
-struct PullCommand: Command {
+struct PushCommand: Command {
     static let configuration: CommandConfiguration = .init(
-        commandName: Plugin.pull.rawValue,
-        abstract: "Pull image from OCI registry."
+        commandName: Plugin.push.rawValue,
+        abstract: "Push image to OCI registry."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
@@ -37,8 +37,8 @@ struct PullCommand: Command {
             self.interactor = interactor
         }
 
-        func execute(command: PullCommand) throws {
-            try interactor.execute(.pull(.init(reference: command.reference)))
+        func execute(command: PushCommand) throws {
+            try interactor.execute(.push(.init(reference: command.reference)))
         }
     }
 

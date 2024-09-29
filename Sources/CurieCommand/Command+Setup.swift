@@ -21,7 +21,7 @@ import Foundation
 import SCInject
 
 enum Setup {
-    static let allSubcommands: [(ParsableCommand.Type, Assembly)] = [
+    static let allStaticSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (BuildCommand.self, BuildCommand.Assembly()),
         (CloneCommand.self, CloneCommand.Assembly()),
         (ConfigCommand.self, ConfigCommand.Assembly()),
@@ -40,9 +40,14 @@ enum Setup {
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
 
-    static let allRuntimeCommands: [(ParsableCommand.Type, Assembly)] = [
+    static let allRuntimeSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (PullCommand.self, PullCommand.Assembly()),
+        (PushCommand.self, PushCommand.Assembly()),
     ]
+
+    static var allSubcommands: [(ParsableCommand.Type, Assembly)] {
+        allStaticSubcommands + allRuntimeSubcommands
+    }
 
     @discardableResult
     static func resolver(with container: DefaultContainer) -> Resolver {
@@ -80,14 +85,24 @@ extension Command {
 
 extension ParsableCommand {
     static var allSubcommands: [ParsableCommand.Type] {
-        (Setup.allSubcommands.map(\.0) + runtimeSubcommands).sorted { $0._commandName < $1._commandName }
+        (Setup.allStaticSubcommands.map(\.0) + runtimeSubcommands)
+            .sorted { $0.configuration.defaultCommandName < $1.configuration.defaultCommandName }
     }
 
     static var runtimeSubcommands: [ParsableCommand.Type] {
-        Setup.allRuntimeCommands.filter { $0.0._commandName == "Test" }.map(\.0)
+        let pluginExecutor = Shared.resolver.resolve(PluginExecutor.self)
+        return Setup.allRuntimeSubcommands
+            .filter { pluginExecutor.supportsCommand($0.0.configuration.defaultCommandName) }
+            .map(\.0)
     }
 }
 
 private enum Shared {
     static let resolver = Setup.resolver(with: DefaultContainer())
+}
+
+private extension CommandConfiguration {
+    var defaultCommandName: String {
+        commandName ?? ""
+    }
 }
