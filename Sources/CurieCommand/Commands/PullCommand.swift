@@ -24,7 +24,7 @@ import TSCBasic
 struct PullCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: Plugin.pull.rawValue,
-        abstract: "Pull image from OCI registry."
+        abstract: "Pull image from registry."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")

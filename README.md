@@ -305,6 +305,25 @@ mount_virtiofs curie shared
 
 By default, curie stores images and containers in `~/.curie` directory. You can change the location by setting `CURIE_DATA_ROOT` environment variable.
 
+### Pull and Push Images
+
+Curie does not natively support interacting with image registries (such as OCI), but it provides a flexible plugin system that allows you to extend its functionality. By creating lightweight plugins, you can easily add `pull` and `push` commands to interact with external image registries or storage backends.
+
+This plugin system abstracts the integration entirely. Whether you are working with an OCI registry, an S3 bucket, or any other storage solution, the choice is yours. The image handling logic is completely within your control.
+
+#### How to Add `pull` and `push` Plugins
+
+To extend Curie with `pull` and/or `push` commands, follow these steps:
+
+1. Navigate to the `~/.curie` directory (or your custom data directory if `CURIE_DATA_ROOT` is set).
+2. Create a `plugins` directory inside.
+3. Add executable files named `pull` and/or `push` to this directory.
+
+Once these executable files are in place, Curie will automatically recognize them and include the new commands in its `--help` output. When a user runs a `pull` or `push` command, Curie will call the corresponding plugin scripts:
+
+- `push --reference <reference>` will be executed when the user runs `curie push <reference>`.
+- `pull --reference <reference>` will be executed when the user runs `curie pull <reference>`.
+
 ## Development
 
 ### Requirements

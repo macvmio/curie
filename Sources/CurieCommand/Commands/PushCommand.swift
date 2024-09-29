@@ -24,7 +24,7 @@ import TSCBasic
 struct PushCommand: Command {
     static let configuration: CommandConfiguration = .init(
         commandName: Plugin.push.rawValue,
-        abstract: "Push image to OCI registry."
+        abstract: "Push image to registry."
     )
 
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
