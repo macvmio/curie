@@ -324,6 +324,37 @@ Once these executable files are in place, Curie will automatically recognize the
 - `push --reference <reference>` will be executed when the user runs `curie push <reference>`.
 - `pull --reference <reference>` will be executed when the user runs `curie pull <reference>`.
 
+#### Pull Plugin Example
+
+The following example shows a basic integration with [geranos](https://github.com/mobileinf/geranos).
+
+```bash
+#!/bin/bash -e
+
+# Check if the number of arguments
+if [[ $# -lt 2 ]]; then
+    echo "Error: reference argument is required"
+    echo "Usage: $0 --reference <reference>"
+    exit 1
+fi
+
+# Check if the first argument is "--reference"
+if [ "$1" != "--reference" ]; then
+    echo "Error: reference argument is required"
+    echo "Usage: $0 --reference <reference>"
+    exit 1
+fi
+
+# Check if geranos is installed
+if ! command -v geranos &> /dev/null; then
+    echo "Error: geranos is not installed."
+    exit 1
+fi
+
+# Call geranos
+geranos pull "$2"
+```
+
 ## Development
 
 ### Requirements
