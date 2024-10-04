@@ -74,6 +74,14 @@ public final class DefaultFileSystem: FileSystem {
         public struct Overrides {
             var currentWorkingDirectory: AbsolutePath?
             var homeDirectory: AbsolutePath?
+
+            public init(
+                currentWorkingDirectory: AbsolutePath? = nil,
+                homeDirectory: AbsolutePath? = nil
+            ) {
+                self.currentWorkingDirectory = currentWorkingDirectory
+                self.homeDirectory = homeDirectory
+            }
         }
 
         var overrides: Overrides = .init()

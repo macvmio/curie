@@ -42,6 +42,8 @@ public final class CoreAssembly: Assembly {
                 imagesInteractor: r.resolve(ImagesInteractor.self),
                 importInteractor: r.resolve(ImportInteractor.self),
                 inspectInteractor: r.resolve(InspectInteractor.self),
+                pullInteractor: r.resolve(PullInteractor.self),
+                pushInteractor: r.resolve(PushInteractor.self),
                 psInteractor: r.resolve(PsInteractor.self),
                 rmiInteractor: r.resolve(RmiInteractor.self),
                 rmInteractor: r.resolve(RmInteractor.self),
@@ -118,6 +120,18 @@ public final class CoreAssembly: Assembly {
             CommitInteractor(
                 configurator: r.resolve(VMConfigurator.self),
                 imageCache: r.resolve(ImageCache.self),
+                console: r.resolve(Console.self)
+            )
+        }
+        registry.register(PullInteractor.self) { r in
+            PullInteractor(
+                pluginExecutor: r.resolve(PluginExecutor.self),
+                console: r.resolve(Console.self)
+            )
+        }
+        registry.register(PushInteractor.self) { r in
+            PushInteractor(
+                pluginExecutor: r.resolve(PluginExecutor.self),
                 console: r.resolve(Console.self)
             )
         }
@@ -203,6 +217,13 @@ public final class CoreAssembly: Assembly {
         }
         registry.register(RestoreImageService.self) { _ in
             DefaultRestoreImageService()
+        }
+        registry.register(PluginExecutor.self) { r in
+            DefaultPluginExecutor(
+                system: r.resolve(System.self),
+                fileSystem: r.resolve(FileSystem.self),
+                console: r.resolve(Console.self)
+            )
         }
     }
 }

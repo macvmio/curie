@@ -26,21 +26,16 @@ import XCTest
 final class BuildInteractorTests: XCTestCase {
     private var subject: Interactor!
     private var env: InteractorsTestsEnvironment!
-    private var directory: TemporaryDirectory!
-
-    private let fileManager = FileManager.default
 
     override func setUpWithError() throws {
         super.setUp()
         env = InteractorsTestsEnvironment()
-        directory = try TemporaryDirectory()
         subject = env.resolveInteractor()
     }
 
     override func tearDown() {
         super.tearDown()
         env = nil
-        directory = nil
         subject = nil
     }
 
