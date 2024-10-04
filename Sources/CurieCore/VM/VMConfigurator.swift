@@ -248,14 +248,16 @@ final class DefaultVMConfigurator: VMConfigurator {
     }
 
     private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {
-        let restoreImage = try await withCheckedContinuation { continuation in
-            VZMacOSRestoreImage.load(
-                from: spec.restoreImagePath.asURL,
-                completionHandler: continuation.resume(returning:)
-            )
-        }.get()
-
-        return restoreImage
+        try await withCheckedThrowingContinuation { continuation in
+            VZMacOSRestoreImage.load(from: spec.restoreImagePath.asURL) { result in
+                switch result {
+                case let .success(restoreImage):
+                    continuation.resume(returning: restoreImage)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 
     private func createPlatformConfiguration(bundle: VMBundle, restoreImage: VZMacOSRestoreImage) throws {
