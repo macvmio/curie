@@ -41,7 +41,7 @@ test:
 sign:
 	@$(mise) run sign
 
-release:
+release: clean
 	@$(mise) run release
 
 format:

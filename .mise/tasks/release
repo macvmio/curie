@@ -27,11 +27,6 @@ CURIE_P8_PATH="$CURIE_TEMP_DIR/curie-authkey.p8"
 CURIE_PKG_BUNDLE_ID="com.curievm.curie"
 CURIE_PKG_DIR="$CURIE_TEMP_DIR/pkg-package"
 
-function clean() {
-    rm -f "$CURIE_CHECKSUMS_PATH"
-    touch "$CURIE_CHECKSUMS_PATH"
-}
-
 function load_envvars_if_possible() {
     CURIE_CREDENTIALS_PATH="$MISE_PROJECT_ROOT/.credentials/release-credentials"
     if [ -e "$CURIE_CREDENTIALS_PATH" ]; then
@@ -192,7 +187,6 @@ function prepare_pkg() {
 }
 
 function main() {
-    clean
     load_envvars_if_possible
     validate_envvars
     set_up
