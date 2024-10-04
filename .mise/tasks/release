@@ -19,12 +19,18 @@ REQUIRED_ENVVARS=(
 
 # Local variables
 CURIE_TEMP_DIR=$(mktemp -d)
+CURIE_CHECKSUMS_PATH="$MISE_PROJECT_ROOT/.build/checksums.txt"
 CURIE_TEMP_KEYCHAIN_IDENTIFIER="curie-credentials"
 CURIE_DEVELOPER_ID_APPLICATION_P12_PATH="$CURIE_TEMP_DIR/curie-developer-id-application.p12"
 CURIE_DEVELOPER_ID_INSTALLER_P12_PATH="$CURIE_TEMP_DIR/curie-developer-id-installer.p12"
 CURIE_P8_PATH="$CURIE_TEMP_DIR/curie-authkey.p8"
 CURIE_PKG_BUNDLE_ID="com.curievm.curie"
 CURIE_PKG_DIR="$CURIE_TEMP_DIR/pkg-package"
+
+function clean() {
+    rm -f "$CURIE_CHECKSUMS_PATH"
+    touch "$CURIE_CHECKSUMS_PATH"
+}
 
 function load_envvars_if_possible() {
     CURIE_CREDENTIALS_PATH="$MISE_PROJECT_ROOT/.credentials/release-credentials"
@@ -178,9 +184,15 @@ function prepare_pkg() {
 
     # Validate the product
     xcrun spctl -a -t install -vvvv "$CURIE_PKG_PATH"
+
+    # Update checksums
+    pushd ".build"
+    shasum -a 256 "$CURIE_PKG_FILENAME" > "$CURIE_CHECKSUMS_PATH"
+    popd
 }
 
 function main() {
+    clean
     load_envvars_if_possible
     validate_envvars
     set_up

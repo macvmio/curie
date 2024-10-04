@@ -27,7 +27,7 @@ final class Constants {
         return Version(0, 2, 0, buildMetadataIdentifiers: identifiers)
     }()
 
-    private static let gitHash = "#GIT_SHORT_HASH#"
+    private static let gitHash = "dbf0203"
 
     // MARK: - Init
 
