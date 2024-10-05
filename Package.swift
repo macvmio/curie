@@ -10,8 +10,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/macvmio/SwiftCommons.git", .upToNextMajor(from: "0.2.1")),
-        .package(url: "https://github.com/apple/swift-tools-support-core", .upToNextMajor(from: "0.5.2")),
-        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.2.3")),
+        .package(url: "https://github.com/apple/swift-tools-support-core", .upToNextMajor(from: "0.6.1")),
+        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.5.0")),
     ],
     targets: [
         .executableTarget(
