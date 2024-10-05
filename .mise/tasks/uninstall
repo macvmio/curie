@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+function main() {
+    if [ -e "/usr/loca/bin/curie" ]; then
+        echo "Will delete /usr/loca/bin/curie (requires sudo)"
+        sudo rm -rf /usr/loca/bin/curie
+    fi
+}
+
+main
