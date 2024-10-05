@@ -10,11 +10,11 @@ It allows users to run and manage isolated environments, making it easier to dev
 
 ### Key Features
 
-* **Containerization**: Like Docker, the tool allows users to create and manage containers, each providing a separate environment for running applications. Containers share the macOS kernel but maintain their own filesystem and resource constraints.
+* **Containerization**: Like Docker, the tool allows users to create and manage containers, each providing a separate environment for running applications (under the hood, each container is represented by a standard macOS VM).
 
 * **Resource Management**: The tool offers basic resource management options, allowing users to allocate CPU and memory resources to containers. This ensures that containers run efficiently without overloading the host system.
 
-* **Image Management**: Users can create, modify, abd clone images. Images can be stored locally and reused across multiple  containers.
+* **Image Management**: Users can create, modify, abd clone images. Images can be stored locally and reused across multiple containers.
 
 ## Usage
 
