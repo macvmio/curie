@@ -16,6 +16,18 @@ It allows users to run and manage isolated environments, making it easier to dev
 
 * **Image Management**: Users can create, modify, abd clone images. Images can be stored locally and reused across multiple containers.
 
+## Installation
+
+### Install via script
+
+The following script will download [the latest version](https://github.com/macvmio/curie/releases/latest) of Curie from [GitHub Releases](https://github.com/macvmio/curie/releases) and install it in `/usr/local/bin/curie` (requires sudo for system-wide installation):
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/macvmio/curie/refs/heads/main/.mise/tasks/install)"
+```
+
+Make sure you have the necessary permissions, as sudo may be required during the installation process.
+
 ## Usage
 
 ### Commands
