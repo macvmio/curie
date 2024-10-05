@@ -189,7 +189,7 @@ final class ImageCacheTests: XCTestCase {
 
     func testPath() throws {
         // Given
-        let expectedPath = environment.homeDirectory.appending(RelativePath(".curie/images/\(anyReference)"))
+        let expectedPath = environment.homeDirectory.appending(RelativePath(".curie/.images/\(anyReference)"))
 
         // When
         let path = try subject.path(
@@ -207,7 +207,7 @@ final class ImageCacheTests: XCTestCase {
     func testImportImage() throws {
         // Given
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
-        let expectedBundlePath = environment.homeDirectory.appending(RelativePath(".curie/images/\(anyReference)"))
+        let expectedBundlePath = environment.homeDirectory.appending(RelativePath(".curie/.images/\(anyReference)"))
 
         // When
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
@@ -232,7 +232,7 @@ final class ImageCacheTests: XCTestCase {
         ]
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
         let expectedBundlePath = environment.temporaryDirectory.appending(component: ".curie-custom")
-            .appending(RelativePath("images/\(anyReference)"))
+            .appending(RelativePath(".images/\(anyReference)"))
 
         // When
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
@@ -257,7 +257,7 @@ final class ImageCacheTests: XCTestCase {
         ]
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
         let expectedBundlePath = environment.currentWorkingDirectory.appending(component: ".curie-custom")
-            .appending(RelativePath("images/\(anyReference)"))
+            .appending(RelativePath(".images/\(anyReference)"))
 
         // When
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)

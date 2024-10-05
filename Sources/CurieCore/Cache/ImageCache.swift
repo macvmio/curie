@@ -263,11 +263,11 @@ final class DefaultImageCache: ImageCache {
     }
 
     private func imagesAbsolutePath() -> AbsolutePath {
-        dataRootDirectory().appending(component: "images")
+        dataRootDirectory().appending(component: ".images")
     }
 
     private func containersAbsolutePath() -> AbsolutePath {
-        dataRootDirectory().appending(component: "containers")
+        dataRootDirectory().appending(component: ".containers")
     }
 
     private func findReference(_ reference: String, type: ImageType) throws -> ImageReference {
