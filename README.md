@@ -359,7 +359,7 @@ geranos pull "$2"
 
 ### Requirements
 
-- Xcode 14.2 or newer
+- Xcode 16.0 or newer
 
 ### Build
 
