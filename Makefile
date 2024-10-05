@@ -16,6 +16,8 @@ SUBCOMMANDS:
   autocorrect             Autocorrect lint issues if possible.
   lint                    Lint source code.
   ready                   Perform all CI checks locally.
+  install                 Install the latest public release.
+  uninstall               Uninstall.
 
 endef
 export HELP_BODY
@@ -62,3 +64,9 @@ ready:
 	make build
 	make sign
 	make test
+
+install:
+	@$(mise) run install
+
+uninstall:
+	@$(mise) run uninstall
