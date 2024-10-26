@@ -4,5 +4,5 @@ swiftformat = "0.53.3"
 
 [settings]
 jobs = 6
-http_timeout = 30
+http_timeout = "30"
 experimental = true
