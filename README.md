@@ -402,4 +402,4 @@ We would like to thank the authors and contributors of the following projects:
 
 ## License
 
-Curie is released under version 2.0 of the [Apache License](LICENSE.txt).
+Curie is released under version 2.0 of the [Apache License](LICENSE).
