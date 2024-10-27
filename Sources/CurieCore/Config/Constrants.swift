@@ -27,7 +27,7 @@ public enum Constants {
         memorySize: .init(bytes: 4 * 1024 * 1024 * 1024),
         display: .init(width: 1920, height: 1080, pixelsPerInch: 144),
         network: .init(devices: [
-            .init(macAddress: .automatic, mode: .NAT),
+            .init(macAddress: .synthesized, mode: .NAT),
         ]),
         sharedDirectory: .init(directories: []),
         shutdown: .init(behaviour: .stop)
