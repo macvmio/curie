@@ -372,6 +372,17 @@ geranos pull "$2"
 ### Requirements
 
 - Xcode 16.0 or newer
+- mise
+
+### Set up dev environment
+
+Almost all `make <command>` commands require [mise](https://github.com/jdx/mise).
+
+If you don't have mise installed, run the following command to install it.
+
+```sh
+make setup
+```
 
 ### Build
 
@@ -399,6 +410,7 @@ We would like to thank the authors and contributors of the following projects:
 - [swift-tools-support-core](https://github.com/apple/swift-tools-support-core)
 - [SwiftLint](https://github.com/realm/SwiftLint)
 - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat)
+- [mise](https://github.com/jdx/mise)
 
 ## License
 
