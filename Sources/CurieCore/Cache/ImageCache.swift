@@ -167,11 +167,11 @@ final class DefaultImageCache: ImageCache {
     }
 
     func path(to reference: ImageReference) throws -> AbsolutePath {
-        storeAbsolutePath(reference.type).appending(try reference.descriptor.relativePath())
+        try storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
     }
 
     func bundle(for reference: ImageReference) throws -> VMBundle {
-        VMBundle(path: try path(to: reference))
+        try VMBundle(path: path(to: reference))
     }
 
     func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws {
@@ -272,7 +272,7 @@ final class DefaultImageCache: ImageCache {
 
     private func findReference(_ reference: String, type: ImageType) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
-        let absolutePath = storeAbsolutePath(type).appending(try descriptor.relativePath())
+        let absolutePath = try storeAbsolutePath(type).appending(descriptor.relativePath())
         guard fileSystem.exists(at: absolutePath) else {
             switch type {
             case .container:
