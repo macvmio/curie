@@ -129,7 +129,7 @@ public final class DefaultFileSystem: FileSystem {
     public func list(at path: AbsolutePath) throws -> [FileSystemItem] {
         try fileManager.contentsOfDirectory(atPath: path.pathString)
             .sorted()
-            .map { RelativePath($0) }
+            .map { try RelativePath(validating: $0) }
             .map {
                 let absolutePath = path.appending($0)
                 var isDir: ObjCBool = false

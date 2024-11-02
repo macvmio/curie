@@ -57,7 +57,7 @@ final class InspectInteractor: AsyncInteractor {
 
     func execute(parameters: InspectParameters) async throws {
         let reference = try imageCache.findReference(parameters.reference)
-        let bundle = imageCache.bundle(for: reference)
+        let bundle = try imageCache.bundle(for: reference)
         let info = try bundleParser.readInfo(from: bundle)
         let arpItems = try aprClient.executeARPQuery()
         let macAddresses = Set(info.metadata.network.flatMap { $0.devices.map(\.value.MACAddress) } ?? [])

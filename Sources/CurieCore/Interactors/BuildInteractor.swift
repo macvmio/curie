@@ -57,7 +57,7 @@ final class BuildInteractor: AsyncInteractor {
 
     func execute(parameters: BuildParameters) async throws {
         let reference = try imageCache.makeImageReference(parameters.reference)
-        let bundle = imageCache.bundle(for: reference)
+        let bundle = try imageCache.bundle(for: reference)
 
         // Get restore image path
         let restoreImagePath = fileSystem.absolutePath(from: parameters.ipwsPath)

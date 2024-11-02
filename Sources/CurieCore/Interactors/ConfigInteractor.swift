@@ -39,7 +39,7 @@ final class ConfigInteractor: AsyncInteractor {
 
     func execute(parameters: ConfigParameters) async throws {
         let reference = try imageCache.findReference(parameters.reference)
-        let bundle = imageCache.bundle(for: reference)
+        let bundle = try imageCache.bundle(for: reference)
         try system.execute(["open", "-t", bundle.config.pathString])
     }
 }

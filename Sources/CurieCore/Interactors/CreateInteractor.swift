@@ -50,7 +50,7 @@ final class CreateInteractor: AsyncInteractor {
         let sourceReference = try imageCache.findImageReference(parameters.reference)
         let targetReference = try imageCache.cloneImage(source: sourceReference, target: .newReference)
 
-        let bundle = imageCache.bundle(for: targetReference)
+        let bundle = try imageCache.bundle(for: targetReference)
         try bundleParser.updateMetadata(bundle: bundle) { metadata in
             metadata.name = parameters.name
         }

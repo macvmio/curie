@@ -189,7 +189,7 @@ final class ImageCacheTests: XCTestCase {
 
     func testPath() throws {
         // Given
-        let expectedPath = environment.homeDirectory.appending(RelativePath(".curie/.images/\(anyReference)"))
+        let expectedPath = environment.homeDirectory.appending(try RelativePath(validating: ".curie/.images/\(anyReference)"))
 
         // When
         let path = try subject.path(
@@ -207,7 +207,7 @@ final class ImageCacheTests: XCTestCase {
     func testImportImage() throws {
         // Given
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
-        let expectedBundlePath = environment.homeDirectory.appending(RelativePath(".curie/.images/\(anyReference)"))
+        let expectedBundlePath = environment.homeDirectory.appending(try RelativePath(validating: ".curie/.images/\(anyReference)"))
 
         // When
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
@@ -215,12 +215,12 @@ final class ImageCacheTests: XCTestCase {
         // Then
         let files = try fileSystem.list(at: expectedBundlePath)
         XCTAssertEqual(files, [
-            .file(.init(path: .init("auxilary-storage.bin"))),
-            .file(.init(path: .init("config.json"))),
-            .file(.init(path: .init("disk.img"))),
-            .file(.init(path: .init("hardware-model.bin"))),
-            .file(.init(path: .init("machine-identifier.bin"))),
-            .file(.init(path: .init("metadata.json"))),
+            .file(.init(path: try .init(validating: "auxilary-storage.bin"))),
+            .file(.init(path: try .init(validating: "config.json"))),
+            .file(.init(path: try .init(validating: "disk.img"))),
+            .file(.init(path: try .init(validating: "hardware-model.bin"))),
+            .file(.init(path: try .init(validating: "machine-identifier.bin"))),
+            .file(.init(path: try .init(validating: "metadata.json"))),
         ])
         XCTAssertBundlesEqual(bundle, path: expectedBundlePath)
     }
@@ -232,7 +232,7 @@ final class ImageCacheTests: XCTestCase {
         ]
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
         let expectedBundlePath = environment.temporaryDirectory.appending(component: ".curie-custom")
-            .appending(RelativePath(".images/\(anyReference)"))
+            .appending(try RelativePath(validating: ".images/\(anyReference)"))
 
         // When
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
@@ -240,12 +240,12 @@ final class ImageCacheTests: XCTestCase {
         // Then
         let files = try fileSystem.list(at: expectedBundlePath)
         XCTAssertEqual(files, [
-            .file(.init(path: .init("auxilary-storage.bin"))),
-            .file(.init(path: .init("config.json"))),
-            .file(.init(path: .init("disk.img"))),
-            .file(.init(path: .init("hardware-model.bin"))),
-            .file(.init(path: .init("machine-identifier.bin"))),
-            .file(.init(path: .init("metadata.json"))),
+            .file(.init(path: try .init(validating: "auxilary-storage.bin"))),
+            .file(.init(path: try .init(validating: "config.json"))),
+            .file(.init(path: try .init(validating: "disk.img"))),
+            .file(.init(path: try .init(validating: "hardware-model.bin"))),
+            .file(.init(path: try .init(validating: "machine-identifier.bin"))),
+            .file(.init(path: try .init(validating: "metadata.json"))),
         ])
         XCTAssertBundlesEqual(bundle, path: expectedBundlePath)
     }
@@ -257,7 +257,7 @@ final class ImageCacheTests: XCTestCase {
         ]
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
         let expectedBundlePath = environment.currentWorkingDirectory.appending(component: ".curie-custom")
-            .appending(RelativePath(".images/\(anyReference)"))
+            .appending(try RelativePath(validating: ".images/\(anyReference)"))
 
         // When
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
@@ -265,12 +265,12 @@ final class ImageCacheTests: XCTestCase {
         // Then
         let files = try fileSystem.list(at: expectedBundlePath)
         XCTAssertEqual(files, [
-            .file(.init(path: .init("auxilary-storage.bin"))),
-            .file(.init(path: .init("config.json"))),
-            .file(.init(path: .init("disk.img"))),
-            .file(.init(path: .init("hardware-model.bin"))),
-            .file(.init(path: .init("machine-identifier.bin"))),
-            .file(.init(path: .init("metadata.json"))),
+            .file(.init(path: try .init(validating: "auxilary-storage.bin"))),
+            .file(.init(path: try .init(validating: "config.json"))),
+            .file(.init(path: try .init(validating: "disk.img"))),
+            .file(.init(path: try .init(validating: "hardware-model.bin"))),
+            .file(.init(path: try .init(validating: "machine-identifier.bin"))),
+            .file(.init(path: try .init(validating: "metadata.json"))),
         ])
         XCTAssertBundlesEqual(bundle, path: expectedBundlePath)
     }
@@ -278,7 +278,7 @@ final class ImageCacheTests: XCTestCase {
     func testExportImageRaw() throws {
         // Given
         let bundle = try fixtures.makeImageBundle(at: anyBundlePath)
-        let expectedBundlePath = environment.currentWorkingDirectory.appending(RelativePath("test/export"))
+        let expectedBundlePath = environment.currentWorkingDirectory.appending(try RelativePath(validating: "test/export"))
         try subject.importImage(sourcePath: bundle.path.pathString, reference: anyReference)
         let imageReference = try subject.findImageReference(anyReference)
 
@@ -292,12 +292,12 @@ final class ImageCacheTests: XCTestCase {
         // Then
         let files = try fileSystem.list(at: expectedBundlePath)
         XCTAssertEqual(files, [
-            .file(.init(path: .init("auxilary-storage.bin"))),
-            .file(.init(path: .init("config.json"))),
-            .file(.init(path: .init("disk.img"))),
-            .file(.init(path: .init("hardware-model.bin"))),
-            .file(.init(path: .init("machine-identifier.bin"))),
-            .file(.init(path: .init("metadata.json"))),
+            .file(.init(path: try .init(validating: "auxilary-storage.bin"))),
+            .file(.init(path: try .init(validating: "config.json"))),
+            .file(.init(path: try .init(validating: "disk.img"))),
+            .file(.init(path: try .init(validating: "hardware-model.bin"))),
+            .file(.init(path: try .init(validating: "machine-identifier.bin"))),
+            .file(.init(path: try .init(validating: "metadata.json"))),
         ])
         XCTAssertBundlesEqual(bundle, path: expectedBundlePath)
     }

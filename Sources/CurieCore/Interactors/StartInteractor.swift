@@ -61,7 +61,7 @@ public final class DefaultStartInteractor: StartInteractor {
 
         let sourceReference = try imageCache.findContainerReference(context.reference)
 
-        let bundle = imageCache.bundle(for: sourceReference)
+        let bundle = try imageCache.bundle(for: sourceReference)
         let overrideConfig = try context.launch.partialConfig()
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
