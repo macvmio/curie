@@ -88,12 +88,12 @@ final class DefaultImageRunner: ImageRunner {
         }
 
         // Launch interface
-        if options.noWindow {
-            console.text("Launch container without a window")
-            launchConsole(with: vm, bundle: bundle)
-        } else {
+        if options.showWindow {
             console.text("Launch container in a window")
             launchWindow(with: vm, bundle: bundle)
+        } else {
+            console.text("Launch container without a window")
+            launchConsole(with: vm, bundle: bundle)
         }
     }
 
