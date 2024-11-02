@@ -68,7 +68,7 @@ public final class DefaultRunInteractor: RunInteractor {
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
             startUpFromMacOSRecovery: context.launch.recoveryMode,
-            noWindow: context.launch.noWindow
+            showWindow: context.launch.showWindow
         )
 
         vm.events
