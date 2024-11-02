@@ -30,8 +30,8 @@ struct RunCommand: Command {
     @Argument(help: "Reference \(CurieCore.Constants.referenceFormat).")
     var reference: String
 
-    @Flag(name: .shortAndLong, help: "Do not create window.")
-    var noWindow: Bool = false
+    @Flag(name: .customLong("window"), inversion: .prefixedNo, help: "Create window or not.")
+    var showWindow: Bool = true
 
     @Flag(name: .shortAndLong, help: "Start in recovery mode.")
     var recoveryMode: Bool = false
@@ -61,7 +61,7 @@ struct RunCommand: Command {
                 with: .init(
                     reference: command.reference,
                     launch: .init(
-                        noWindow: command.noWindow,
+                        showWindow: command.showWindow,
                         mainScreenResolution: command.mainScreenResolution,
                         recoveryMode: command.recoveryMode,
                         shareCurrentWorkingDirectory: command.shareCWD,

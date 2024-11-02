@@ -19,20 +19,20 @@ import CurieCommon
 import Foundation
 
 public struct LaunchParameters {
-    public var noWindow: Bool
+    public var showWindow: Bool
     public var mainScreenResolution: Bool
     public var recoveryMode: Bool
     public var shareCurrentWorkingDirectory: Bool
     public var pauseOnExit: Bool
 
     public init(
-        noWindow: Bool,
+        showWindow: Bool,
         mainScreenResolution: Bool,
         recoveryMode: Bool,
         shareCurrentWorkingDirectory: Bool,
         pauseOnExit: Bool
     ) {
-        self.noWindow = noWindow
+        self.showWindow = showWindow
         self.mainScreenResolution = mainScreenResolution
         self.recoveryMode = recoveryMode
         self.shareCurrentWorkingDirectory = shareCurrentWorkingDirectory
