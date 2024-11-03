@@ -47,8 +47,8 @@ protocol ImageCache {
     @discardableResult
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference
     func moveImage(source: ImageReference, target: ImageReference) throws
-    func path(to reference: ImageReference) -> AbsolutePath
-    func bundle(for reference: ImageReference) -> VMBundle
+    func path(to reference: ImageReference) throws -> AbsolutePath
+    func bundle(for reference: ImageReference) throws -> VMBundle
 
     func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws
     func importImage(sourcePath: String, reference: String) throws
@@ -79,7 +79,7 @@ final class DefaultImageCache: ImageCache {
                 .generic("Cannot create empty reference, please use (\(CurieCore.Constants.referenceFormat)) format")
         }
         let descriptor = try ImageDescriptor(reference: reference)
-        let relativePath = RelativePath(reference)
+        let relativePath = try RelativePath(validating: reference)
         let absolutePath = imagesAbsolutePath().appending(relativePath)
         guard !fileSystem.exists(at: absolutePath) else {
             throw CoreError
@@ -121,7 +121,7 @@ final class DefaultImageCache: ImageCache {
     }
 
     func removeImage(_ reference: ImageReference) throws {
-        let absolutePath = path(to: reference)
+        let absolutePath = try path(to: reference)
         try fileSystem.remove(at: absolutePath)
         try removeEmptySubdirectories(of: imagesAbsolutePath())
         try removeEmptySubdirectories(of: containersAbsolutePath())
@@ -129,11 +129,11 @@ final class DefaultImageCache: ImageCache {
 
     @discardableResult
     func cloneImage(source: ImageReference, target: Target) throws -> ImageReference {
-        let sourceAbsolutePath = path(to: source)
+        let sourceAbsolutePath = try path(to: source)
         let targetId = ImageID.make()
         let targetDescriptor = try target.imageDescriptor(source: source, imageId: targetId)
         let targetReference = ImageReference(id: targetId, descriptor: targetDescriptor, type: target.imageType())
-        let targetAbsolutePath = path(to: targetReference)
+        let targetAbsolutePath = try path(to: targetReference)
         guard sourceAbsolutePath != targetAbsolutePath else {
             throw CoreError.generic("Cannot clone, target reference is the same as source")
         }
@@ -150,8 +150,8 @@ final class DefaultImageCache: ImageCache {
     }
 
     func moveImage(source: ImageReference, target: ImageReference) throws {
-        let sourceAbsolutePath = path(to: source)
-        let targetAbsolutePath = path(to: target)
+        let sourceAbsolutePath = try path(to: source)
+        let targetAbsolutePath = try path(to: target)
 
         if fileSystem.exists(at: targetAbsolutePath) {
             try fileSystem.remove(at: targetAbsolutePath)
@@ -166,16 +166,16 @@ final class DefaultImageCache: ImageCache {
         try removeEmptySubdirectories(of: containersAbsolutePath())
     }
 
-    func path(to reference: ImageReference) -> AbsolutePath {
-        storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
+    func path(to reference: ImageReference) throws -> AbsolutePath {
+        try storeAbsolutePath(reference.type).appending(reference.descriptor.relativePath())
     }
 
-    func bundle(for reference: ImageReference) -> VMBundle {
-        VMBundle(path: path(to: reference))
+    func bundle(for reference: ImageReference) throws -> VMBundle {
+        try VMBundle(path: path(to: reference))
     }
 
     func exportImage(source: ImageReference, destinationPath: String, mode: ExportMode) throws {
-        let sourceAbsolutePath = path(to: source)
+        let sourceAbsolutePath = try path(to: source)
         let targetAbsolutePath = fileSystem.absolutePath(from: destinationPath)
         if fileSystem.exists(at: targetAbsolutePath) {
             guard try fileSystem.list(at: targetAbsolutePath).isEmpty else {
@@ -209,7 +209,7 @@ final class DefaultImageCache: ImageCache {
         }
 
         let targetReference = try makeImageReference(reference)
-        let targetAbsolutePath = path(to: targetReference)
+        let targetAbsolutePath = try path(to: targetReference)
 
         try fileSystem.createDirectory(at: targetAbsolutePath.parentDirectory)
 
@@ -240,7 +240,7 @@ final class DefaultImageCache: ImageCache {
 
     private func items(from references: [ImageReference]) throws -> [ImageItem] {
         let items = try references.map {
-            let bundle = bundle(for: $0)
+            let bundle = try bundle(for: $0)
             let metadata = try bundleParser.readMetadata(from: bundle)
             return try ImageItem(
                 reference: $0,
@@ -272,7 +272,7 @@ final class DefaultImageCache: ImageCache {
 
     private func findReference(_ reference: String, type: ImageType) throws -> ImageReference {
         let descriptor = try ImageDescriptor(reference: reference)
-        let absolutePath = storeAbsolutePath(type).appending(descriptor.relativePath())
+        let absolutePath = try storeAbsolutePath(type).appending(descriptor.relativePath())
         guard fileSystem.exists(at: absolutePath) else {
             switch type {
             case .container:
@@ -369,11 +369,11 @@ final class DefaultImageCache: ImageCache {
 }
 
 private extension ImageDescriptor {
-    func relativePath() -> RelativePath {
+    func relativePath() throws -> RelativePath {
         if let tag {
-            RelativePath("\(repository):\(tag)")
+            try RelativePath(validating: "\(repository):\(tag)")
         } else {
-            RelativePath(repository)
+            try RelativePath(validating: repository)
         }
     }
 }
