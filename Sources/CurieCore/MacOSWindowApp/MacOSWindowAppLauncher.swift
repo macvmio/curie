@@ -25,6 +25,7 @@ final class MacOSWindowAppLauncher {
         let app = NSApplication.shared
         app.setActivationPolicy(.regular)
         app.activate(ignoringOtherApps: true)
+        app.applicationIconImage = CurieIcon.image
 
         MacOSWindowApp.vm = vm
         MacOSWindowApp.bundle = bundle
