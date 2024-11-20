@@ -1,4 +1,4 @@
-# Curie
+![Curie](Resources/curie-logo.png)
 
 [![Build Status](https://github.com/macvmio/curie/actions/workflows/main.yml/badge.svg)](https://github.com/macvmio/curie/actions/workflows/main.yml)
 
@@ -7,6 +7,8 @@
 *Curie* is a lightweight, open-source virtualization solution, leveraging the Apple [Virtualization.framework](https://developer.apple.com/documentation/virtualization).
 
 It allows users to run and manage isolated environments, making it easier to develop and test software in a controlled environment.
+
+![Demo](Resources/curie-demo.png)
 
 ### Key Features
 
