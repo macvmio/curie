@@ -65,7 +65,7 @@ final class PushInteractorTests: XCTestCase {
 
     func testPushPluginNotExecutable() throws {
         // Given
-        env.fileManager.createFile(atPath: pushExecutablePath, contents: "".data(using: .utf8)!)
+        env.fileManager.createFile(atPath: pushExecutablePath, contents: Data("".utf8))
 
         // When
         try subject.execute(.push(.init(reference: anyReference)))
@@ -79,7 +79,7 @@ final class PushInteractorTests: XCTestCase {
 
     func testPushPluginSuccessCall() throws {
         // Given
-        env.fileManager.createFile(atPath: pushExecutablePath, contents: "".data(using: .utf8)!)
+        env.fileManager.createFile(atPath: pushExecutablePath, contents: Data("".utf8))
         try env.fileManager.markAsExecuable(atPath: pushExecutablePath)
 
         // When

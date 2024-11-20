@@ -116,7 +116,6 @@ final class VM: NSObject {
         }
 
         console.text("Will stop container")
-        // swiftlint:disable:next identifier_name
         vm.stop { [_events] error in
             if let error {
                 _events.send(.imageStopFailed)
