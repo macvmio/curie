@@ -65,7 +65,7 @@ final class PullInteractorTests: XCTestCase {
 
     func testPullPluginNotExecutable() throws {
         // Given
-        env.fileManager.createFile(atPath: pullExecutablePath, contents: "".data(using: .utf8)!)
+        env.fileManager.createFile(atPath: pullExecutablePath, contents: Data("".utf8))
 
         // When
         try subject.execute(.pull(.init(reference: anyReference)))
@@ -79,7 +79,7 @@ final class PullInteractorTests: XCTestCase {
 
     func testPullPluginSuccessCall() throws {
         // Given
-        env.fileManager.createFile(atPath: pullExecutablePath, contents: "".data(using: .utf8)!)
+        env.fileManager.createFile(atPath: pullExecutablePath, contents: Data("".utf8))
         try env.fileManager.markAsExecuable(atPath: pullExecutablePath)
 
         // When

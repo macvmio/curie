@@ -37,7 +37,7 @@ final class DefaultVMBundleParserTests: XCTestCase {
     func testReadConfig() throws {
         // Given
         fileSystem.mockRead = { _ in
-            """
+            Data("""
             {
               "cpuCount" : 8,
               "network" : {
@@ -57,7 +57,7 @@ final class DefaultVMBundleParserTests: XCTestCase {
                 "bytes" : 1073741824
               }
             }
-            """.data(using: .utf8)!
+            """.utf8)
         }
 
         // When
