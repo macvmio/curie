@@ -2,8 +2,6 @@
 # mise description="Lint the project"
 set -euo pipefail
 
-export MISE_VERBOSE=1
-
 source "$MISE_PROJECT_ROOT/.mise/helpers/common"
 
 swiftlint --strict --quiet
