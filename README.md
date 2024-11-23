@@ -413,7 +413,7 @@ Program ended with exit code: 1
 To resolve this issue, you need to add the necessary entitlement to your app. Follow these steps to configure your Xcode project:
 
 1. Open the Scheme Editor:
-    - In Xcode, go to the Product menu and select **Scheme** > **Edit Scheme**.
+    - In Xcode, go to the **Product** menu and select **Scheme** > **Edit Scheme**.
 
 2. Add a Post-Build Action:
     - In the Scheme editor, select the Build tab.
