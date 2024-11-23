@@ -425,9 +425,6 @@ To resolve this issue, you need to add the necessary entitlement to your app. Fo
 ```sh
 codesign --sign - --entitlements "$WORKSPACE_PATH/../../../Resources/curie.entitlements" --force "$TARGET_BUILD_DIR/curie"
 ```
-    - This command will:
-        - Sign the app with the specified entitlement file (curie.entitlements).
-        - Apply the required com.apple.security.virtualization entitlement during the post-build phase.
 
 4. Save and Build:
     - Save the scheme changes and rebuild the project. The app should now have the necessary entitlement to run the virtual machine without errors.
