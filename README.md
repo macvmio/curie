@@ -403,6 +403,34 @@ Execute the commands below to run the project locally.
 .build/debug/curie --help
 ```
 
+### Build and Run in Xcode
+
+The [Virtualization.framework](https://developer.apple.com/documentation/virtualization) requires the `com.apple.security.virtualization` entitlement to run correctly. Without this entitlement, certain commands, such as `start` or `run`, may fail and produce the following error:
+
+```
+Error: Invalid virtual machine configuration. The process doesn’t have the “com.apple.security.virtualization” entitlement.
+Program ended with exit code: 1
+```
+
+To resolve this issue, you need to add the necessary entitlement to your app. Follow these steps to configure your Xcode project:
+
+1. Open the Scheme Editor:
+    - In Xcode, go to the **Product** menu and select **Scheme** > **Edit Scheme**.
+
+2. Add a Post-Build Action:
+    - In the Scheme editor, select the Build tab.
+    - Under the **Post-actions** section, click the **+** button and choose New Run Script Action.
+
+3. Enter the Codesign Command:
+    - In the newly created **Run Script** action, enter the following command to apply the entitlement:
+
+```sh
+codesign --sign - --entitlements "$WORKSPACE_PATH/../../../Resources/curie.entitlements" --force "$TARGET_BUILD_DIR/curie"
+```
+
+4. Save and Build:
+    - Save the scheme changes and rebuild the project. The app should now have the necessary entitlement to run the virtual machine without errors.
+
 ## Attributions
 
 We would like to thank the authors and contributors of the following projects:
