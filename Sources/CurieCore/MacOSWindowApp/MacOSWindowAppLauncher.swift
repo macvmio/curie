@@ -73,6 +73,11 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
     func applicationDidFinishLaunching(_: Notification) {
         NSApplication.shared.mainMenu?.removeItem(at: indexOfEditMenu)
     }
+
+    func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
+        MacOSWindowApp.vm.exit(machineStateURL: MacOSWindowApp.bundle.machineState.asURL, exit: exit)
+        return .terminateCancel
+    }
 }
 
 private struct MacOSWindowAppViewView: NSViewRepresentable {
