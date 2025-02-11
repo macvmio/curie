@@ -4,9 +4,9 @@
 
 ## Overview
 
-*Curie* is a lightweight, open-source virtualization solution, leveraging the Apple [Virtualization.framework](https://developer.apple.com/documentation/virtualization).
+*Curie* is a lightweight, open-source virtualization solution that leverages the Apple [Virtualization.framework](https://developer.apple.com/documentation/virtualization). 
 
-It allows users to run and manage isolated environments, making it easier to develop and test software in a controlled environment.
+It empowers users to run and manage isolated instances, simplifying the process of running, developing, and testing software in a controlled and reproducable environment.
 
 ![Demo](Resources/curie-demo.png)
 
