@@ -23,6 +23,7 @@ jobs:
   lint:
     name: Lint
     runs-on: macos-14
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v4
     - name: Run setup
@@ -33,6 +34,7 @@ jobs:
   build:
     name: Build
     runs-on: macos-14
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v4
     - uses: actions/cache@v4
@@ -49,6 +51,7 @@ jobs:
   test:
     name: Test
     runs-on: macos-14
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v4
     - uses: actions/cache@v4
