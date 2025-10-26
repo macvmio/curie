@@ -1,5 +1,5 @@
 #!/bin/bash
-# mise description="Clean build directory"
+#MISE description="Clean build directory"
 set -euo pipefail
 
 source "$MISE_PROJECT_ROOT/.mise/helpers/common"
