@@ -1,5 +1,5 @@
 #!/bin/bash
-# mise description="Show environment"
+#MISE description="Show environment"
 set -euo pipefail
 
 source "$MISE_PROJECT_ROOT/.mise/helpers/common"
