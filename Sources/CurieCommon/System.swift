@@ -19,13 +19,13 @@ import Foundation
 import TSCBasic
 
 public enum OutputType {
-    case `default`
+    case stdout
     case muted
     case custom(Output)
 
     var output: Output {
         switch self {
-        case .default:
+        case .stdout:
             StandardOutput.shared
         case .muted:
             ForwardOutput(stdout: nil, stderr: nil)
@@ -37,20 +37,20 @@ public enum OutputType {
 
 public protocol System {
     func makeSIGINTSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     ) -> DispatchSourceSignal
 
     func makeSIGTERMSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     ) -> DispatchSourceSignal
 
     func keepAlive(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     )
 
     func keepAliveWithSIGINTEventHandler(
         cancellable: Cancellable,
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     )
 
     func execute(_ arguments: [String]) throws
@@ -64,31 +64,31 @@ final class DefaultSystem: System {
     private let environment = ProcessInfo.processInfo.environment
 
     func makeSIGINTSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     ) -> DispatchSourceSignal {
         signal(SIGINT, SIG_IGN)
         let sourceSignal = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
         sourceSignal.setEventHandler {
-            signalHandler(exit)
+            signalHandler()
         }
         sourceSignal.resume()
         return sourceSignal
     }
 
     func makeSIGTERMSourceSignal(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     ) -> DispatchSourceSignal {
         signal(SIGTERM, SIG_IGN)
         let sourceSignal = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
         sourceSignal.setEventHandler {
-            signalHandler(exit)
+            signalHandler()
         }
         sourceSignal.resume()
         return sourceSignal
     }
 
     func keepAlive(
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     ) {
         keepAliveWithSIGINTEventHandler(
             cancellable: StateCancellable(),
@@ -98,7 +98,7 @@ final class DefaultSystem: System {
 
     func keepAliveWithSIGINTEventHandler(
         cancellable: Cancellable,
-        signalHandler: @escaping (@escaping (Int32) -> Never) -> Void
+        signalHandler: @escaping () -> ()
     ) {
         let sigint = makeSIGINTSourceSignal(signalHandler: signalHandler)
         let sigterm = makeSIGTERMSourceSignal(signalHandler: signalHandler)
@@ -110,7 +110,7 @@ final class DefaultSystem: System {
     }
 
     func execute(_ arguments: [String]) throws {
-        try execute(arguments, output: .default)
+        try execute(arguments, output: .stdout)
     }
 
     func execute(_ arguments: [String], output: OutputType) throws {
@@ -137,7 +137,7 @@ final class DefaultSystem: System {
 private extension OutputType {
     func outputRedirection() -> TSCBasic.Process.OutputRedirection {
         switch self {
-        case .default:
+        case .stdout:
             .none
         default:
             .stream { [output] bytes in output.write(bytes, to: .stdout) }

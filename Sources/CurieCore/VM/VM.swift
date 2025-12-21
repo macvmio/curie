@@ -127,23 +127,39 @@ final class VM: NSObject {
         }
     }
 
-    public func exit(machineStateURL: URL, exit: @escaping (Int32) -> Never) {
+    public func terminate(
+        machineStateURL: URL,
+        completionHandler: @escaping (Result<Void, Error>) -> ()
+    ) {
         console.text("Will exit container")
         let completion = { [console, config] (result: Result<Void, Error>) in
             switch result {
             case .success:
                 console.text("Did \(config.shutdown.behaviour.description) container")
-                exit(0)
             case let .failure(error):
                 console.error("Failed to \(config.shutdown.behaviour.description) container, \(error)")
-                exit(1)
             }
+            completionHandler(result)
         }
         switch config.shutdown.behaviour {
         case .stop:
             stop(completionHandler: completion)
         case .pause:
             pause(machineStateURL: machineStateURL, completionHandler: completion)
+        }
+    }
+
+    public func terminateVmAndEventuallyTerminateCurrentProcessWithCorrespondingExitCode(
+        machineStateURL: URL
+    ) {
+        if vm.state == .stopping { return }
+        terminate(machineStateURL: machineStateURL) { vmTerminationResult in
+            switch vmTerminationResult {
+            case .success:
+                Darwin.exit(0)
+            case .failure:
+                Darwin.exit(1)
+            }
         }
     }
 
