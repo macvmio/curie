@@ -149,7 +149,9 @@ final class VM: NSObject {
         }
     }
 
-    public func terminateVmAndEventuallyTerminateCurrentProcessWithCorrespondingExitCode(
+    /// Terminates the VM (by stopping or pausing) and then exits the current process.
+    /// Exit code is 0 when VM is terminated successfully, and non zero in case of failure.
+    public func terminateVmAndCurrentProcess(
         machineStateURL: URL
     ) {
         if vm.state == .stopping { return }

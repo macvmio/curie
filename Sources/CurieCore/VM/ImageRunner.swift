@@ -100,7 +100,7 @@ final class DefaultImageRunner: ImageRunner {
     private func launchConsole(with vm: VM, bundle: VMBundle) {
         withExtendedLifetime(vm) { _ in
             system.keepAlive {
-                vm.terminateVmAndEventuallyTerminateCurrentProcessWithCorrespondingExitCode(
+                vm.terminateVmAndCurrentProcess(
                     machineStateURL: bundle.machineState.asURL
                 )
             }
@@ -109,14 +109,14 @@ final class DefaultImageRunner: ImageRunner {
 
     private func launchWindow(with vm: VM, bundle: VMBundle) {
         let sigint = system.makeSIGINTSourceSignal {
-            vm.terminateVmAndEventuallyTerminateCurrentProcessWithCorrespondingExitCode(
+            vm.terminateVmAndCurrentProcess(
                 machineStateURL: bundle.machineState.asURL
             )
         }
         vm.addSourceSignal(sigint)
 
         let sigterm = system.makeSIGTERMSourceSignal {
-            vm.terminateVmAndEventuallyTerminateCurrentProcessWithCorrespondingExitCode(
+            vm.terminateVmAndCurrentProcess(
                 machineStateURL: bundle.machineState.asURL
             )
         }
