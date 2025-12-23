@@ -37,20 +37,20 @@ public enum OutputType {
 
 public protocol System {
     func makeSIGINTSourceSignal(
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     ) -> DispatchSourceSignal
 
     func makeSIGTERMSourceSignal(
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     ) -> DispatchSourceSignal
 
     func keepAlive(
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     )
 
     func keepAliveWithSIGINTEventHandler(
         cancellable: Cancellable,
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     )
 
     func execute(_ arguments: [String]) throws
@@ -64,7 +64,7 @@ final class DefaultSystem: System {
     private let environment = ProcessInfo.processInfo.environment
 
     func makeSIGINTSourceSignal(
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     ) -> DispatchSourceSignal {
         signal(SIGINT, SIG_IGN)
         let sourceSignal = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
@@ -76,7 +76,7 @@ final class DefaultSystem: System {
     }
 
     func makeSIGTERMSourceSignal(
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     ) -> DispatchSourceSignal {
         signal(SIGTERM, SIG_IGN)
         let sourceSignal = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
@@ -88,7 +88,7 @@ final class DefaultSystem: System {
     }
 
     func keepAlive(
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     ) {
         keepAliveWithSIGINTEventHandler(
             cancellable: StateCancellable(),
@@ -98,7 +98,7 @@ final class DefaultSystem: System {
 
     func keepAliveWithSIGINTEventHandler(
         cancellable: Cancellable,
-        signalHandler: @escaping () -> ()
+        signalHandler: @escaping () -> Void
     ) {
         let sigint = makeSIGINTSourceSignal(signalHandler: signalHandler)
         let sigterm = makeSIGTERMSourceSignal(signalHandler: signalHandler)

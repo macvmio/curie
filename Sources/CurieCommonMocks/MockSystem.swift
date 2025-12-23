@@ -30,26 +30,26 @@ public final class MockSystem: System {
     public init() {}
 
     public func makeSIGINTSourceSignal(
-        signalHandler _: @escaping () -> ()
+        signalHandler _: @escaping () -> Void
     ) -> DispatchSourceSignal {
         fatalError("Not implemented yet")
     }
 
     public func makeSIGTERMSourceSignal(
-        signalHandler _: @escaping () -> ()
+        signalHandler _: @escaping () -> Void
     ) -> DispatchSourceSignal {
         fatalError("Not implemented yet")
     }
 
     public func keepAlive(
-        signalHandler _: @escaping () -> ()
+        signalHandler _: @escaping () -> Void
     ) {
         fatalError("Not implemented yet")
     }
 
     public func keepAliveWithSIGINTEventHandler(
         cancellable _: CurieCommon.Cancellable,
-        signalHandler _: @escaping () -> ()
+        signalHandler _: @escaping () -> Void
     ) {
         fatalError("Not implemented yet")
     }

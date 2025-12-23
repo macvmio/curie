@@ -129,7 +129,7 @@ final class VM: NSObject {
 
     public func terminate(
         machineStateURL: URL,
-        completionHandler: @escaping (Result<Void, Error>) -> ()
+        completionHandler: @escaping (Result<Void, Error>) -> Void
     ) {
         console.text("Will exit container")
         let completion = { [console, config] (result: Result<Void, Error>) in
