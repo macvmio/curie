@@ -41,23 +41,8 @@ private struct MacOSWindowApp: App {
     private var appDelegate: MacOSWindowAppDelegate
 
     var body: some Scene {
-        WindowGroup(MacOSWindowApp.vm.metadata.name ?? MacOSWindowApp.vm.metadata.id.description) {
-            Group {
-                MacOSWindowAppViewView(vm: MacOSWindowApp.vm).onAppear {
-                    NSWindow.allowsAutomaticWindowTabbing = false
-                }.onDisappear {
-                    MacOSWindowApp.vm.terminateVmAndCurrentProcess(
-                        machineStateURL: MacOSWindowApp.bundle.machineState.asURL
-                    )
-                }
-            }.frame(
-                minWidth: CGFloat(VMConfig.DisplayConfig.minWidth),
-                idealWidth: CGFloat(MacOSWindowApp.vm.config.display.width),
-                maxWidth: .infinity,
-                minHeight: CGFloat(VMConfig.DisplayConfig.minHeight),
-                idealHeight: CGFloat(MacOSWindowApp.vm.config.display.height),
-                maxHeight: .infinity
-            )
+        Settings {
+            EmptyView()
         }.commands {
             CommandGroup(replacing: .help, addition: {})
             CommandGroup(replacing: .newItem, addition: {})
@@ -70,13 +55,47 @@ private struct MacOSWindowApp: App {
 }
 
 private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
-    let indexOfEditMenu = 2
+    private var window: NSWindow!
 
     func applicationDidFinishLaunching(_: Notification) {
+        NSApplication.shared.setActivationPolicy(.regular)
+        NSWindow.allowsAutomaticWindowTabbing = false
+
+        let indexOfEditMenu = 2
         NSApplication.shared.mainMenu?.removeItem(at: indexOfEditMenu)
+
+        let idealWidth = CGFloat(MacOSWindowApp.vm.config.display.width)
+        let idealHeight = CGFloat(MacOSWindowApp.vm.config.display.height)
+        let minWidth = CGFloat(VMConfig.DisplayConfig.minWidth)
+        let minHeight = CGFloat(VMConfig.DisplayConfig.minHeight)
+
+        window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: idealWidth, height: idealHeight),
+            styleMask: [.titled, .closable, .resizable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = MacOSWindowApp.vm.metadata.name ?? MacOSWindowApp.vm.metadata.id.description
+        window.setContentSize(NSSize(width: idealWidth, height: idealHeight))
+        window.contentMinSize = NSSize(width: minWidth, height: minHeight)
+        window.isReleasedWhenClosed = false
+
+        let hostingController = NSHostingController(
+            rootView: MacOSWindowAppViewView(vm: MacOSWindowApp.vm)
+        )
+        window.contentViewController = hostingController
+        window.makeKeyAndOrderFront(nil)
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool {
+        true
     }
 
     func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
+        // This method is called when last window is closed (see applicationShouldTerminateAfterLastWindowClosed)
+        // as well as when the CMD+Q action is initiated.
+        // In both cases we should initiate a gracefull VM termination.
+
         MacOSWindowApp.vm.terminateVmAndCurrentProcess(
             machineStateURL: MacOSWindowApp.bundle.machineState.asURL
         )
