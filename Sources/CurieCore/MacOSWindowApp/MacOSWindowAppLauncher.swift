@@ -46,7 +46,9 @@ private struct MacOSWindowApp: App {
                 MacOSWindowAppViewView(vm: MacOSWindowApp.vm).onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false
                 }.onDisappear {
-                    MacOSWindowApp.vm.exit(machineStateURL: MacOSWindowApp.bundle.machineState.asURL, exit: exit)
+                    MacOSWindowApp.vm.terminateVmAndCurrentProcess(
+                        machineStateURL: MacOSWindowApp.bundle.machineState.asURL
+                    )
                 }
             }.frame(
                 minWidth: CGFloat(VMConfig.DisplayConfig.minWidth),
@@ -75,7 +77,9 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
     }
 
     func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
-        MacOSWindowApp.vm.exit(machineStateURL: MacOSWindowApp.bundle.machineState.asURL, exit: exit)
+        MacOSWindowApp.vm.terminateVmAndCurrentProcess(
+            machineStateURL: MacOSWindowApp.bundle.machineState.asURL
+        )
         return .terminateCancel
     }
 }
