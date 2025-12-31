@@ -52,11 +52,6 @@ public final class UnixDomainSocketServer {
         for trackedHandle in trackedHandles {
             trackedHandle.close()
         }
-
-        let fileManager = FileManager()
-        for trackedHandle in trackedHandles where fileManager.fileExists(atPath: trackedHandle.socketPath) {
-            try? fileManager.removeItem(atPath: trackedHandle.socketPath)
-        }
     }
 
     public func start<Request: Codable>(
