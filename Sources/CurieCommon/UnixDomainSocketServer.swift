@@ -48,20 +48,44 @@ public final class ServerListeningHandle {
     }
 }
 
+public struct Response<T: Codable> {
+    public let payload: T
+
+    /// When set to `true` it essentially means the process will be terminating after processing this request, so the
+    /// socket should be terminated gracefully after delivering this response.
+    public let closeSocketAfterDeliveringResponse: Bool
+
+    public init(payload: T, closeSocketAfterDeliveringResponse: Bool) {
+        self.payload = payload
+        self.closeSocketAfterDeliveringResponse = closeSocketAfterDeliveringResponse
+    }
+}
+
 public final class UnixDomainSocketServer {
+    private let lock = NSLock()
     private var trackedHandles: [ServerListeningHandle] = []
 
     public init() {}
 
     deinit {
-        for trackedHandle in trackedHandles {
-            trackedHandle.close()
+        try? close()
+    }
+
+    public func close() throws {
+        try lock.withLock {
+            for trackedHandle in trackedHandles {
+                trackedHandle.close()
+            }
+            let fileManager = FileManager()
+            for trackedHandle in trackedHandles where fileManager.fileExists(atPath: trackedHandle.socketPath) {
+                try fileManager.removeItem(atPath: trackedHandle.socketPath)
+            }
         }
     }
 
-    public func start<Request: Codable>(
+    public func start<RequestPayload: Codable>(
         socketPath: String,
-        handler: @escaping (Request) -> some Codable,
+        responseProvider: @escaping (RequestPayload) -> Response<some Codable>,
         connectionQueue: DispatchQueue
     ) throws -> ServerListeningHandle {
         let serverFileDescriptor = socket(AF_UNIX, SOCK_STREAM, 0)
@@ -106,7 +130,11 @@ public final class UnixDomainSocketServer {
                         listeningHandle.close()
                         return
                     }
-                    strongSelf.handleClient(clientFileDescriptor: clientFileDescriptor, handler: handler)
+                    strongSelf.handleClient(
+                        listeningHandle: listeningHandle,
+                        clientFileDescriptor: clientFileDescriptor,
+                        responseProvider: responseProvider
+                    )
                 }
             }
             listeningHandle.close()
@@ -117,12 +145,13 @@ public final class UnixDomainSocketServer {
         return listeningHandle
     }
 
-    private func handleClient<Request: Codable, Response: Codable>(
+    private func handleClient<RequestPayload: Codable, ResponsePayload: Codable>(
+        listeningHandle: ServerListeningHandle,
         clientFileDescriptor: Int32,
-        handler: (Request) -> Response
+        responseProvider: (RequestPayload) -> Response<ResponsePayload>
     ) {
         defer {
-            close(clientFileDescriptor)
+            Darwin.close(clientFileDescriptor)
         }
 
         var buffer = [UInt8](repeating: 0, count: 4096)
@@ -132,20 +161,24 @@ public final class UnixDomainSocketServer {
         }
 
         let data = Data(buffer[0 ..< count])
-        guard let request = try? JSONDecoder().decode(Request.self, from: data) else {
-            send(response: ErrorResponse(reason: "Invalid request"), to: clientFileDescriptor)
+        guard let request = try? JSONDecoder().decode(RequestPayload.self, from: data) else {
+            send(payload: ErrorResponse(reason: "Invalid request"), to: clientFileDescriptor)
             return
         }
 
-        let response: Response = handler(request)
-        send(response: response, to: clientFileDescriptor)
+        let response: Response<ResponsePayload> = responseProvider(request)
+        send(payload: response.payload, to: clientFileDescriptor)
+
+        if response.closeSocketAfterDeliveringResponse {
+            listeningHandle.close()
+        }
     }
 
     private func send(
-        response: some Codable,
+        payload: some Codable,
         to fileDescriptor: Int32
     ) {
-        guard let outData = try? JSONEncoder().encode(response) else {
+        guard let outData = try? JSONEncoder().encode(payload) else {
             return
         }
         _ = outData.withUnsafeBytes {

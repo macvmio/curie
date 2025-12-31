@@ -45,6 +45,9 @@ struct RunCommand: Command {
     @Flag(name: .shortAndLong, help: "Print only CONTAINER ID.")
     var quiet: Bool = false
 
+    @Option(help: "Create unix socket to interact with running VM over it at this path.")
+    var createSocketAt: String?
+
     final class Executor: CommandExecutor {
         private let interactor: RunInteractor
         private let console: Console
@@ -65,7 +68,8 @@ struct RunCommand: Command {
                         mainScreenResolution: command.mainScreenResolution,
                         recoveryMode: command.recoveryMode,
                         shareCurrentWorkingDirectory: command.shareCWD,
-                        pauseOnExit: false
+                        pauseOnExit: false,
+                        unixSocketPath: command.createSocketAt
                     )
                 )
             )

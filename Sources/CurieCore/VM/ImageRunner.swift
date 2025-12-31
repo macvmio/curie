@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+import Combine
 import CurieCommon
 import Foundation
 
@@ -29,6 +30,8 @@ final class DefaultImageRunner: ImageRunner {
     private let system: System
     private let fileSystem: FileSystem
     private let console: Console
+    private let vmSocketServer: VMSocketServer
+    private var cancellables = Set<AnyCancellable>()
 
     init(
         windowAppLauncher: MacOSWindowAppLauncher,
@@ -37,7 +40,8 @@ final class DefaultImageRunner: ImageRunner {
         clipboardSyncService: ClipboardSyncService,
         system: System,
         fileSystem: FileSystem,
-        console: Console
+        console: Console,
+        vmSocketServer: VMSocketServer
     ) {
         self.windowAppLauncher = windowAppLauncher
         self.imageCache = imageCache
@@ -46,6 +50,7 @@ final class DefaultImageRunner: ImageRunner {
         self.system = system
         self.fileSystem = fileSystem
         self.console = console
+        self.vmSocketServer = vmSocketServer
     }
 
     func run(vm: VM, bundle: VMBundle, options: VMStartOptions) throws {
@@ -54,6 +59,8 @@ final class DefaultImageRunner: ImageRunner {
             metadata: bundleParser.readMetadata(from: bundle)
         )
         console.text(info.description)
+
+        try startSocketServerIfNeeded(vm: vm, bundle: bundle, options: options)
 
         if fileSystem.exists(at: bundle.machineState) {
             let deleteMachineStateFile = { [console, fileSystem] in
@@ -100,6 +107,43 @@ final class DefaultImageRunner: ImageRunner {
             console.text("Launch container without a window")
             launchConsole(with: vm, bundle: bundle)
         }
+    }
+
+    private func startSocketServerIfNeeded(
+        vm: VM,
+        bundle: VMBundle,
+        options: VMStartOptions
+    ) throws {
+        guard let socketPath = options.unixSocketPath else { return }
+        do {
+            try vmSocketServer.startServer(
+                socketPath: socketPath,
+                vm: vm,
+                vmBundle: bundle
+            )
+            console.text("Started socket server at \(socketPath)")
+            scheduleSocketServerStop(vm: vm, options: options)
+        } catch {
+            console.error("Failed to start socket server: \(error)")
+            throw error
+        }
+    }
+
+    private func scheduleSocketServerStop(
+        vm: VM,
+        options _: VMStartOptions
+    ) {
+        vm.events
+            .filter { $0 == .imageDidStop || $0 == .imageStopFailed }
+            .sink { [vmSocketServer, console] _ in
+                do {
+                    try vmSocketServer.stop()
+                    console.text("Stopped socket server")
+                } catch {
+                    console.error("Failed to close socket server: \(error)")
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func launchConsole(with vm: VM, bundle: VMBundle) {
