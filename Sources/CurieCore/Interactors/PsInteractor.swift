@@ -55,7 +55,7 @@ final class PsInteractor: AsyncInteractor {
                 "name",
             ],
             values: images.map {
-                return [
+                [
                     .string($0.reference.id.description),
                     .string($0.reference.descriptor.repository),
                     .string($0.reference.descriptor.tag ?? "<none>"),

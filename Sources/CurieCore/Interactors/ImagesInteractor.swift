@@ -54,7 +54,7 @@ final class ImagesInteractor: AsyncInteractor {
                 "size",
             ],
             values: images.map {
-                return [
+                [
                     .string($0.reference.descriptor.repository),
                     .string($0.reference.descriptor.tag ?? "<none>"),
                     .string($0.reference.id.description),

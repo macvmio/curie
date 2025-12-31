@@ -32,60 +32,6 @@ public final class TableRenderer {
     }
 
     public struct Content {
-        public enum Row: Codable {
-            case string(String)
-            case memorySize(MemorySize)
-            case date(Date)
-
-            public func humanReadable(now: Date) -> String {
-                switch self {
-                case .string(let string):
-                    return string
-                case .memorySize(let memorySize):
-                    return "\(memorySize)"
-                case .date(let date):
-                    return Self.humanDateFormatter.localizedString(for: date, relativeTo: now)
-                }
-            }
-
-            public func encode(to encoder: any Encoder) throws {
-                var container = encoder.singleValueContainer()
-                switch self {
-                case .string(let string):
-                    try container.encode(string)
-                case .memorySize(let memorySize):
-                    try container.encode(memorySize)
-                case .date(let date):
-                    try container.encode(Self.jsonDateFormatter.string(from: date))
-                }
-            }
-
-            public init(from decoder: any Decoder) throws {
-                let container = try decoder.singleValueContainer()
-                do {
-                    guard let date = Self.jsonDateFormatter.date(from: try container.decode(String.self)) else {
-                        throw CoreError.generic("Cannot decode ISO8601 date")
-                    }
-                    self = .date(date)
-                } catch {
-                    do {
-                        self = .memorySize(try container.decode(MemorySize.self))
-                    } catch {
-                        self = .string(try container.decode(String.self))
-                    }
-                }
-            }
-
-            private static let jsonDateFormatter = ISO8601DateFormatter()
-
-            private static let humanDateFormatter: RelativeDateTimeFormatter = {
-                let formatter = RelativeDateTimeFormatter()
-                formatter.unitsStyle = .full
-                formatter.locale = Locale(identifier: "en_US_POSIX")
-                return formatter
-            }()
-        }
-
         public var headers: [String]
         public var rows: [[Row]]
 
@@ -93,6 +39,60 @@ public final class TableRenderer {
             self.headers = headers
             rows = values
         }
+    }
+
+    public enum Row: Codable {
+        case string(String)
+        case memorySize(MemorySize)
+        case date(Date)
+
+        public func humanReadable(now: Date) -> String {
+            switch self {
+            case let .string(string):
+                string
+            case let .memorySize(memorySize):
+                "\(memorySize)"
+            case let .date(date):
+                Self.humanDateFormatter.localizedString(for: date, relativeTo: now)
+            }
+        }
+
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.singleValueContainer()
+            switch self {
+            case let .string(string):
+                try container.encode(string)
+            case let .memorySize(memorySize):
+                try container.encode(memorySize)
+            case let .date(date):
+                try container.encode(Self.jsonDateFormatter.string(from: date))
+            }
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            do {
+                guard let date = try Self.jsonDateFormatter.date(from: container.decode(String.self)) else {
+                    throw CoreError.generic("Cannot decode ISO8601 date")
+                }
+                self = .date(date)
+            } catch {
+                do {
+                    self = try .memorySize(container.decode(MemorySize.self))
+                } catch {
+                    self = try .string(container.decode(String.self))
+                }
+            }
+        }
+
+        private static let jsonDateFormatter = ISO8601DateFormatter()
+
+        private static let humanDateFormatter: RelativeDateTimeFormatter = {
+            let formatter = RelativeDateTimeFormatter()
+            formatter.unitsStyle = .full
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            return formatter
+        }()
     }
 
     private let jsonEncoder = {
@@ -121,7 +121,7 @@ public final class TableRenderer {
     // MARK: - Private
 
     private func renderJson(content: Content, config _: Config) -> String {
-        let rawData = content.rows.reduce(into: [[String: Content.Row]]()) { acc, val in
+        let rawData = content.rows.reduce(into: [[String: Row]]()) { acc, val in
             let dictionary = Dictionary(val.enumerated().map { (
                 content.headers[$0].replacingOccurrences(of: " ", with: "_"),
                 $1
@@ -150,7 +150,7 @@ public final class TableRenderer {
 
         var result = "\n"
         result.append(
-            renderTextRow(content.headers.map { Content.Row.string($0.uppercased()) }, widths: widths, config: config)
+            renderTextRow(content.headers.map { Row.string($0.uppercased()) }, widths: widths, config: config)
         )
         for row in content.rows {
             result.append(renderTextRow(row, widths: widths, config: config))
@@ -158,7 +158,7 @@ public final class TableRenderer {
         return result
     }
 
-    private func renderTextRow(_ columns: [Content.Row], widths: [Int], config: Config) -> String {
+    private func renderTextRow(_ columns: [Row], widths: [Int], config: Config) -> String {
         var result = ""
         for column in columns.enumerated() {
             result.append(column.element.humanReadable(now: wallClock.now()))
