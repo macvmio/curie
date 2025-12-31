@@ -23,12 +23,12 @@ public final class UnixDomainSocketClient {
         request: some Codable,
         socketPath: String
     ) throws -> Response {
-        let clientFD = socket(AF_UNIX, SOCK_STREAM, 0)
-        guard clientFD >= 0 else {
+        let clientFileDescriptor = socket(AF_UNIX, SOCK_STREAM, 0)
+        guard clientFileDescriptor >= 0 else {
             throw NSError(domain: "SocketError", code: 1)
         }
         defer {
-            close(clientFD)
+            close(clientFileDescriptor)
         }
 
         var addr = sockaddr_un()
@@ -39,7 +39,7 @@ public final class UnixDomainSocketClient {
 
         let connectResult = withUnsafePointer(to: &bindAddr) {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                connect(clientFD, $0, socklen_t(MemoryLayout.size(ofValue: addr)))
+                connect(clientFileDescriptor, $0, socklen_t(MemoryLayout.size(ofValue: addr)))
             }
         }
         guard connectResult == 0 else {
@@ -48,11 +48,11 @@ public final class UnixDomainSocketClient {
 
         let reqData = try JSONEncoder().encode(request)
         _ = reqData.withUnsafeBytes {
-            write(clientFD, $0.baseAddress, reqData.count)
+            write(clientFileDescriptor, $0.baseAddress, reqData.count)
         }
 
         var buffer = [UInt8](repeating: 0, count: 4096)
-        let count = read(clientFD, &buffer, buffer.count)
+        let count = read(clientFileDescriptor, &buffer, buffer.count)
         guard count > 0 else {
             throw NSError(domain: "ReadError", code: 3)
         }
