@@ -30,13 +30,6 @@ final class PsInteractor: AsyncInteractor {
     private let wallClock: WallClock
     private let console: Console
 
-    private let dateFormatter: RelativeDateTimeFormatter = {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
-
     init(
         imageCache: ImageCache,
         wallClock: WallClock,
@@ -51,7 +44,7 @@ final class PsInteractor: AsyncInteractor {
         let items = try imageCache.listContainers()
         let images = items.sorted { $0.createAt > $1.createAt }
 
-        let rendered = TableRenderer()
+        let rendered = TableRenderer(wallClock: wallClock)
         let content = TableRenderer.Content(
             headers: [
                 "container id",
@@ -61,14 +54,16 @@ final class PsInteractor: AsyncInteractor {
                 "size",
                 "name",
             ],
-            values: images.map { [
-                $0.reference.id.description,
-                $0.reference.descriptor.repository,
-                $0.reference.descriptor.tag ?? "<none>",
-                dateFormatter.localizedString(for: $0.createAt, relativeTo: wallClock.now()),
-                $0.size.description,
-                $0.name ?? "<none>",
-            ] }
+            values: images.map {
+                return [
+                    .string($0.reference.id.description),
+                    .string($0.reference.descriptor.repository),
+                    .string($0.reference.descriptor.tag ?? "<none>"),
+                    .date($0.createAt),
+                    .memorySize($0.size),
+                    .string($0.name ?? "<none>"),
+                ]
+            }
         )
         let config = TableRenderer.Config(format: parameters.format.rendererFormat())
         let text = rendered.render(content: content, config: config)

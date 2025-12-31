@@ -30,13 +30,6 @@ final class ImagesInteractor: AsyncInteractor {
     private let wallClock: WallClock
     private let console: Console
 
-    private let dateFormatter: RelativeDateTimeFormatter = {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
-
     init(
         imageCache: ImageCache,
         wallClock: WallClock,
@@ -51,7 +44,7 @@ final class ImagesInteractor: AsyncInteractor {
         let items = try imageCache.listImages()
         let images = items.sorted { $0.createAt > $1.createAt }
 
-        let rendered = TableRenderer()
+        let rendered = TableRenderer(wallClock: wallClock)
         let content = TableRenderer.Content(
             headers: [
                 "repository",
@@ -60,13 +53,15 @@ final class ImagesInteractor: AsyncInteractor {
                 "created",
                 "size",
             ],
-            values: images.map { [
-                $0.reference.descriptor.repository,
-                $0.reference.descriptor.tag ?? "<none>",
-                $0.reference.id.description,
-                dateFormatter.localizedString(for: $0.createAt, relativeTo: wallClock.now()),
-                $0.size.description,
-            ] }
+            values: images.map {
+                return [
+                    .string($0.reference.descriptor.repository),
+                    .string($0.reference.descriptor.tag ?? "<none>"),
+                    .string($0.reference.id.description),
+                    .date($0.createAt),
+                    .memorySize($0.size),
+                ]
+            }
         )
         let config = TableRenderer.Config(format: parameters.format.rendererFormat())
         let text = rendered.render(content: content, config: config)
