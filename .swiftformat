@@ -3,6 +3,7 @@
 --maxwidth 120
 --allman false
 --disable wrapMultilineStatementBraces
+--disable redundantPublic
 --funcattributes prev-line
 --typeattributes prev-line
 --varattributes prev-line
