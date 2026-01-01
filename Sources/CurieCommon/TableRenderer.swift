@@ -33,12 +33,66 @@ public final class TableRenderer {
 
     public struct Content {
         public var headers: [String]
-        public var rows: [[String]]
+        public var rows: [[Row]]
 
-        public init(headers: [String], values: [[String]]) {
+        public init(headers: [String], values: [[Row]]) {
             self.headers = headers
             rows = values
         }
+    }
+
+    public enum Row: Codable {
+        case string(String)
+        case memorySize(MemorySize)
+        case date(Date)
+
+        public func humanReadable(now: Date) -> String {
+            switch self {
+            case let .string(string):
+                string
+            case let .memorySize(memorySize):
+                "\(memorySize)"
+            case let .date(date):
+                Self.humanDateFormatter.localizedString(for: date, relativeTo: now)
+            }
+        }
+
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.singleValueContainer()
+            switch self {
+            case let .string(string):
+                try container.encode(string)
+            case let .memorySize(memorySize):
+                try container.encode(memorySize)
+            case let .date(date):
+                try container.encode(Self.jsonDateFormatter.string(from: date))
+            }
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            do {
+                guard let date = try Self.jsonDateFormatter.date(from: container.decode(String.self)) else {
+                    throw CoreError.generic("Cannot decode ISO8601 date")
+                }
+                self = .date(date)
+            } catch {
+                do {
+                    self = try .memorySize(container.decode(MemorySize.self))
+                } catch {
+                    self = try .string(container.decode(String.self))
+                }
+            }
+        }
+
+        private static let jsonDateFormatter = ISO8601DateFormatter()
+
+        private static let humanDateFormatter: RelativeDateTimeFormatter = {
+            let formatter = RelativeDateTimeFormatter()
+            formatter.unitsStyle = .full
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            return formatter
+        }()
     }
 
     private let jsonEncoder = {
@@ -47,7 +101,13 @@ public final class TableRenderer {
         return encoder
     }()
 
-    public init() {}
+    private let wallClock: WallClock
+
+    public init(
+        wallClock: WallClock
+    ) {
+        self.wallClock = wallClock
+    }
 
     public func render(content: Content, config: Config) -> String {
         switch config.format {
@@ -61,7 +121,7 @@ public final class TableRenderer {
     // MARK: - Private
 
     private func renderJson(content: Content, config _: Config) -> String {
-        let rawData = content.rows.reduce(into: [[String: String]]()) { acc, val in
+        let rawData = content.rows.reduce(into: [[String: Row]]()) { acc, val in
             let dictionary = Dictionary(val.enumerated().map { (
                 content.headers[$0].replacingOccurrences(of: " ", with: "_"),
                 $1
@@ -81,7 +141,7 @@ public final class TableRenderer {
         let headersWidths: [Int] = content.headers.map(\.count)
         let valuesWidths: [Int] = content.rows.reduce(into: content.headers.map { _ in 0 }) { result, row in
             for item in row.enumerated() {
-                result[item.offset] = max(result[item.offset], item.element.count)
+                result[item.offset] = max(result[item.offset], item.element.humanReadable(now: wallClock.now()).count)
             }
         }
         let widths: [Int] = (0 ..< max(headersWidths.count, valuesWidths.count)).map {
@@ -89,18 +149,20 @@ public final class TableRenderer {
         }
 
         var result = "\n"
-        result.append(renderTextRow(content.headers.map { $0.uppercased() }, widths: widths, config: config))
+        result.append(
+            renderTextRow(content.headers.map { Row.string($0.uppercased()) }, widths: widths, config: config)
+        )
         for row in content.rows {
             result.append(renderTextRow(row, widths: widths, config: config))
         }
         return result
     }
 
-    private func renderTextRow(_ columns: [String], widths: [Int], config: Config) -> String {
+    private func renderTextRow(_ columns: [Row], widths: [Int], config: Config) -> String {
         var result = ""
         for column in columns.enumerated() {
-            result.append(column.element)
-            result.append(space(widths[column.offset] - column.element.count))
+            result.append(column.element.humanReadable(now: wallClock.now()))
+            result.append(space(widths[column.offset] - column.element.humanReadable(now: wallClock.now()).count))
             if column.offset < widths.count - 1 {
                 result.append(space(config.columnPadding))
             }
