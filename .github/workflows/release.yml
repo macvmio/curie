@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEVELOPER_DIR: "/Applications/Xcode_16.2.app/Contents/Developer"
+  DEVELOPER_DIR: "/Applications/Xcode_26.1.app/Contents/Developer"
   MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # Limit GITHUB_TOKEN permissions to read-only for repo contents
@@ -14,7 +14,7 @@ permissions:
 jobs:
   release:
     name: Release
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
