@@ -24,10 +24,10 @@ final class Constants {
             debugVersionIdentifier(),
             gitHashVersionIdentifier(),
         ].compactMap { $0 }
-        return Version(0, 5, 0, buildMetadataIdentifiers: identifiers)
+        return Version(0, 6, 0, buildMetadataIdentifiers: identifiers)
     }()
 
-    private static let gitHash = "dbf0203"
+    private static let gitHash = "#GIT_SHORT_HASH#"
 
     // MARK: - Init
 
