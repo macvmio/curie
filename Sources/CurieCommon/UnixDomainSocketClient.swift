@@ -25,15 +25,13 @@ public final class UnixDomainSocketClient {
     ) throws -> Response {
         let clientFileDescriptor = socket(AF_UNIX, SOCK_STREAM, 0)
         guard clientFileDescriptor >= 0 else {
-            throw NSError(domain: "SocketError", code: 1)
+            throw CoreError.generic("Failed to create socket for path \(socketPath), error \(errno)")
         }
         defer {
             close(clientFileDescriptor)
         }
 
-        var addr = sockaddr_un()
-        addr.sun_family = sa_family_t(AF_UNIX)
-        strcpy(&addr.sun_path.0, socketPath)
+        let addr = try UnixDomainSocketUtil.createSockaddr(socketPath: socketPath)
 
         var bindAddr = addr
 
@@ -43,7 +41,7 @@ public final class UnixDomainSocketClient {
             }
         }
         guard connectResult == 0 else {
-            throw NSError(domain: "ConnectError", code: 2)
+            throw CoreError.generic("Failed to connect to \(socketPath), error \(errno)")
         }
 
         let reqData = try JSONEncoder().encode(request)
@@ -54,7 +52,7 @@ public final class UnixDomainSocketClient {
         var buffer = [UInt8](repeating: 0, count: 4096)
         let count = read(clientFileDescriptor, &buffer, buffer.count)
         guard count > 0 else {
-            throw NSError(domain: "ReadError", code: 3)
+            throw CoreError.generic("Failed to read from socket, error \(errno)")
         }
 
         let data = Data(buffer[0 ..< count])

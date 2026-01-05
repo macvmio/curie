@@ -25,21 +25,26 @@ public final class ServerListeningHandle {
     public let socketPath: String
     public let fileDescriptor: Int32
     public private(set) var isListening: Bool
+    private let lock = NSLock()
 
     public init(
         socketPath: String,
         fileDescriptor: Int32,
-        isListening: Bool
     ) {
         self.socketPath = socketPath
         self.fileDescriptor = fileDescriptor
-        self.isListening = isListening
+        isListening = true
     }
 
     public func close() {
-        isListening = false
-        Darwin.close(fileDescriptor)
-        Darwin.unlink(socketPath)
+        lock.withLock {
+            if !isListening {
+                return
+            }
+            isListening = false
+            Darwin.close(fileDescriptor)
+            Darwin.unlink(socketPath)
+        }
     }
 }
 
@@ -62,12 +67,10 @@ public final class UnixDomainSocketServer {
         let serverFileDescriptor = socket(AF_UNIX, SOCK_STREAM, 0)
 
         guard serverFileDescriptor >= 0 else {
-            throw NSError(domain: "SocketFileDescriptorError", code: 1)
+            throw CoreError.generic("Failed to create socket at \(socketPath) with error num \(errno)")
         }
 
-        var addr = sockaddr_un()
-        addr.sun_family = sa_family_t(AF_UNIX)
-        strcpy(&addr.sun_path.0, socketPath)
+        let addr = try UnixDomainSocketUtil.createSockaddr(socketPath: socketPath)
 
         var bindAddr = addr
         let bindResult = withUnsafePointer(to: &bindAddr) {
@@ -76,15 +79,17 @@ public final class UnixDomainSocketServer {
             }
         }
         guard bindResult == 0 else {
-            throw NSError(domain: "SocketBindError", code: 2)
+            throw CoreError.generic("Failed to bind socket at \(socketPath) with error num \(errno)")
         }
 
-        listen(serverFileDescriptor, 10)
+        let backlog: Int32 = 10
+        if listen(serverFileDescriptor, backlog) != 0 {
+            throw CoreError.generic("Failed to listen to socket at \(socketPath) with error num \(errno)")
+        }
 
         let listeningHandle = ServerListeningHandle(
             socketPath: socketPath,
-            fileDescriptor: serverFileDescriptor,
-            isListening: true
+            fileDescriptor: serverFileDescriptor
         )
 
         connectionQueue.async { [weak self] in

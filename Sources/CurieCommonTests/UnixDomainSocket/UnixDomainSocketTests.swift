@@ -60,7 +60,7 @@ final class UnixDomainSocketTests: XCTestCase {
             clientMessage: "from client",
             expectedServerMessage: "from server"
         )
-        wait(for: [serverHandlerCalled])
+        wait(for: [serverHandlerCalled], timeout: 10)
     }
 
     func testSocketPathIsDeletedAfterDestroyingSocket() throws {
@@ -88,7 +88,7 @@ final class UnixDomainSocketTests: XCTestCase {
                 clientMessage: "from client",
                 expectedServerMessage: "from server"
             )
-            wait(for: [serverHandlerCalled])
+            wait(for: [serverHandlerCalled], timeout: 10)
 
             XCTAssertTrue(
                 FileManager().fileExists(atPath: socketPath),
