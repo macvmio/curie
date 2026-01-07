@@ -117,7 +117,7 @@ final class UnixDomainSocketTests: XCTestCase {
             try sendMessageAndReceiveResponse(
                 socketPath: socketPath,
                 clientMessage: "from client #\(idx)",
-                expectedServerMessage: "from server in response to: from client #\(idx)",
+                expectedServerMessage: "from server in response to: from client #\(idx)"
             )
         }
     }

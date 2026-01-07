@@ -29,7 +29,7 @@ public final class ServerListeningHandle {
 
     public init(
         socketPath: String,
-        fileDescriptor: Int32,
+        fileDescriptor: Int32
     ) {
         self.socketPath = socketPath
         self.fileDescriptor = fileDescriptor
