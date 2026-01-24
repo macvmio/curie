@@ -32,6 +32,7 @@ public struct VMPartialConfig: Equatable, Codable {
     var network: VMConfig.NetworkConfig?
     var sharedDirectory: VMConfig.SharedDirectoryConfig?
     var shutdown: VMConfig.ShutdownConfig?
+    var clipboard: VMConfig.ClipboardConfig?
 
     func merge(config: VMPartialConfig) -> VMPartialConfig {
         let network = VMConfig.NetworkConfig(devices: (config.network?.devices ?? []) + (network?.devices ?? []))
@@ -46,7 +47,8 @@ public struct VMPartialConfig: Equatable, Codable {
             display: config.display ?? display,
             network: network,
             sharedDirectory: sharedDirectory,
-            shutdown: config.shutdown ?? shutdown
+            shutdown: config.shutdown ?? shutdown,
+            clipboard: config.clipboard ?? clipboard
         )
     }
 }
@@ -196,12 +198,17 @@ public struct VMConfig: Equatable, Codable {
         var behaviour: ShutdownBehaviour
     }
 
+    struct ClipboardConfig: Equatable, Codable {
+        var enabled: Bool
+    }
+
     var cpuCount: Int
     var memorySize: MemorySize
     var display: DisplayConfig
     var network: NetworkConfig
     var sharedDirectory: SharedDirectoryConfig
     var shutdown: ShutdownConfig
+    var clipboard: ClipboardConfig
 }
 
 extension VMConfig: CustomStringConvertible {
@@ -223,6 +230,8 @@ extension VMConfig: CustomStringConvertible {
         \(sharedDirectory.directories.description)
           shutdown:
             behaviour: \(shutdown.behaviour.description)
+          clipboard:
+            enabled: \(clipboard.enabled)
         """
     }
 }

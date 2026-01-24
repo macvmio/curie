@@ -21,6 +21,11 @@ let package = Package(
             ],
             path: "Sources/Curie"
         ),
+        .executableTarget(
+            name: "curie-agent",
+            dependencies: [],
+            path: "Sources/CurieAgent"
+        ),
         .target(
             name: "CurieCommand",
             dependencies: [

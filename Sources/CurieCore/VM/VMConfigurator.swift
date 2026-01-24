@@ -100,6 +100,7 @@ final class DefaultVMConfigurator: VMConfigurator {
         configuration.networkDevices = try prepareNetworkDeviceConfigurations(with: bundle, config: config)
         configuration.pointingDevices = preparePointingDeviceConfigurations()
         configuration.keyboards = prepareKeyboardConfigurations()
+        configuration.socketDevices = prepareSocketDeviceConfigurations(config: config)
         try configuration.validate()
         if #available(macOS 14.0, *) {
             try configuration.validateSaveRestoreSupport()
@@ -210,6 +211,13 @@ final class DefaultVMConfigurator: VMConfigurator {
         } else {
             [VZUSBKeyboardConfiguration()]
         }
+    }
+
+    private func prepareSocketDeviceConfigurations(config: VMConfig) -> [VZSocketDeviceConfiguration] {
+        guard config.clipboard.enabled else {
+            return []
+        }
+        return [VZVirtioSocketDeviceConfiguration()]
     }
 
     private func createDiskImage(atPath path: AbsolutePath, size: MemorySize) throws {

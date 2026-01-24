@@ -177,7 +177,8 @@ final class DefaultVMBundleParser: VMBundleParser {
             display: prepareDisplay(config: partialConfig),
             network: prepareNetwork(config: partialConfig),
             sharedDirectory: prepareSharedDirectory(config: partialConfig),
-            shutdown: prepareShutdown(config: partialConfig)
+            shutdown: prepareShutdown(config: partialConfig),
+            clipboard: prepareClipboard(config: partialConfig)
         )
     }
 
@@ -253,5 +254,9 @@ final class DefaultVMBundleParser: VMBundleParser {
 
     private func prepareShutdown(config: VMPartialConfig) -> VMConfig.ShutdownConfig {
         config.shutdown ?? defaultConfig.shutdown
+    }
+
+    private func prepareClipboard(config: VMPartialConfig) -> VMConfig.ClipboardConfig {
+        config.clipboard ?? defaultConfig.clipboard
     }
 }
