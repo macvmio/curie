@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+import CurieCommon
 import Darwin
 import Foundation
 
@@ -39,12 +40,17 @@ protocol HostConnectionDelegate: AnyObject {
 final class HostConnection {
     weak var delegate: HostConnectionDelegate?
 
+    private let console: Console
     private var socketFd: Int32 = -1
     private var isConnected = false
     private var receiveBuffer = Data()
     private var readSource: DispatchSourceRead?
 
     private let connectionQueue = DispatchQueue(label: "com.curie.agent.connection")
+
+    init(console: Console) {
+        self.console = console
+    }
 
     func connect() {
         connectionQueue.async { [weak self] in
@@ -72,7 +78,7 @@ final class HostConnection {
         // Create vsock socket
         socketFd = socket(afVsock, SOCK_STREAM, 0)
         guard socketFd >= 0 else {
-            print("curie-agent: Failed to create vsock socket: \(errno)")
+            console.error("Failed to create vsock socket: \(errno)")
             scheduleReconnect()
             return
         }
@@ -94,7 +100,7 @@ final class HostConnection {
         }
 
         if result < 0 {
-            print("curie-agent: Failed to connect to host: \(errno)")
+            console.error("Failed to connect to host: \(errno)")
             close(socketFd)
             socketFd = -1
             scheduleReconnect()
@@ -102,7 +108,6 @@ final class HostConnection {
         }
 
         isConnected = true
-        print("curie-agent: Connected to host on port \(ClipboardConstants.port)")
 
         startReading()
 
@@ -141,7 +146,7 @@ final class HostConnection {
             guard let baseAddress = buffer.baseAddress else { return }
             let bytesWritten = write(socketFd, baseAddress, buffer.count)
             if bytesWritten < 0 {
-                print("curie-agent: Failed to write to socket: \(errno)")
+                console.error("Failed to write to socket: \(errno)")
                 performDisconnect()
                 scheduleReconnect()
             }
@@ -165,7 +170,6 @@ final class HostConnection {
         let bytesRead = read(socketFd, &buffer, buffer.count)
 
         if bytesRead <= 0 {
-            print("curie-agent: Connection closed by host")
             performDisconnect()
             scheduleReconnect()
             return

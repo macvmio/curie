@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+import CurieCommon
 import Foundation
 
 func printUsage() {
@@ -51,6 +52,7 @@ for arg in args {
     }
 }
 
-// Run the agent
-let agent = AgentRunner()
+// Create console and run the agent
+let console = DefaultConsole(output: StandardOutput.shared)
+let agent = AgentRunner(console: console)
 agent.run()

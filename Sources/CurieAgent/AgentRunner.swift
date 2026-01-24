@@ -14,17 +14,24 @@
 // limitations under the License.
 //
 
+import CurieCommon
 import Foundation
 
 final class AgentRunner {
-    private let connection = HostConnection()
+    private let console: Console
+    private let connection: HostConnection
     private let clipboardMonitor = ClipboardMonitor()
     private var sequenceNumber: UInt32 = 0
     private var isConnected = false
 
+    init(console: Console) {
+        self.console = console
+        connection = HostConnection(console: console)
+    }
+
     func run() {
-        print("curie-agent: Starting clipboard sync agent")
-        print("curie-agent: Connecting to host on port \(ClipboardConstants.port)...")
+        console.text("Starting clipboard sync agent")
+        console.text("Connecting to host on port \(ClipboardConstants.port)...")
 
         connection.delegate = self
         clipboardMonitor.delegate = self
@@ -45,7 +52,7 @@ final class AgentRunner {
 
         sequenceNumber += 1
         guard let message = ClipboardMessage.clipboardData(sequenceNumber: sequenceNumber, content: content) else {
-            print("curie-agent: Failed to encode clipboard data")
+            console.error("Failed to encode clipboard data")
             return
         }
 
@@ -55,7 +62,7 @@ final class AgentRunner {
 
 extension AgentRunner: HostConnectionDelegate {
     func connectionDidConnect(_: HostConnection) {
-        print("curie-agent: Connected to host")
+        console.text("Connected to host")
         isConnected = true
 
         // Send current clipboard state to host
@@ -63,7 +70,7 @@ extension AgentRunner: HostConnectionDelegate {
     }
 
     func connectionDidDisconnect(_: HostConnection) {
-        print("curie-agent: Disconnected from host, will retry...")
+        console.text("Disconnected from host, will retry...")
         isConnected = false
     }
 
@@ -103,7 +110,7 @@ extension AgentRunner: ClipboardMonitorDelegate {
 
         sequenceNumber += 1
         guard let message = ClipboardMessage.clipboardData(sequenceNumber: sequenceNumber, content: content) else {
-            print("curie-agent: Failed to encode clipboard data")
+            console.error("Failed to encode clipboard data")
             return
         }
 
