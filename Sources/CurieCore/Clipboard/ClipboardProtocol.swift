@@ -153,41 +153,41 @@ public struct ClipboardMessage {
     }
 }
 
-extension ClipboardMessage {
-    public static func clipboardChanged(sequenceNumber: UInt32, changeCount: Int) -> ClipboardMessage {
+public extension ClipboardMessage {
+    static func clipboardChanged(sequenceNumber: UInt32, changeCount: Int) -> ClipboardMessage {
         var payload = Data()
         var count = UInt32(changeCount).bigEndian
         payload.append(contentsOf: withUnsafeBytes(of: &count) { Array($0) })
         return ClipboardMessage(type: .clipboardChanged, sequenceNumber: sequenceNumber, payload: payload)
     }
 
-    public static func clipboardData(sequenceNumber: UInt32, content: ClipboardContent) -> ClipboardMessage? {
+    static func clipboardData(sequenceNumber: UInt32, content: ClipboardContent) -> ClipboardMessage? {
         guard let payload = try? JSONEncoder().encode(content) else {
             return nil
         }
         return ClipboardMessage(type: .clipboardData, sequenceNumber: sequenceNumber, payload: payload)
     }
 
-    public static func clipboardRequest(sequenceNumber: UInt32) -> ClipboardMessage {
+    static func clipboardRequest(sequenceNumber: UInt32) -> ClipboardMessage {
         ClipboardMessage(type: .clipboardRequest, sequenceNumber: sequenceNumber)
     }
 
-    public static func ping(sequenceNumber: UInt32) -> ClipboardMessage {
+    static func ping(sequenceNumber: UInt32) -> ClipboardMessage {
         ClipboardMessage(type: .ping, sequenceNumber: sequenceNumber)
     }
 
-    public static func pong(sequenceNumber: UInt32) -> ClipboardMessage {
+    static func pong(sequenceNumber: UInt32) -> ClipboardMessage {
         ClipboardMessage(type: .pong, sequenceNumber: sequenceNumber)
     }
 
-    public func parseClipboardContent() -> ClipboardContent? {
+    func parseClipboardContent() -> ClipboardContent? {
         guard type == .clipboardData else {
             return nil
         }
         return try? JSONDecoder().decode(ClipboardContent.self, from: payload)
     }
 
-    public func parseChangeCount() -> Int? {
+    func parseChangeCount() -> Int? {
         guard type == .clipboardChanged, payload.count >= 4 else {
             return nil
         }

@@ -223,7 +223,7 @@ public final class DefaultClipboardSyncService: NSObject, ClipboardSyncService {
         readSource?.setEventHandler { [weak self] in
             guard let self else { return }
             // Check if already cleaning up
-            guard self.readSource != nil else { return }
+            guard readSource != nil else { return }
 
             var buffer = [UInt8](repeating: 0, count: 4096)
             let bytesRead = read(fileDescriptor, &buffer, buffer.count)
@@ -231,8 +231,8 @@ public final class DefaultClipboardSyncService: NSObject, ClipboardSyncService {
             if bytesRead < 0 {
                 let errorCode = errno
                 // Clear readSource to prevent more event handling
-                let source = self.readSource
-                self.readSource = nil
+                let source = readSource
+                readSource = nil
                 source?.cancel()
                 DispatchQueue.main.async {
                     self.console.text("Agent read error \(errorCode)")
@@ -243,8 +243,8 @@ public final class DefaultClipboardSyncService: NSObject, ClipboardSyncService {
 
             if bytesRead == 0 {
                 // Clear readSource to prevent more event handling
-                let source = self.readSource
-                self.readSource = nil
+                let source = readSource
+                readSource = nil
                 source?.cancel()
                 DispatchQueue.main.async {
                     self.console.text("Agent disconnected")
@@ -254,7 +254,7 @@ public final class DefaultClipboardSyncService: NSObject, ClipboardSyncService {
             }
 
             let data = Data(buffer[0 ..< bytesRead])
-            self.handleReceivedData(data)
+            handleReceivedData(data)
         }
 
         readSource?.resume()
