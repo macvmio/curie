@@ -1,6 +1,11 @@
 ![Curie](Resources/curie-logo.png)
 
 [![Build Status](https://github.com/macvmio/curie/actions/workflows/main.yml/badge.svg)](https://github.com/macvmio/curie/actions/workflows/main.yml)
+[![Swift](https://img.shields.io/badge/Swift-5.8+-orange.svg)](https://swift.org)
+[![Platform](https://img.shields.io/badge/platform-macOS%2013+-blue.svg)](https://developer.apple.com/macos/)
+[![CLI](https://img.shields.io/badge/interface-CLI-green.svg)](#usage)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/macvmio/curie)](https://github.com/macvmio/curie/releases/latest)
 
 ## Overview
 
