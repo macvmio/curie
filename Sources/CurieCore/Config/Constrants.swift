@@ -31,7 +31,7 @@ public enum Constants {
         ]),
         sharedDirectory: .init(directories: []),
         shutdown: .init(behaviour: .stop),
-        clipboard: .init(enabled: true)
+        clipboard: .init(enabled: false)
     )
 
     static let dataRootEnvironmentVariable = "CURIE_DATA_ROOT"

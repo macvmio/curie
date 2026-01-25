@@ -71,7 +71,7 @@ final class DefaultVMBundleParserTests: XCTestCase {
             network: .init(devices: [.init(macAddress: .automatic, mode: .NAT)]),
             sharedDirectory: .init(directories: []),
             shutdown: .init(behaviour: .stop),
-            clipboard: .init(enabled: true)
+            clipboard: .init(enabled: false)
         ))
     }
 
