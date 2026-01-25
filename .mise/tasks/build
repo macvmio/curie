@@ -5,3 +5,6 @@ set -euo pipefail
 source "$MISE_PROJECT_ROOT/.mise/helpers/common"
 
 xcrun swift build
+
+# Build agent DMG
+"$MISE_PROJECT_ROOT/.mise/tasks/build-agent-dmg"

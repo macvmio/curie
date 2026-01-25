@@ -14,45 +14,66 @@
 // limitations under the License.
 //
 
+import AppKit
 import CurieCommon
 import Foundation
+import SwiftUI
 
-func printUsage() {
+// MARK: - Entry Point
+
+let isServiceMode = CommandLine.arguments.contains("--service")
+let isHelpMode = CommandLine.arguments.contains("--help") || CommandLine.arguments.contains("-h")
+
+if isHelpMode {
     print("""
-    curie-agent - Clipboard sync agent for macOS VMs
+    CurieAgent - Clipboard sync agent for macOS VMs
 
     Usage:
-        curie-agent [--help]
+        CurieAgent              Launch installer UI
+        CurieAgent --service    Run as clipboard sync daemon
+        CurieAgent --help       Show this help message
 
     Description:
         This agent runs inside a macOS VM and synchronizes the clipboard
         with the host machine running curie.
 
-    Requirements:
-        - Must be run inside a macOS VM created by curie
-        - The VM must have clipboard sharing enabled (default)
-        - The agent connects to the host via Virtio socket on port 52525
-
-    Setup:
-        1. Copy curie-agent binary into the VM (via shared folder)
-        2. Run curie-agent manually or set up as a login item
-
-    Options:
-        --help    Show this help message
-
     """)
+} else if isServiceMode {
+    // Run as daemon
+    let console = DefaultConsole(output: StandardOutput.shared)
+    let agent = AgentRunner(console: console)
+    agent.run()
+} else {
+    // Launch installer UI
+    let app = NSApplication.shared
+    let delegate = AppDelegate()
+    app.delegate = delegate
+    app.run()
 }
 
-// Parse arguments
-let args = CommandLine.arguments.dropFirst()
-for arg in args {
-    if arg == "--help" || arg == "-h" {
-        printUsage()
-        exit(0)
+// MARK: - App Delegate
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    var window: NSWindow?
+
+    func applicationDidFinishLaunching(_: Notification) {
+        let contentView = InstallerView()
+
+        window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
+            styleMask: [.titled, .closable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        window?.title = "Curie Agent"
+        window?.center()
+        window?.contentView = NSHostingView(rootView: contentView)
+        window?.makeKeyAndOrderFront(nil)
+
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool {
+        true
     }
 }
-
-// Create console and run the agent
-let console = DefaultConsole(output: StandardOutput.shared)
-let agent = AgentRunner(console: console)
-agent.run()

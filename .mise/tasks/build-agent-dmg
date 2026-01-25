@@ -1,0 +1,83 @@
+#!/bin/bash
+#MISE description="Build CurieAgent.app and create DMG"
+set -euo pipefail
+source "$MISE_PROJECT_ROOT/.mise/helpers/common"
+
+# Variables
+CONFIG="${1:-debug}"
+AGENT_APP_NAME="CurieAgent.app"
+AGENT_DMG_NAME="CurieAgent.dmg"
+AGENT_VOLUME_NAME="Curie Agent"
+BUILD_DIR="$MISE_PROJECT_ROOT/.build/$CONFIG"
+AGENT_APP_PATH="$BUILD_DIR/$AGENT_APP_NAME"
+AGENT_DMG_PATH="$BUILD_DIR/$AGENT_DMG_NAME"
+RESOURCES_DIR="$MISE_PROJECT_ROOT/Resources/CurieAgent"
+
+function build_agent() {
+    log "Building curie-agent ($CONFIG)..."
+    xcrun swift build -c "$CONFIG" --product curie-agent
+}
+
+function create_app_bundle() {
+    log "Creating $AGENT_APP_NAME bundle..."
+
+    # Remove old bundle if exists
+    rm -rf "$AGENT_APP_PATH"
+
+    # Create bundle structure
+    mkdir -p "$AGENT_APP_PATH/Contents/MacOS"
+    mkdir -p "$AGENT_APP_PATH/Contents/Resources"
+
+    # Copy executable
+    cp "$BUILD_DIR/curie-agent" "$AGENT_APP_PATH/Contents/MacOS/CurieAgent"
+
+    # Copy Info.plist
+    cp "$RESOURCES_DIR/Info.plist" "$AGENT_APP_PATH/Contents/"
+
+    # Copy icon if exists
+    if [ -f "$RESOURCES_DIR/AppIcon.icns" ]; then
+        cp "$RESOURCES_DIR/AppIcon.icns" "$AGENT_APP_PATH/Contents/Resources/"
+    fi
+
+    # Make executable
+    chmod +x "$AGENT_APP_PATH/Contents/MacOS/CurieAgent"
+
+    log "Created $AGENT_APP_PATH"
+}
+
+function create_dmg() {
+    log "Creating $AGENT_DMG_NAME..."
+
+    # Remove old DMG if exists
+    rm -f "$AGENT_DMG_PATH"
+
+    # Create temporary directory for DMG contents
+    DMG_TEMP_DIR=$(mktemp -d)
+    trap "rm -rf $DMG_TEMP_DIR" EXIT
+
+    # Copy app to temp directory
+    cp -R "$AGENT_APP_PATH" "$DMG_TEMP_DIR/"
+
+    # Create DMG (UDRW format for Virtualization framework compatibility)
+    hdiutil create \
+        -volname "$AGENT_VOLUME_NAME" \
+        -srcfolder "$DMG_TEMP_DIR" \
+        -ov \
+        -format UDRW \
+        "$AGENT_DMG_PATH"
+
+    log "Created $AGENT_DMG_PATH"
+}
+
+function main() {
+    build_agent
+    create_app_bundle
+    create_dmg
+
+    log ""
+    log "Build complete!"
+    log "  App: $AGENT_APP_PATH"
+    log "  DMG: $AGENT_DMG_PATH"
+}
+
+main "$@"

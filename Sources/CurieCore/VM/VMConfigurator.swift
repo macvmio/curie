@@ -95,7 +95,7 @@ final class DefaultVMConfigurator: VMConfigurator {
         configuration.cpuCount = config.cpuCount
         configuration.memorySize = config.memorySize.bytes
         configuration.graphicsDevices = prepareGraphicsDeviceConfigurations(config: config)
-        configuration.storageDevices = try prepareStorageDeviceConfigurations(with: bundle)
+        configuration.storageDevices = try prepareStorageDeviceConfigurations(with: bundle, config: config)
         configuration.directorySharingDevices = try prepareDirectorySharingDevices(config: config)
         configuration.networkDevices = try prepareNetworkDeviceConfigurations(with: bundle, config: config)
         configuration.pointingDevices = preparePointingDeviceConfigurations()
@@ -126,10 +126,56 @@ final class DefaultVMConfigurator: VMConfigurator {
         return [graphicsConfiguration]
     }
 
-    private func prepareStorageDeviceConfigurations(with bundle: VMBundle) throws
+    private func prepareStorageDeviceConfigurations(with bundle: VMBundle, config: VMConfig) throws
         -> [VZStorageDeviceConfiguration] {
+        var devices: [VZStorageDeviceConfiguration] = []
+
+        // Main disk image
         let diskImageAttachment = try VZDiskImageStorageDeviceAttachment(url: bundle.diskImage.asURL, readOnly: false)
-        return [VZVirtioBlockDeviceConfiguration(attachment: diskImageAttachment)]
+        devices.append(VZVirtioBlockDeviceConfiguration(attachment: diskImageAttachment))
+
+        // Agent DMG for clipboard support
+        if config.clipboard.enabled {
+            if let agentDMGPath = findAgentDMG() {
+                console.text("Attaching agent DMG to VM")
+                let dmgAttachment = try VZDiskImageStorageDeviceAttachment(url: agentDMGPath, readOnly: true)
+                devices.append(VZVirtioBlockDeviceConfiguration(attachment: dmgAttachment))
+            }
+        }
+
+        return devices
+    }
+
+    private func findAgentDMG() -> URL? {
+        // Get the real executable path using _NSGetExecutablePath
+        var buffer = [CChar](repeating: 0, count: Int(MAXPATHLEN))
+        var bufferSize = UInt32(buffer.count)
+
+        guard _NSGetExecutablePath(&buffer, &bufferSize) == 0 else {
+            console.text("Failed to get executable path")
+            return nil
+        }
+
+        // Resolve symlinks using realpath
+        guard let realPath = realpath(buffer, nil) else {
+            console.text("Failed to resolve executable path")
+            return nil
+        }
+        let executablePath = String(cString: realPath)
+        free(realPath)
+
+        let executableDir = (executablePath as NSString).deletingLastPathComponent
+        let dmgPath = executableDir + "/CurieAgent.dmg"
+
+        console.text("Looking for agent DMG at: \(dmgPath)")
+
+        if FileManager.default.fileExists(atPath: dmgPath) {
+            console.text("Found agent DMG")
+            return URL(fileURLWithPath: dmgPath)
+        }
+
+        console.text("Agent DMG not found")
+        return nil
     }
 
     private func prepareDirectorySharingDevices(config: VMConfig) throws -> [VZDirectorySharingDeviceConfiguration] {
