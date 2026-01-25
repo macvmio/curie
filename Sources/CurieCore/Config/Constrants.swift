@@ -30,7 +30,8 @@ public enum Constants {
             .init(macAddress: .synthesized, mode: .NAT),
         ]),
         sharedDirectory: .init(directories: []),
-        shutdown: .init(behaviour: .stop)
+        shutdown: .init(behaviour: .stop),
+        clipboard: .init(enabled: true)
     )
 
     static let dataRootEnvironmentVariable = "CURIE_DATA_ROOT"

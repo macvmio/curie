@@ -46,7 +46,6 @@ private struct MacOSWindowApp: App {
         }.commands {
             CommandGroup(replacing: .help, addition: {})
             CommandGroup(replacing: .newItem, addition: {})
-            CommandGroup(replacing: .pasteboard, addition: {})
             CommandGroup(replacing: .textEditing, addition: {})
             CommandGroup(replacing: .undoRedo, addition: {})
             CommandGroup(replacing: .windowSize, addition: {})
@@ -60,9 +59,6 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
     func applicationDidFinishLaunching(_: Notification) {
         NSApplication.shared.setActivationPolicy(.regular)
         NSWindow.allowsAutomaticWindowTabbing = false
-
-        let indexOfEditMenu = 2
-        NSApplication.shared.mainMenu?.removeItem(at: indexOfEditMenu)
 
         let idealWidth = CGFloat(MacOSWindowApp.vm.config.display.width)
         let idealHeight = CGFloat(MacOSWindowApp.vm.config.display.height)

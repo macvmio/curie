@@ -42,6 +42,7 @@ final class VM: NSObject {
     private let _events = PassthroughSubject<Event, Never>()
 
     private var sourceSignals: [DispatchSourceSignal] = []
+    private var clipboardSyncService: ClipboardSyncService?
 
     init(
         vm: VZVirtualMachine,
@@ -57,6 +58,23 @@ final class VM: NSObject {
         super.init()
 
         vm.delegate = self
+    }
+
+    public func startClipboardSync(service: ClipboardSyncService) {
+        guard config.clipboard.enabled else {
+            return
+        }
+        guard let socketDevice = vm.socketDevices.first as? VZVirtioSocketDevice else {
+            console.text("No socket device available for clipboard sync")
+            return
+        }
+        clipboardSyncService = service
+        service.start(socketDevice: socketDevice)
+    }
+
+    public func stopClipboardSync() {
+        clipboardSyncService?.stop()
+        clipboardSyncService = nil
     }
 
     public func start(options: VMStartOptions, completionHandler: @escaping (Result<Void, Error>) -> Void) {

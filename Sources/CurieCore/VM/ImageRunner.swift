@@ -25,6 +25,7 @@ final class DefaultImageRunner: ImageRunner {
     private let windowAppLauncher: MacOSWindowAppLauncher
     private let imageCache: ImageCache
     private let bundleParser: VMBundleParser
+    private let clipboardSyncService: ClipboardSyncService
     private let system: System
     private let fileSystem: FileSystem
     private let console: Console
@@ -33,6 +34,7 @@ final class DefaultImageRunner: ImageRunner {
         windowAppLauncher: MacOSWindowAppLauncher,
         imageCache: ImageCache,
         bundleParser: VMBundleParser,
+        clipboardSyncService: ClipboardSyncService,
         system: System,
         fileSystem: FileSystem,
         console: Console
@@ -40,6 +42,7 @@ final class DefaultImageRunner: ImageRunner {
         self.windowAppLauncher = windowAppLauncher
         self.imageCache = imageCache
         self.bundleParser = bundleParser
+        self.clipboardSyncService = clipboardSyncService
         self.system = system
         self.fileSystem = fileSystem
         self.console = console
@@ -61,11 +64,12 @@ final class DefaultImageRunner: ImageRunner {
                     exit(1)
                 }
             }
-            vm.resume(machineStateURL: bundle.machineState.asURL) { [console] result in
+            vm.resume(machineStateURL: bundle.machineState.asURL) { [console, clipboardSyncService] result in
                 switch result {
                 case .success:
                     console.text("Container \(info.metadata.id.description) started")
                     deleteMachineStateFile()
+                    vm.startClipboardSync(service: clipboardSyncService)
                 case let .failure(error):
                     console.error("Failed to start container. \(error)")
                     deleteMachineStateFile()
@@ -73,7 +77,7 @@ final class DefaultImageRunner: ImageRunner {
                 }
             }
         } else {
-            vm.start(options: options) { [console] result in
+            vm.start(options: options) { [console, clipboardSyncService] result in
                 switch result {
                 case .success:
                     if console.quiet {
@@ -81,6 +85,7 @@ final class DefaultImageRunner: ImageRunner {
                     } else {
                         console.text("Container \(info.metadata.id.description) started")
                     }
+                    vm.startClipboardSync(service: clipboardSyncService)
                 case let .failure(error):
                     console.error("Failed to start container. \(error)")
                 }
