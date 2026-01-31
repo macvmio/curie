@@ -119,7 +119,8 @@ final class DefaultImageRunner: ImageRunner {
             try vmSocketServer.startServer(
                 socketPath: socketPath,
                 vm: vm,
-                vmBundle: bundle
+                vmBundle: bundle,
+                windowAppLauncher: windowAppLauncher
             )
             console.text("Started socket server at \(socketPath)")
             scheduleSocketServerStop(vm: vm, options: options)

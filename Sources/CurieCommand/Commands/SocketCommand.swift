@@ -78,6 +78,7 @@ extension CurieSocketRequest: @retroactive ExpressibleByArgument {
         let examples: [CurieSocketRequest] = [
             .ping(PingPayload()),
             .terminateVm(TerminateVmPayload(waitToComplete: true, timeout: 10)),
+            .makeScreenshot(MakeScreenshotPayload(savePngImageAtPath: "/path/to/output.png")),
         ]
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]

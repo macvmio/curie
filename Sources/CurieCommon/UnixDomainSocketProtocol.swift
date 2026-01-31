@@ -21,6 +21,7 @@ import Foundation
 public enum CurieSocketRequest {
     case ping(PingPayload)
     case terminateVm(TerminateVmPayload)
+    case makeScreenshot(MakeScreenshotPayload)
 }
 
 // MARK: Request Payloads
@@ -45,6 +46,14 @@ public struct TerminateVmPayload {
     ) {
         self.waitToComplete = waitToComplete
         self.timeout = timeout
+    }
+}
+
+public struct MakeScreenshotPayload {
+    public var savePngImageAtPath: String
+
+    public init(savePngImageAtPath: String) {
+        self.savePngImageAtPath = savePngImageAtPath
     }
 }
 
@@ -73,6 +82,8 @@ public extension CurieSocketRequest {
             "Ping the server"
         case .terminateVm:
             "Terminate the VM"
+        case .makeScreenshot:
+            "Make screenshot"
         }
     }
 }
@@ -81,6 +92,7 @@ extension CurieSocketRequest: Codable {
     private enum RequestKey: String, CodingKey, CaseIterable {
         case ping
         case terminateVm
+        case makeScreenshot
     }
 
     public init(from decoder: Decoder) throws {
@@ -103,6 +115,9 @@ extension CurieSocketRequest: Codable {
         case .terminateVm:
             let payload = try container.decode(TerminateVmPayload.self, forKey: .terminateVm)
             self = .terminateVm(payload)
+        case .makeScreenshot:
+            let payload = try container.decode(MakeScreenshotPayload.self, forKey: .makeScreenshot)
+            self = .makeScreenshot(payload)
         }
     }
 
@@ -113,6 +128,8 @@ extension CurieSocketRequest: Codable {
             try container.encode(payload, forKey: .ping)
         case let .terminateVm(payload):
             try container.encode(payload, forKey: .terminateVm)
+        case let .makeScreenshot(payload):
+            try container.encode(payload, forKey: .makeScreenshot)
         }
     }
 }
@@ -217,4 +234,8 @@ extension TerminateVmPayload: Codable {
             try container.encode(timeout, forKey: .timeout)
         }
     }
+}
+
+extension MakeScreenshotPayload: Codable {
+
 }

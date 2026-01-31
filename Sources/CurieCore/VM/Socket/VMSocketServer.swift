@@ -23,7 +23,8 @@ protocol VMSocketServer {
     func startServer(
         socketPath: String,
         vm: VM,
-        vmBundle: VMBundle
+        vmBundle: VMBundle,
+        windowAppLauncher: MacOSWindowAppLauncher
     ) throws
 
     func stop() throws
@@ -43,7 +44,8 @@ final class VMSocketServerImpl: VMSocketServer {
     func startServer(
         socketPath: String,
         vm: VM,
-        vmBundle: VMBundle
+        vmBundle: VMBundle,
+        windowAppLauncher: MacOSWindowAppLauncher
     ) throws {
         try lock.withLock {
             _ = try unixSocketServer.start(
@@ -55,7 +57,7 @@ final class VMSocketServerImpl: VMSocketServer {
                             closeSocketAfterDeliveringResponse: true
                         )
                     }
-                    return createResponse(request: request, vm: vm, vmBundle: vmBundle)
+                    return createResponse(request: request, vm: vm, vmBundle: vmBundle, windowAppLauncher: windowAppLauncher)
                 },
                 connectionQueue: socketQueue
             )
@@ -71,7 +73,8 @@ final class VMSocketServerImpl: VMSocketServer {
     private func createResponse(
         request: CurieSocketRequest,
         vm: VM,
-        vmBundle: VMBundle
+        vmBundle: VMBundle,
+        windowAppLauncher: MacOSWindowAppLauncher
     ) -> Response<CurieSocketResponse> {
         let promisedResponse: PromisedSocketResponse
 
@@ -88,6 +91,11 @@ final class VMSocketServerImpl: VMSocketServer {
                 vmBundle: vmBundle,
                 socketQueue: socketQueue
             )
+        case let .makeScreenshot(makeScreenshotPayload):
+            let processor = MakeScreenshotRequestProcessor(
+                vmScreenshotter: VMScreenshotterImpl()
+            )
+            promisedResponse = processor.process(request: makeScreenshotPayload)
         }
 
         let socketResponse: CurieSocketResponse = promisedResponse.getSocketResponse()
