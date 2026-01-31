@@ -19,7 +19,7 @@ import CurieCommon
 import Dispatch
 import Foundation
 
-protocol VMSocketServer {
+protocol SocketServer {
     func startServer(
         socketPath: String,
         vm: VM,
@@ -29,15 +29,18 @@ protocol VMSocketServer {
     func stop() throws
 }
 
-final class VMSocketServerImpl: VMSocketServer {
+final class DefaultSocketServer: SocketServer {
     private let lock = NSLock()
     private let socketQueue: DispatchQueue
     private let unixSocketServer = UnixDomainSocketServer()
+    private let screenshotter: Screenshotter
 
     init(
-        socketQueue: DispatchQueue
+        socketQueue: DispatchQueue,
+        screenshotter: Screenshotter
     ) {
         self.socketQueue = socketQueue
+        self.screenshotter = screenshotter
     }
 
     func startServer(
@@ -95,7 +98,7 @@ final class VMSocketServerImpl: VMSocketServer {
 
         case let .makeScreenshot(makeScreenshotPayload):
             let processor = MakeScreenshotRequestProcessor(
-                vmScreenshotter: VMScreenshotterImpl()
+                screenshotter: screenshotter
             )
             promisedResponse = processor.process(request: makeScreenshotPayload)
         }

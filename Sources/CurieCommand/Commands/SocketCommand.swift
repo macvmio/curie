@@ -27,7 +27,7 @@ struct SocketCommand: Command {
         abstract: "Communicate with running container over socket."
     )
 
-    @Option(name: [.customShort("p"), .long], help: "Opened unix socket of the container to interact with")
+    @Option(name: [.customShort("t"), .long], help: "Use unix socket at this path to interact with running VM over it.")
     var socketPath: String
 
     @Option(name: [.customShort("r"), .long], help: "Payload to send to socket")

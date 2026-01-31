@@ -19,16 +19,16 @@ import CurieCommon
 import Foundation
 
 final class MakeScreenshotRequestProcessor {
-    private let vmScreenshotter: VMScreenshotter
+    private let screenshotter: Screenshotter
 
-    init(vmScreenshotter: VMScreenshotter) {
-        self.vmScreenshotter = vmScreenshotter
+    init(screenshotter: Screenshotter) {
+        self.screenshotter = screenshotter
     }
 
     func process(request: MakeScreenshotPayload) -> PromisedSocketResponse {
         DispatchQueue.main.sync {
             do {
-                try vmScreenshotter.makePngScreeshot(createPngImageAtPath: request.savePngImageAtPath)
+                try screenshotter.makePngScreeshot(createPngImageAtPath: request.savePngImageAtPath)
                 return ConstantPromisedSocketResponse(
                     response: .success(["imagePath": .string(request.savePngImageAtPath)]),
                     closeSocketAfterDeliveringResponse: false
@@ -43,11 +43,11 @@ final class MakeScreenshotRequestProcessor {
     }
 }
 
-protocol VMScreenshotter: AnyObject {
+protocol Screenshotter: AnyObject {
     func makePngScreeshot(createPngImageAtPath: String) throws
 }
 
-enum VMScreenshotterError: Error, CustomStringConvertible {
+enum ScreenshotterError: Error, CustomStringConvertible {
     case noWindow
     case noWindowContentView
     case noBitmapImageRep
@@ -67,7 +67,7 @@ enum VMScreenshotterError: Error, CustomStringConvertible {
     }
 }
 
-final class VMScreenshotterImpl: VMScreenshotter {
+final class DefaultScreenshotter: Screenshotter {
     init() {}
 
     public func makePngScreeshot(createPngImageAtPath path: String) throws {
@@ -78,19 +78,19 @@ final class VMScreenshotterImpl: VMScreenshotter {
 
     private func screenshotOfKeyWindow() throws -> NSImage {
         guard let window = NSApp.windows.first else {
-            throw VMScreenshotterError.noWindow
+            throw ScreenshotterError.noWindow
         }
         return try image(of: window)
     }
 
     private func image(of window: NSWindow) throws -> NSImage {
         guard let view = window.contentView else {
-            throw VMScreenshotterError.noWindowContentView
+            throw ScreenshotterError.noWindowContentView
         }
 
         let bounds = view.bounds
         guard let rep = view.bitmapImageRepForCachingDisplay(in: bounds) else {
-            throw VMScreenshotterError.noBitmapImageRep
+            throw ScreenshotterError.noBitmapImageRep
         }
         view.cacheDisplay(in: bounds, to: rep)
 
@@ -103,7 +103,7 @@ final class VMScreenshotterImpl: VMScreenshotter {
         guard let tiffData = image.tiffRepresentation,
               let rep = NSBitmapImageRep(data: tiffData),
               let png = rep.representation(using: .png, properties: [:]) else {
-            throw VMScreenshotterError.noPngData
+            throw ScreenshotterError.noPngData
         }
         return png
     }

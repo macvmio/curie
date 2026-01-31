@@ -215,17 +215,21 @@ public final class CoreAssembly: Assembly {
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self),
                 console: r.resolve(Console.self),
-                vmSocketServer: r.resolve(VMSocketServer.self)
+                socketServer: r.resolve(SocketServer.self)
             )
         }
-        registry.register(VMSocketServer.self) { _ in
-            VMSocketServerImpl(
+        registry.register(SocketServer.self) { r in
+            DefaultSocketServer(
                 socketQueue: DispatchQueue(
-                    label: "VMSocketServer.socketQueue",
+                    label: "SocketServer.socketQueue",
                     attributes: .concurrent,
                     target: .global(qos: .userInitiated)
-                )
+                ),
+                screenshotter: r.resolve(Screenshotter.self)
             )
+        }
+        registry.register(Screenshotter.self) { _ in
+            DefaultScreenshotter()
         }
         registry.register(ClipboardSyncService.self) { r in
             DefaultClipboardSyncService(

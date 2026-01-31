@@ -22,7 +22,7 @@ import Virtualization
 struct VMStartOptions {
     var startUpFromMacOSRecovery: Bool
     var showWindow: Bool
-    var unixSocketPath: String?
+    var socketPath: String?
 }
 
 final class VM: NSObject {

@@ -30,7 +30,7 @@ final class DefaultImageRunner: ImageRunner {
     private let system: System
     private let fileSystem: FileSystem
     private let console: Console
-    private let vmSocketServer: VMSocketServer
+    private let socketServer: SocketServer
     private var cancellables = Set<AnyCancellable>()
 
     init(
@@ -41,7 +41,7 @@ final class DefaultImageRunner: ImageRunner {
         system: System,
         fileSystem: FileSystem,
         console: Console,
-        vmSocketServer: VMSocketServer
+        socketServer: SocketServer
     ) {
         self.windowAppLauncher = windowAppLauncher
         self.imageCache = imageCache
@@ -50,7 +50,7 @@ final class DefaultImageRunner: ImageRunner {
         self.system = system
         self.fileSystem = fileSystem
         self.console = console
-        self.vmSocketServer = vmSocketServer
+        self.socketServer = socketServer
     }
 
     func run(vm: VM, bundle: VMBundle, options: VMStartOptions) throws {
@@ -114,9 +114,9 @@ final class DefaultImageRunner: ImageRunner {
         bundle: VMBundle,
         options: VMStartOptions
     ) throws {
-        guard let socketPath = options.unixSocketPath else { return }
+        guard let socketPath = options.socketPath else { return }
         do {
-            try vmSocketServer.startServer(
+            try socketServer.startServer(
                 socketPath: socketPath,
                 vm: vm,
                 vmBundle: bundle
@@ -135,9 +135,9 @@ final class DefaultImageRunner: ImageRunner {
     ) {
         vm.events
             .filter { $0 == .imageDidStop || $0 == .imageStopFailed }
-            .sink { [vmSocketServer, console] _ in
+            .sink { [socketServer, console] _ in
                 do {
-                    try vmSocketServer.stop()
+                    try socketServer.stop()
                     console.text("Stopped socket server")
                 } catch {
                     console.error("Failed to close socket server: \(error)")

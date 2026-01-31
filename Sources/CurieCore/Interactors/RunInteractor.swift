@@ -69,7 +69,7 @@ public final class DefaultRunInteractor: RunInteractor {
         let options = VMStartOptions(
             startUpFromMacOSRecovery: context.launch.recoveryMode,
             showWindow: context.launch.showWindow,
-            unixSocketPath: context.launch.unixSocketPath
+            socketPath: context.launch.socketPath
         )
 
         vm.events
