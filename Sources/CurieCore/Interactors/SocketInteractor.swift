@@ -48,6 +48,8 @@ public final class DefaultSocketInteractor: SocketInteractor {
             request: context.socketRequest,
             socketPath: context.socketPath
         )
-        console.text("\(response)", always: true)
+        let jsonData = try JSONEncoder().encode(response)
+        let jsonString = String(data: jsonData, encoding: .utf8)
+        console.text("\(jsonString ?? "")", always: true)
     }
 }

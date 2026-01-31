@@ -16,33 +16,36 @@
 
 import ArgumentParser
 import CurieCommon
-import Darwin
+import CurieCore
 import Foundation
 import SCInject
 import TSCBasic
 
-struct SocketCommand: Command {
+struct SocketPingCommand: Command {
     static let configuration: CommandConfiguration = .init(
-        commandName: "socket",
-        abstract: "Use subcommands to communicate with running container over socket.",
-        subcommands: [
-            SocketPingCommand.self,
-            SocketTerminateVmCommand.self,
-            SocketMakeScreenshotCommand.self,
-            SocketJSONCommand.self,
-        ]
+        commandName: "ping",
+        abstract: "Check socket for aliveness."
     )
 
+    @Option(name: [.customShort("t"), .long], help: "Use unix socket at this path to interact with running VM over it.")
+    var socketPath: String
+
     final class Executor: CommandExecutor {
+        private let interactor: SocketInteractor
         private let console: Console
 
-        init(console: Console) {
+        init(interactor: SocketInteractor, console: Console) {
+            self.interactor = interactor
             self.console = console
         }
 
-        func execute(command: SocketCommand) throws {
-            console.error("Please use subcommands to interact with the socket!")
-            throw CommandError.exit(1)
+        func execute(command: SocketPingCommand) throws {
+            try interactor.execute(
+                with: .init(
+                    socketPath: command.socketPath,
+                    socketRequest: .ping(PingPayload())
+                )
+            )
         }
     }
 
@@ -50,6 +53,7 @@ struct SocketCommand: Command {
         func assemble(_ registry: Registry) {
             registry.register(Executor.self) { r in
                 Executor(
+                    interactor: r.resolve(SocketInteractor.self),
                     console: r.resolve(Console.self)
                 )
             }
