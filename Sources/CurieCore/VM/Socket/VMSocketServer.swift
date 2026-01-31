@@ -92,6 +92,7 @@ final class VMSocketServerImpl: VMSocketServer {
                 vmBundle: vmBundle,
                 socketQueue: socketQueue
             )
+
         case let .makeScreenshot(makeScreenshotPayload):
             let processor = MakeScreenshotRequestProcessor(
                 vmScreenshotter: VMScreenshotterImpl()
