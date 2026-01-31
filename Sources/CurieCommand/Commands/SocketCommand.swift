@@ -40,7 +40,7 @@ struct SocketCommand: Command {
             self.console = console
         }
 
-        func execute(command: SocketCommand) throws {
+        func execute(command _: SocketCommand) throws {
             console.error("Please use subcommands to interact with the socket!")
             throw CommandError.exit(1)
         }

@@ -30,7 +30,10 @@ struct SocketJSONCommand: Command {
     @Option(name: [.customShort("t"), .long], help: "Use unix socket at this path to interact with running VM over it.")
     var socketPath: String
 
-    @Option(name: [.customShort("r"), .long], help: "JSON payload to send to socket, must be of type CurieSocketRequest")
+    @Option(
+        name: [.customShort("r"), .long],
+        help: "JSON payload to send to socket, must be of type CurieSocketRequest"
+    )
     var socketRequest: CurieSocketRequest
 
     final class Executor: CommandExecutor {
