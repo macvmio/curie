@@ -57,7 +57,12 @@ final class VMSocketServerImpl: VMSocketServer {
                             closeSocketAfterDeliveringResponse: true
                         )
                     }
-                    return createResponse(request: request, vm: vm, vmBundle: vmBundle, windowAppLauncher: windowAppLauncher)
+                    return createResponse(
+                        request: request,
+                        vm: vm,
+                        vmBundle: vmBundle,
+                        windowAppLauncher: windowAppLauncher
+                    )
                 },
                 connectionQueue: socketQueue
             )
