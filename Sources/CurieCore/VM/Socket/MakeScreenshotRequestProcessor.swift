@@ -26,7 +26,7 @@ final class MakeScreenshotRequestProcessor {
     }
 
     func process(request: MakeScreenshotPayload) -> PromisedSocketResponse {
-        return DispatchQueue.main.sync {
+        DispatchQueue.main.sync {
             do {
                 try vmScreenshotter.makePngScreeshot(createPngImageAtPath: request.savePngImageAtPath)
                 return ConstantPromisedSocketResponse(

@@ -236,6 +236,4 @@ extension TerminateVmPayload: Codable {
     }
 }
 
-extension MakeScreenshotPayload: Codable {
-
-}
+extension MakeScreenshotPayload: Codable {}

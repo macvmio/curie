@@ -23,8 +23,7 @@ protocol VMSocketServer {
     func startServer(
         socketPath: String,
         vm: VM,
-        vmBundle: VMBundle,
-        windowAppLauncher: MacOSWindowAppLauncher
+        vmBundle: VMBundle
     ) throws
 
     func stop() throws
@@ -44,8 +43,7 @@ final class VMSocketServerImpl: VMSocketServer {
     func startServer(
         socketPath: String,
         vm: VM,
-        vmBundle: VMBundle,
-        windowAppLauncher: MacOSWindowAppLauncher
+        vmBundle: VMBundle
     ) throws {
         try lock.withLock {
             _ = try unixSocketServer.start(
@@ -60,8 +58,7 @@ final class VMSocketServerImpl: VMSocketServer {
                     return createResponse(
                         request: request,
                         vm: vm,
-                        vmBundle: vmBundle,
-                        windowAppLauncher: windowAppLauncher
+                        vmBundle: vmBundle
                     )
                 },
                 connectionQueue: socketQueue
@@ -78,8 +75,7 @@ final class VMSocketServerImpl: VMSocketServer {
     private func createResponse(
         request: CurieSocketRequest,
         vm: VM,
-        vmBundle: VMBundle,
-        windowAppLauncher: MacOSWindowAppLauncher
+        vmBundle: VMBundle
     ) -> Response<CurieSocketResponse> {
         let promisedResponse: PromisedSocketResponse
 
