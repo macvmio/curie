@@ -168,6 +168,12 @@ public final class CoreAssembly: Assembly {
                 system: r.resolve(System.self)
             )
         }
+        registry.register(SocketInteractor.self) { r in
+            DefaultSocketInteractor(
+                unixSocketClient: UnixDomainSocketClient(),
+                console: r.resolve(Console.self)
+            )
+        }
     }
 
     private func assembleUtils(_ registry: Registry) {
@@ -208,8 +214,22 @@ public final class CoreAssembly: Assembly {
                 clipboardSyncService: r.resolve(ClipboardSyncService.self),
                 system: r.resolve(System.self),
                 fileSystem: r.resolve(FileSystem.self),
-                console: r.resolve(Console.self)
+                console: r.resolve(Console.self),
+                socketServer: r.resolve(SocketServer.self)
             )
+        }
+        registry.register(SocketServer.self) { r in
+            DefaultSocketServer(
+                socketQueue: DispatchQueue(
+                    label: "SocketServer.socketQueue",
+                    attributes: .concurrent,
+                    target: .global(qos: .userInitiated)
+                ),
+                screenshotter: r.resolve(Screenshotter.self)
+            )
+        }
+        registry.register(Screenshotter.self) { _ in
+            DefaultScreenshotter()
         }
         registry.register(ClipboardSyncService.self) { r in
             DefaultClipboardSyncService(

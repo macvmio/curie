@@ -47,10 +47,13 @@ final class UnixDomainSocketTests: XCTestCase {
 
         _ = try server.start(
             socketPath: socketPath,
-            handler: { (requestFromClient: RequestFromClient) in
+            responseProvider: { (requestFromClient: RequestFromClient) in
                 XCTAssertEqual(requestFromClient.messageFromClient, "from client")
                 serverHandlerCalled.fulfill()
-                return ResponseFromServer(messageFromServer: "from server")
+                return Response(
+                    payload: ResponseFromServer(messageFromServer: "from server"),
+                    closeSocketAfterDeliveringResponse: false
+                )
             },
             connectionQueue: .global()
         )
@@ -75,10 +78,13 @@ final class UnixDomainSocketTests: XCTestCase {
             let server = UnixDomainSocketServer()
             _ = try server.start(
                 socketPath: socketPath,
-                handler: { (requestFromClient: RequestFromClient) in
+                responseProvider: { (requestFromClient: RequestFromClient) in
                     XCTAssertEqual(requestFromClient.messageFromClient, "from client")
                     serverHandlerCalled.fulfill()
-                    return ResponseFromServer(messageFromServer: "from server")
+                    return Response(
+                        payload: ResponseFromServer(messageFromServer: "from server"),
+                        closeSocketAfterDeliveringResponse: false
+                    )
                 },
                 connectionQueue: .global()
             )
@@ -105,9 +111,12 @@ final class UnixDomainSocketTests: XCTestCase {
     func testRepeated() throws {
         _ = try server.start(
             socketPath: socketPath,
-            handler: { (requestFromClient: RequestFromClient) in
-                ResponseFromServer(
-                    messageFromServer: "from server in response to: \(requestFromClient.messageFromClient)"
+            responseProvider: { (requestFromClient: RequestFromClient) in
+                Response(
+                    payload: ResponseFromServer(
+                        messageFromServer: "from server in response to: \(requestFromClient.messageFromClient)"
+                    ),
+                    closeSocketAfterDeliveringResponse: false
                 )
             },
             connectionQueue: .global()
@@ -120,5 +129,35 @@ final class UnixDomainSocketTests: XCTestCase {
                 expectedServerMessage: "from server in response to: from client #\(idx)"
             )
         }
+    }
+
+    func testClosingSocketAfterResponse() throws {
+        _ = try server.start(
+            socketPath: socketPath,
+            responseProvider: { (_: RequestFromClient) in
+                Response(
+                    payload: ResponseFromServer(
+                        messageFromServer: "from server"
+                    ),
+                    closeSocketAfterDeliveringResponse: true
+                )
+            },
+            connectionQueue: .global()
+        )
+
+        let attempt: () throws -> Void = {
+            try self.sendMessageAndReceiveResponse(
+                socketPath: self.socketPath,
+                clientMessage: "from client",
+                expectedServerMessage: "from server"
+            )
+        }
+
+        XCTAssertNoThrow(
+            try attempt()
+        )
+        XCTAssertThrowsError(
+            try attempt()
+        )
     }
 }

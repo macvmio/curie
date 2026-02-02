@@ -66,7 +66,8 @@ public final class DefaultStartInteractor: StartInteractor {
         let vm = try configurator.loadVM(with: bundle, overrideConfig: overrideConfig)
         let options = VMStartOptions(
             startUpFromMacOSRecovery: context.launch.recoveryMode,
-            showWindow: context.launch.showWindow
+            showWindow: context.launch.showWindow,
+            socketPath: context.launch.socketPath
         )
 
         try imageRunner.run(vm: vm, bundle: bundle, options: options)

@@ -22,6 +22,7 @@ import Virtualization
 struct VMStartOptions {
     var startUpFromMacOSRecovery: Bool
     var showWindow: Bool
+    var socketPath: String?
 }
 
 final class VM: NSObject {
@@ -78,6 +79,8 @@ final class VM: NSObject {
     }
 
     public func start(options: VMStartOptions, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        precondition(Thread.isMainThread)
+
         console.text("Will start container")
         let startOptions = VZMacOSVirtualMachineStartOptions()
         startOptions.startUpFromMacOSRecovery = options.startUpFromMacOSRecovery
@@ -91,6 +94,8 @@ final class VM: NSObject {
     }
 
     public func pause(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        precondition(Thread.isMainThread)
+
         console.text("Will pause container")
         vm.pause { [vm] result in
             switch result {
@@ -113,6 +118,8 @@ final class VM: NSObject {
     }
 
     public func resume(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        precondition(Thread.isMainThread)
+
         console.text("Will start paused container")
         if #available(macOS 14.0, *) {
             vm.restoreMachineStateFrom(url: machineStateURL) { [vm] error in
@@ -128,6 +135,8 @@ final class VM: NSObject {
     }
 
     public func stop(completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        precondition(Thread.isMainThread)
+
         guard vm.state != .stopped else {
             completionHandler(.success(()))
             return
@@ -149,6 +158,8 @@ final class VM: NSObject {
         machineStateURL: URL,
         completionHandler: @escaping (Result<Void, Error>) -> Void
     ) {
+        precondition(Thread.isMainThread)
+
         console.text("Will exit container")
         let completion = { [console, config] (result: Result<Void, Error>) in
             switch result {
@@ -170,16 +181,19 @@ final class VM: NSObject {
     /// Terminates the VM (by stopping or pausing) and then exits the current process.
     /// Exit code is 0 when VM is terminated successfully, and non zero in case of failure.
     public func terminateVmAndCurrentProcess(
-        machineStateURL: URL
+        machineStateURL: URL,
+        postFlight: @escaping (Result<Void, Error>) -> Void = { _ in }
     ) {
         if vm.state == .stopping { return }
         terminate(machineStateURL: machineStateURL) { vmTerminationResult in
-            switch vmTerminationResult {
+            let exitCode: Int32 = switch vmTerminationResult {
             case .success:
-                Darwin.exit(0)
+                0
             case .failure:
-                Darwin.exit(1)
+                1
             }
+            postFlight(vmTerminationResult)
+            Darwin.exit(exitCode)
         }
     }
 

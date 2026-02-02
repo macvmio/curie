@@ -24,19 +24,22 @@ public struct LaunchParameters {
     public var recoveryMode: Bool
     public var shareCurrentWorkingDirectory: Bool
     public var pauseOnExit: Bool
+    public var socketPath: String?
 
     public init(
         showWindow: Bool,
         mainScreenResolution: Bool,
         recoveryMode: Bool,
         shareCurrentWorkingDirectory: Bool,
-        pauseOnExit: Bool
+        pauseOnExit: Bool,
+        socketPath: String?
     ) {
         self.showWindow = showWindow
         self.mainScreenResolution = mainScreenResolution
         self.recoveryMode = recoveryMode
         self.shareCurrentWorkingDirectory = shareCurrentWorkingDirectory
         self.pauseOnExit = pauseOnExit
+        self.socketPath = socketPath
     }
 
     func partialConfig() throws -> VMPartialConfig {

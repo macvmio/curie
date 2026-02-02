@@ -37,6 +37,10 @@ enum Setup {
         (RmiCommand.self, RmiCommand.Assembly()),
         (RunCommand.self, RunCommand.Assembly()),
         (StartCommand.self, StartCommand.Assembly()),
+        (SocketCommand.self, SocketCommand.Assembly()),
+        (SocketMakeScreenshotCommand.self, SocketMakeScreenshotCommand.Assembly()),
+        (SocketPingCommand.self, SocketPingCommand.Assembly()),
+        (SocketTerminateVmCommand.self, SocketTerminateVmCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
 
