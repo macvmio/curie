@@ -22,6 +22,7 @@ public enum CurieSocketRequest {
     case ping(PingPayload)
     case terminateVm(TerminateVmPayload)
     case makeScreenshot(MakeScreenshotPayload)
+    case synthesizeKeyboard(SynthesizeKeyboardPayload)
 }
 
 // MARK: Request Payloads
@@ -57,6 +58,14 @@ public struct MakeScreenshotPayload {
     }
 }
 
+public struct SynthesizeKeyboardPayload {
+    public var input: KeyboardInput
+
+    public init(input: KeyboardInput) {
+        self.input = input
+    }
+}
+
 // MARK: - Response
 
 public enum CurieSocketResponse {
@@ -84,6 +93,8 @@ public extension CurieSocketRequest {
             "Terminate the VM"
         case .makeScreenshot:
             "Make screenshot"
+        case .synthesizeKeyboard:
+            "Synthesize keyboard input"
         }
     }
 }
@@ -93,6 +104,7 @@ extension CurieSocketRequest: Codable {
         case ping
         case terminateVm
         case makeScreenshot
+        case synthesizeKeyboard
     }
 
     public init(from decoder: Decoder) throws {
@@ -118,6 +130,9 @@ extension CurieSocketRequest: Codable {
         case .makeScreenshot:
             let payload = try container.decode(MakeScreenshotPayload.self, forKey: .makeScreenshot)
             self = .makeScreenshot(payload)
+        case .synthesizeKeyboard:
+            let payload = try container.decode(SynthesizeKeyboardPayload.self, forKey: .synthesizeKeyboard)
+            self = .synthesizeKeyboard(payload)
         }
     }
 
@@ -130,6 +145,8 @@ extension CurieSocketRequest: Codable {
             try container.encode(payload, forKey: .terminateVm)
         case let .makeScreenshot(payload):
             try container.encode(payload, forKey: .makeScreenshot)
+        case let .synthesizeKeyboard(payload):
+            try container.encode(payload, forKey: .synthesizeKeyboard)
         }
     }
 }
@@ -237,3 +254,20 @@ extension TerminateVmPayload: Codable {
 }
 
 extension MakeScreenshotPayload: Codable {}
+
+extension SynthesizeKeyboardPayload: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.input = try container.decode(KeyboardInput.self, forKey: .input)
+    }
+
+    enum CodingKeys: CodingKey {
+        case input
+        case waitToComplete
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.input, forKey: .input)
+    }
+}

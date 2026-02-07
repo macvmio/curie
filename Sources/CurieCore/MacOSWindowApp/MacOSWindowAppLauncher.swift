@@ -53,7 +53,7 @@ private struct MacOSWindowApp: App {
     }
 }
 
-private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
+private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDelegate {
     private var window: NSWindow!
 
     func applicationDidFinishLaunching(_: Notification) {
@@ -75,6 +75,7 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
         window.setContentSize(NSSize(width: idealWidth, height: idealHeight))
         window.contentMinSize = NSSize(width: minWidth, height: minHeight)
         window.isReleasedWhenClosed = false
+        window.delegate = self
 
         let hostingController = NSHostingController(
             rootView: MacOSWindowAppViewView(vm: MacOSWindowApp.vm)
@@ -96,6 +97,15 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
             machineStateURL: MacOSWindowApp.bundle.machineState.asURL
         )
         return .terminateCancel
+    }
+
+    func windowDidBecomeKey(_ notification: Notification) {
+        guard let window = notification.object as? NSWindow else {
+            return
+        }
+        if let vmView = window.contentView?.firstDescendant(of: VZVirtualMachineView.self) {
+            window.makeFirstResponder(vmView)
+        }
     }
 }
 
