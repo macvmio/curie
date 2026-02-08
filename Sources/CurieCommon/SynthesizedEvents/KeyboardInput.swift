@@ -104,7 +104,7 @@ public enum KeyboardKey: String, Codable {
     case space, spacebar
     case left, leftarrow
     case right, rightarrow
-    case up, uparrow
+    case up, uparrow // swiftlint:disable:this identifier_name
     case down, downarrow
 }
 
@@ -114,7 +114,7 @@ public enum KeyPhase: String, Codable {
     case down
 
     /// Up alone is used to release key modifier
-    case up
+    case up // swiftlint:disable:this identifier_name
 
     /// Regular key press (down and then up)
     case press
