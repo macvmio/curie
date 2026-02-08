@@ -28,7 +28,7 @@ extension NSWindow {
     ///   - keyboardInput: What to input
     public func synthesize(
         keyboardInput: KeyboardInput,
-        completion: @escaping () -> ()
+        completion: @escaping () -> Void
     ) {
         let eventGroup = DispatchGroup()
         defer {
@@ -101,18 +101,17 @@ extension NSWindow {
     }
 }
 
-
 // MARK: - Models
 
 extension KeyPhase {
     var eventTypesToSynthesize: [NSEvent.EventType] {
         switch self {
         case .down:
-            return [.keyDown]
+            [.keyDown]
         case .up:
-            return [.keyUp]
+            [.keyUp]
         case .press:
-            return [.keyDown, .keyUp]
+            [.keyDown, .keyUp]
         }
     }
 }
@@ -120,12 +119,12 @@ extension KeyPhase {
 extension KeyboardInput {
     var allKeyStrokes: [KeyStroke] {
         switch content {
-        case .text(let string):
+        case let .text(string):
             return KeyStroke.keystrokesForTypingString(
                 string,
                 delayAfter: delayAfter
             )
-        case .key(let keyboardKey, let keyModifiers, let keyPhase):
+        case let .key(keyboardKey, keyModifiers, keyPhase):
             let keyStroke = KeyStroke(
                 modifiedVirtualKey: ModifiedVirtualKey(
                     virtualKey: keyboardKey.virtualKey,
@@ -138,7 +137,6 @@ extension KeyboardInput {
         }
     }
 }
-
 
 // MARK: - Models
 
@@ -155,11 +153,11 @@ struct ModifiedVirtualKey {
     var modifierFlags: NSEvent.ModifierFlags
 
     static func withShift(virtualKey: VirtualKey) -> ModifiedVirtualKey {
-        return ModifiedVirtualKey(virtualKey: virtualKey, modifierFlags: .shift)
+        ModifiedVirtualKey(virtualKey: virtualKey, modifierFlags: .shift)
     }
 
     static func unmodified(virtualKey: VirtualKey) -> ModifiedVirtualKey {
-        return ModifiedVirtualKey(virtualKey: virtualKey, modifierFlags: [])
+        ModifiedVirtualKey(virtualKey: virtualKey, modifierFlags: [])
     }
 }
 
@@ -194,55 +192,55 @@ extension KeyStroke {
     static func modifiedVirtualKey(for character: Character) -> ModifiedVirtualKey {
         func codeForLowercasedChar(_ lc: Character) -> Int? {
             switch lc {
-            case "0": return kVK_ANSI_0
-            case "1": return kVK_ANSI_1
-            case "2": return kVK_ANSI_2
-            case "3": return kVK_ANSI_3
-            case "4": return kVK_ANSI_4
-            case "5": return kVK_ANSI_5
-            case "6": return kVK_ANSI_6
-            case "7": return kVK_ANSI_7
-            case "8": return kVK_ANSI_8
-            case "9": return kVK_ANSI_9
-            case "a": return kVK_ANSI_A
-            case "b": return kVK_ANSI_B
-            case "c": return kVK_ANSI_C
-            case "d": return kVK_ANSI_D
-            case "e": return kVK_ANSI_E
-            case "f": return kVK_ANSI_F
-            case "g": return kVK_ANSI_G
-            case "h": return kVK_ANSI_H
-            case "i": return kVK_ANSI_I
-            case "j": return kVK_ANSI_J
-            case "k": return kVK_ANSI_K
-            case "l": return kVK_ANSI_L
-            case "m": return kVK_ANSI_M
-            case "n": return kVK_ANSI_N
-            case "o": return kVK_ANSI_O
-            case "p": return kVK_ANSI_P
-            case "q": return kVK_ANSI_Q
-            case "r": return kVK_ANSI_R
-            case "s": return kVK_ANSI_S
-            case "t": return kVK_ANSI_T
-            case "u": return kVK_ANSI_U
-            case "v": return kVK_ANSI_V
-            case "w": return kVK_ANSI_W
-            case "x": return kVK_ANSI_X
-            case "y": return kVK_ANSI_Y
-            case "z": return kVK_ANSI_Z
-            case "`": return kVK_ANSI_Grave
-            case "-": return kVK_ANSI_Minus
-            case "=": return kVK_ANSI_Equal
-            case "[": return kVK_ANSI_LeftBracket
-            case "]": return kVK_ANSI_RightBracket
-            case "\\": return kVK_ANSI_Backslash
-            case ";": return kVK_ANSI_Semicolon
-            case "'": return kVK_ANSI_Quote
-            case ",": return kVK_ANSI_Comma
-            case ".": return kVK_ANSI_Period
-            case "/": return kVK_ANSI_Slash
-            case " ": return kVK_Space
-            default: return nil
+            case "0": kVK_ANSI_0
+            case "1": kVK_ANSI_1
+            case "2": kVK_ANSI_2
+            case "3": kVK_ANSI_3
+            case "4": kVK_ANSI_4
+            case "5": kVK_ANSI_5
+            case "6": kVK_ANSI_6
+            case "7": kVK_ANSI_7
+            case "8": kVK_ANSI_8
+            case "9": kVK_ANSI_9
+            case "a": kVK_ANSI_A
+            case "b": kVK_ANSI_B
+            case "c": kVK_ANSI_C
+            case "d": kVK_ANSI_D
+            case "e": kVK_ANSI_E
+            case "f": kVK_ANSI_F
+            case "g": kVK_ANSI_G
+            case "h": kVK_ANSI_H
+            case "i": kVK_ANSI_I
+            case "j": kVK_ANSI_J
+            case "k": kVK_ANSI_K
+            case "l": kVK_ANSI_L
+            case "m": kVK_ANSI_M
+            case "n": kVK_ANSI_N
+            case "o": kVK_ANSI_O
+            case "p": kVK_ANSI_P
+            case "q": kVK_ANSI_Q
+            case "r": kVK_ANSI_R
+            case "s": kVK_ANSI_S
+            case "t": kVK_ANSI_T
+            case "u": kVK_ANSI_U
+            case "v": kVK_ANSI_V
+            case "w": kVK_ANSI_W
+            case "x": kVK_ANSI_X
+            case "y": kVK_ANSI_Y
+            case "z": kVK_ANSI_Z
+            case "`": kVK_ANSI_Grave
+            case "-": kVK_ANSI_Minus
+            case "=": kVK_ANSI_Equal
+            case "[": kVK_ANSI_LeftBracket
+            case "]": kVK_ANSI_RightBracket
+            case "\\": kVK_ANSI_Backslash
+            case ";": kVK_ANSI_Semicolon
+            case "'": kVK_ANSI_Quote
+            case ",": kVK_ANSI_Comma
+            case ".": kVK_ANSI_Period
+            case "/": kVK_ANSI_Slash
+            case " ": kVK_Space
+            default: nil
             }
         }
 
@@ -251,7 +249,7 @@ extension KeyStroke {
         let lower = original.lowercased()
 
         if let first = lower.first {
-            if first >= "a" && first <= "z" {
+            if first >= "a", first <= "z" {
                 if let code = codeForLowercasedChar(first) {
                     return ModifiedVirtualKey(
                         virtualKey: .init(code: code, characters: original, charactersIgnoringModifiers: lower),
@@ -259,7 +257,7 @@ extension KeyStroke {
                     )
                 }
             }
-            if first >= "0" && first <= "9" {
+            if first >= "0", first <= "9" {
                 if let code = codeForLowercasedChar(first) {
                     return ModifiedVirtualKey(
                         virtualKey: .init(code: code, characters: lower, charactersIgnoringModifiers: lower),
@@ -271,47 +269,179 @@ extension KeyStroke {
 
         // Shifted digit symbols on U.S. ANSI
         switch character {
-        case "!": return .withShift(virtualKey: .init(code: kVK_ANSI_1, characters: "!", charactersIgnoringModifiers: "1"))
-        case "@": return .withShift(virtualKey: .init(code: kVK_ANSI_2, characters: "@", charactersIgnoringModifiers: "2"))
-        case "#": return .withShift(virtualKey: .init(code: kVK_ANSI_3, characters: "#", charactersIgnoringModifiers: "3"))
-        case "$": return .withShift(virtualKey: .init(code: kVK_ANSI_4, characters: "$", charactersIgnoringModifiers: "4"))
-        case "%": return .withShift(virtualKey: .init(code: kVK_ANSI_5, characters: "%", charactersIgnoringModifiers: "5"))
-        case "^": return .withShift(virtualKey: .init(code: kVK_ANSI_6, characters: "^", charactersIgnoringModifiers: "6"))
-        case "&": return .withShift(virtualKey: .init(code: kVK_ANSI_7, characters: "&", charactersIgnoringModifiers: "7"))
-        case "*": return .withShift(virtualKey: .init(code: kVK_ANSI_8, characters: "*", charactersIgnoringModifiers: "8"))
-        case "(": return .withShift(virtualKey: .init(code: kVK_ANSI_9, characters: "(", charactersIgnoringModifiers: "9"))
-        case ")": return .withShift(virtualKey: .init(code: kVK_ANSI_0, characters: ")", charactersIgnoringModifiers: "0"))
+        case "!": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_1,
+                characters: "!",
+                charactersIgnoringModifiers: "1"
+            ))
+        case "@": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_2,
+                characters: "@",
+                charactersIgnoringModifiers: "2"
+            ))
+        case "#": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_3,
+                characters: "#",
+                charactersIgnoringModifiers: "3"
+            ))
+        case "$": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_4,
+                characters: "$",
+                charactersIgnoringModifiers: "4"
+            ))
+        case "%": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_5,
+                characters: "%",
+                charactersIgnoringModifiers: "5"
+            ))
+        case "^": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_6,
+                characters: "^",
+                charactersIgnoringModifiers: "6"
+            ))
+        case "&": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_7,
+                characters: "&",
+                charactersIgnoringModifiers: "7"
+            ))
+        case "*": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_8,
+                characters: "*",
+                charactersIgnoringModifiers: "8"
+            ))
+        case "(": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_9,
+                characters: "(",
+                charactersIgnoringModifiers: "9"
+            ))
+        case ")": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_0,
+                characters: ")",
+                charactersIgnoringModifiers: "0"
+            ))
         default: break
         }
         // Punctuation pairs requiring shift on U.S. ANSI rows
         switch character {
-        case "_":  return .withShift(virtualKey: .init(code: kVK_ANSI_Minus,         characters: "_",  charactersIgnoringModifiers: "-"))
-        case "+":  return .withShift(virtualKey: .init(code: kVK_ANSI_Equal,         characters: "+",  charactersIgnoringModifiers: "="))
-        case "{":  return .withShift(virtualKey: .init(code: kVK_ANSI_LeftBracket,   characters: "{",  charactersIgnoringModifiers: "["))
-        case "}":  return .withShift(virtualKey: .init(code: kVK_ANSI_RightBracket,  characters: "}",  charactersIgnoringModifiers: "]"))
-        case "|":  return .withShift(virtualKey: .init(code: kVK_ANSI_Backslash,     characters: "|",  charactersIgnoringModifiers: "\\"))
-        case ":":  return .withShift(virtualKey: .init(code: kVK_ANSI_Semicolon,     characters: ":",  charactersIgnoringModifiers: ";"))
-        case "\"": return .withShift(virtualKey: .init(code: kVK_ANSI_Quote,         characters: "\"", charactersIgnoringModifiers: "'"))
-        case "<":  return .withShift(virtualKey: .init(code: kVK_ANSI_Comma,         characters: "<",  charactersIgnoringModifiers: ","))
-        case ">":  return .withShift(virtualKey: .init(code: kVK_ANSI_Period,        characters: ">",  charactersIgnoringModifiers: "."))
-        case "?":  return .withShift(virtualKey: .init(code: kVK_ANSI_Slash,         characters: "?",  charactersIgnoringModifiers: "/"))
-        case "~":  return .withShift(virtualKey: .init(code: kVK_ANSI_Grave,         characters: "~",  charactersIgnoringModifiers: "`"))
+        case "_": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Minus,
+                characters: "_",
+                charactersIgnoringModifiers: "-"
+            ))
+        case "+": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Equal,
+                characters: "+",
+                charactersIgnoringModifiers: "="
+            ))
+        case "{": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_LeftBracket,
+                characters: "{",
+                charactersIgnoringModifiers: "["
+            ))
+        case "}": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_RightBracket,
+                characters: "}",
+                charactersIgnoringModifiers: "]"
+            ))
+        case "|": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Backslash,
+                characters: "|",
+                charactersIgnoringModifiers: "\\"
+            ))
+        case ":": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Semicolon,
+                characters: ":",
+                charactersIgnoringModifiers: ";"
+            ))
+        case "\"": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Quote,
+                characters: "\"",
+                charactersIgnoringModifiers: "'"
+            ))
+        case "<": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Comma,
+                characters: "<",
+                charactersIgnoringModifiers: ","
+            ))
+        case ">": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Period,
+                characters: ">",
+                charactersIgnoringModifiers: "."
+            ))
+        case "?": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Slash,
+                characters: "?",
+                charactersIgnoringModifiers: "/"
+            ))
+        case "~": return .withShift(virtualKey: .init(
+                code: kVK_ANSI_Grave,
+                characters: "~",
+                charactersIgnoringModifiers: "`"
+            ))
         default: break
         }
         // Unshifted punctuation
         switch character {
-        case "-":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Minus,         characters: "-",  charactersIgnoringModifiers: "-"))
-        case "=":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Equal,         characters: "=",  charactersIgnoringModifiers: "="))
-        case "[":  return .unmodified(virtualKey: .init(code: kVK_ANSI_LeftBracket,   characters: "[",  charactersIgnoringModifiers: "["))
-        case "]":  return .unmodified(virtualKey: .init(code: kVK_ANSI_RightBracket,  characters: "]",  charactersIgnoringModifiers: "]"))
-        case "\\": return .unmodified(virtualKey: .init(code: kVK_ANSI_Backslash,     characters: "\\", charactersIgnoringModifiers: "\\"))
-        case ";":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Semicolon,     characters: ";",  charactersIgnoringModifiers: ";"))
-        case "'":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Quote,         characters: "'",  charactersIgnoringModifiers: "'"))
-        case ",":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Comma,         characters: ",",  charactersIgnoringModifiers: ","))
-        case ".":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Period,        characters: ".",  charactersIgnoringModifiers: "."))
-        case "/":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Slash,         characters: "/",  charactersIgnoringModifiers: "/"))
-        case "`":  return .unmodified(virtualKey: .init(code: kVK_ANSI_Grave,         characters: "`",  charactersIgnoringModifiers: "`"))
-        case " ":  return .unmodified(virtualKey: .init(code: kVK_Space,              characters: " ",  charactersIgnoringModifiers: " "))
+        case "-": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Minus,
+                characters: "-",
+                charactersIgnoringModifiers: "-"
+            ))
+        case "=": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Equal,
+                characters: "=",
+                charactersIgnoringModifiers: "="
+            ))
+        case "[": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_LeftBracket,
+                characters: "[",
+                charactersIgnoringModifiers: "["
+            ))
+        case "]": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_RightBracket,
+                characters: "]",
+                charactersIgnoringModifiers: "]"
+            ))
+        case "\\": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Backslash,
+                characters: "\\",
+                charactersIgnoringModifiers: "\\"
+            ))
+        case ";": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Semicolon,
+                characters: ";",
+                charactersIgnoringModifiers: ";"
+            ))
+        case "'": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Quote,
+                characters: "'",
+                charactersIgnoringModifiers: "'"
+            ))
+        case ",": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Comma,
+                characters: ",",
+                charactersIgnoringModifiers: ","
+            ))
+        case ".": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Period,
+                characters: ".",
+                charactersIgnoringModifiers: "."
+            ))
+        case "/": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Slash,
+                characters: "/",
+                charactersIgnoringModifiers: "/"
+            ))
+        case "`": return .unmodified(virtualKey: .init(
+                code: kVK_ANSI_Grave,
+                characters: "`",
+                charactersIgnoringModifiers: "`"
+            ))
+        case " ": return .unmodified(virtualKey: .init(
+                code: kVK_Space,
+                characters: " ",
+                charactersIgnoringModifiers: " "
+            ))
         default: break
         }
 
@@ -396,25 +526,25 @@ extension KeyboardKey {
     var virtualKey: VirtualKey {
         switch self {
         case .return, .enter:
-            return .specialKey(code: kVK_Return, specialKey: .carriageReturn)
+            .specialKey(code: kVK_Return, specialKey: .carriageReturn)
         case .escape, .esc:
-            return VirtualKey(code: kVK_Escape, characters: "\u{1B}", charactersIgnoringModifiers: "\u{1B}")
+            VirtualKey(code: kVK_Escape, characters: "\u{1B}", charactersIgnoringModifiers: "\u{1B}")
         case .tab:
-            return VirtualKey.specialKey(code: kVK_Tab, specialKey: .tab)
+            VirtualKey.specialKey(code: kVK_Tab, specialKey: .tab)
         case .delete, .deletebackward, .backspace:
-            return .specialKey(code: kVK_Delete, specialKey: .delete)
+            .specialKey(code: kVK_Delete, specialKey: .delete)
         case .deleteforward, .forwarddelete:
-            return .specialKey(code: kVK_ForwardDelete, specialKey: .deleteForward)
+            .specialKey(code: kVK_ForwardDelete, specialKey: .deleteForward)
         case .space, .spacebar:
-            return VirtualKey(code: kVK_Space, characters: " ", charactersIgnoringModifiers: " ")
+            VirtualKey(code: kVK_Space, characters: " ", charactersIgnoringModifiers: " ")
         case .left, .leftarrow:
-            return .specialKey(code: kVK_LeftArrow, specialKey: .leftArrow)
+            .specialKey(code: kVK_LeftArrow, specialKey: .leftArrow)
         case .right, .rightarrow:
-            return .specialKey(code: kVK_RightArrow, specialKey: .rightArrow)
+            .specialKey(code: kVK_RightArrow, specialKey: .rightArrow)
         case .up, .uparrow:
-            return .specialKey(code: kVK_UpArrow, specialKey: .upArrow)
+            .specialKey(code: kVK_UpArrow, specialKey: .upArrow)
         case .down, .downarrow:
-            return .specialKey(code: kVK_DownArrow, specialKey: .downArrow)
+            .specialKey(code: kVK_DownArrow, specialKey: .downArrow)
         }
     }
 }

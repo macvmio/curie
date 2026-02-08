@@ -17,13 +17,13 @@
 import AppKit
 
 extension NSView {
-    func firstDescendant<T: NSView>(of type: T.Type) -> T? {
+    func firstDescendant<T: NSView>(of _: T.Type) -> T? {
         // Breadth-first so we find “nearby” views first
         var queue: [NSView] = subviews
         while !queue.isEmpty {
-            let v = queue.removeFirst()
-            if let match = v as? T { return match }
-            queue.append(contentsOf: v.subviews)
+            let subview = queue.removeFirst()
+            if let match = subview as? T { return match }
+            queue.append(contentsOf: subview.subviews)
         }
         return nil
     }

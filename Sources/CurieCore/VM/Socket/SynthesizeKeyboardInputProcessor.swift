@@ -19,10 +19,7 @@ import CurieCommon
 import Foundation
 
 final class SynthesizeKeyboardInputProcessor {
-
-    init() {
-
-    }
+    init() {}
 
     func process(request: SynthesizeKeyboardPayload) -> PromisedSocketResponse {
         let response = BlockingSocketResponse(

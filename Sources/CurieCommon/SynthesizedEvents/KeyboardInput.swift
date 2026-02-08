@@ -33,8 +33,9 @@ public struct KeyboardInput: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.content = try container.decode(KeyboardInputContent.self, forKey: .content)
-        self.delayAfter = try container.decodeIfPresent(TimeInterval.self, forKey: .delayAfter) ?? KeyboardInput.defaultdelayAfterStrokes
+        content = try container.decode(KeyboardInputContent.self, forKey: .content)
+        delayAfter = try container.decodeIfPresent(TimeInterval.self, forKey: .delayAfter) ?? KeyboardInput
+            .defaultdelayAfterStrokes
     }
 
     enum CodingKeys: CodingKey {
@@ -44,9 +45,9 @@ public struct KeyboardInput: Codable {
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.content, forKey: .content)
+        try container.encode(content, forKey: .content)
         if delayAfter != Self.defaultdelayAfterStrokes {
-            try container.encode(self.delayAfter, forKey: .delayAfter)
+            try container.encode(delayAfter, forKey: .delayAfter)
         }
     }
 }
@@ -68,25 +69,25 @@ public enum KeyboardInputContent: Codable {
     public init(from decoder: any Decoder) throws {
         do {
             let container = try decoder.singleValueContainer()
-            self = .text(try container.decode(String.self))
+            self = try .text(container.decode(String.self))
         } catch {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self = .key(
-                try container.decode(KeyboardKey.self, forKey: .key),
-                try container.decode(Set<KeyModifier>.self, forKey: .modifiers),
-                try container.decode(KeyPhase.self, forKey: .phase)
+            self = try .key(
+                container.decode(KeyboardKey.self, forKey: .key),
+                container.decode(Set<KeyModifier>.self, forKey: .modifiers),
+                container.decode(KeyPhase.self, forKey: .phase)
             )
         }
     }
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .key(let keyboardKey, let keyModifiers, let keyPhase):
+        case let .key(keyboardKey, keyModifiers, keyPhase):
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(keyboardKey.rawValue, forKey: .key)
             try container.encode(keyModifiers, forKey: .modifiers)
             try container.encode(keyPhase, forKey: .phase)
-        case .text(let string):
+        case let .text(string):
             var container = encoder.singleValueContainer()
             try container.encode(string)
         }

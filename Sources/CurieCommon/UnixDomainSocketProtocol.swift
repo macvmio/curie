@@ -258,7 +258,7 @@ extension MakeScreenshotPayload: Codable {}
 extension SynthesizeKeyboardPayload: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.input = try container.decode(KeyboardInput.self, forKey: .input)
+        input = try container.decode(KeyboardInput.self, forKey: .input)
     }
 
     enum CodingKeys: CodingKey {
@@ -268,6 +268,6 @@ extension SynthesizeKeyboardPayload: Codable {
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.input, forKey: .input)
+        try container.encode(input, forKey: .input)
     }
 }

@@ -22,15 +22,15 @@ extension KeyModifier {
     var nsEventModifierFlags: NSEvent.ModifierFlags {
         switch self {
         case .shift:
-            return .shift
+            .shift
         case .command:
-            return .command
+            .command
         case .option:
-            return .option
+            .option
         case .control:
-            return .control
-        case .fn:
-            return .function
+            .control
+        case .function:
+            .function
         }
     }
 
@@ -47,15 +47,15 @@ extension KeyModifier {
     var keyCode: Int {
         switch self {
         case .shift:
-            return kVK_Shift
+            kVK_Shift
         case .command:
-            return kVK_Command
+            kVK_Command
         case .option:
-            return kVK_Option
+            kVK_Option
         case .control:
-            return kVK_Control
-        case .fn:
-            return kVK_Function
+            kVK_Control
+        case .function:
+            kVK_Function
         }
     }
 }

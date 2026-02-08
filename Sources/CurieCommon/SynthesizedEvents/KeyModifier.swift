@@ -19,5 +19,5 @@ public enum KeyModifier: String, Codable, CaseIterable {
     case command
     case option
     case control
-    case fn
+    case function
 }
