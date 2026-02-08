@@ -26,17 +26,17 @@ final class SynthesizedEventsJSONTests: XCTestCase {
         "Hello"
         """
         let data = Data(jsonString.utf8)
-        
+
         let decoded = try decoder.decode(KeyboardInputContent.self, from: data)
-        
+
         guard case let .text(text) = decoded else {
             XCTFail("Expected .text case")
             return
         }
-        
+
         XCTAssertEqual(text, "Hello")
     }
-    
+
     func testDecodeFromRawJSON_KeyWithModifiers() throws {
         let jsonString = """
         {
@@ -46,19 +46,19 @@ final class SynthesizedEventsJSONTests: XCTestCase {
         }
         """
         let data = Data(jsonString.utf8)
-        
+
         let decoded = try decoder.decode(KeyboardInputContent.self, from: data)
-        
+
         guard case let .key(key, modifiers, phase) = decoded else {
             XCTFail("Expected .key case")
             return
         }
-        
+
         XCTAssertEqual(key, .return)
         XCTAssertEqual(modifiers, [.command, .shift])
         XCTAssertEqual(phase, .press)
     }
-    
+
     func testDecodeFromRawJSON_KeyboardInput() throws {
         let jsonString = """
         {
@@ -71,20 +71,20 @@ final class SynthesizedEventsJSONTests: XCTestCase {
         }
         """
         let data = Data(jsonString.utf8)
-        
+
         let decoded = try decoder.decode(KeyboardInput.self, from: data)
-        
+
         guard case let .key(key, modifiers, phase) = decoded.content else {
             XCTFail("Expected .key content")
             return
         }
-        
+
         XCTAssertEqual(key, .tab)
         XCTAssertEqual(modifiers, [.control])
         XCTAssertEqual(phase, .down)
         XCTAssertEqual(decoded.delayAfter, 0.25)
     }
-    
+
     func testDecodeFromRawJSON_KeyboardInputWithTextContent() throws {
         let jsonString = """
         {
@@ -92,57 +92,55 @@ final class SynthesizedEventsJSONTests: XCTestCase {
         }
         """
         let data = Data(jsonString.utf8)
-        
+
         let decoded = try decoder.decode(KeyboardInput.self, from: data)
-        
+
         guard case let .text(text) = decoded.content else {
             XCTFail("Expected .text content")
             return
         }
-        
+
         XCTAssertEqual(text, "Type this text")
         XCTAssertEqual(decoded.delayAfter, KeyboardInput.defaultdelayAfterStrokes)
     }
-    
-    // MARK: - Edge Cases
-    
+
     func testKeyboardInput_SpecialCharactersInText() throws {
         let specialText = "Hello\n\tWorld! @#$%^&*()"
         let input = KeyboardInput(content: .text(specialText))
         let data = try encoder.encode(input)
-        
+
         let decoded = try decoder.decode(KeyboardInput.self, from: data)
-        
+
         guard case let .text(decodedText) = decoded.content else {
             XCTFail("Expected text content")
             return
         }
-        
+
         XCTAssertEqual(decodedText, specialText)
     }
 
     func testKeyboardInput_ZeroDelay() throws {
         let input = KeyboardInput(content: .text("Fast"), delayAfter: 0.0)
         let data = try encoder.encode(input)
-        
+
         let decoded = try decoder.decode(KeyboardInput.self, from: data)
         XCTAssertEqual(decoded.delayAfter, 0.0)
     }
-    
+
     func testKeyboardInput_AllModifiersCombined() throws {
         let allModifiers: Set<KeyModifier> = [.shift, .command, .option, .control, .function]
         let input = KeyboardInput(
             content: .key(.space, allModifiers, .press)
         )
         let data = try encoder.encode(input)
-        
+
         let decoded = try decoder.decode(KeyboardInput.self, from: data)
-        
+
         guard case let .key(key, modifiers, phase) = decoded.content else {
             XCTFail("Expected key content")
             return
         }
-        
+
         XCTAssertEqual(key, .space)
         XCTAssertEqual(modifiers, allModifiers)
         XCTAssertEqual(phase, .press)
