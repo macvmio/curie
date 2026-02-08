@@ -59,10 +59,16 @@ public struct MakeScreenshotPayload {
 }
 
 public struct SynthesizeKeyboardPayload {
+    public static let defaultTimeout: TimeInterval = 10
+
     public var input: KeyboardInput
 
-    public init(input: KeyboardInput) {
+    /// Some meaningful timeout for the input to complete.
+    public var timeout: TimeInterval
+
+    public init(input: KeyboardInput, timeout: TimeInterval?) {
         self.input = input
+        self.timeout = timeout ?? Self.defaultTimeout
     }
 }
 
@@ -259,15 +265,19 @@ extension SynthesizeKeyboardPayload: Codable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         input = try container.decode(KeyboardInput.self, forKey: .input)
+        timeout = try container.decodeIfPresent(TimeInterval.self, forKey: .timeout) ?? Self.defaultTimeout
     }
 
     enum CodingKeys: CodingKey {
         case input
-        case waitToComplete
+        case timeout
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(input, forKey: .input)
+        if timeout != Self.defaultTimeout {
+            try container.encode(timeout, forKey: .timeout)
+        }
     }
 }

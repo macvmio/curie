@@ -17,10 +17,10 @@
 import CurieCommon
 
 extension KeyboardInput {
-    var allKeyStrokes: [KeyStroke] {
+    func allKeyStrokes() throws -> [KeyStroke] {
         switch content {
         case let .text(string):
-            return KeyStroke.keystrokesForTypingString(
+            return try KeyStroke.keystrokesForTypingString(
                 string,
                 delayAfter: delayAfter
             )

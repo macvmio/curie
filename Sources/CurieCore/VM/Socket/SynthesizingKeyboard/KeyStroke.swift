@@ -26,9 +26,16 @@ struct KeyStroke {
     var delayAfter: TimeInterval
 }
 
+struct KeyStrokeMappingError: Error, CustomStringConvertible {
+    public var character: Character
+    var description: String {
+        "Could not resolve keystroke for character: \(character)"
+    }
+}
+
 extension KeyStroke {
     // Resolve a character to a physical key code and required modifiers for a U.S. ANSI layout.
-    static func modifiedVirtualKey(for character: Character) -> ModifiedVirtualKey {
+    static func modifiedVirtualKey(for character: Character) throws -> ModifiedVirtualKey {
         if character.isNewline {
             return ModifiedVirtualKey(
                 virtualKey: VirtualKey(code: kVK_Return, characters: "", charactersIgnoringModifiers: ""),
@@ -36,21 +43,20 @@ extension KeyStroke {
             )
         }
 
-        if let result = CharacterKeyMapping.shared.mapping(for: character) {
-            return result
+        guard let modifiedVirtualKey = CharacterKeyMapping.shared.mapping(for: character) else {
+            throw KeyStrokeMappingError(character: character)
         }
-        print("Unsupported character: '\(character)'")
-        return CharacterKeyMapping.fallback(for: character)
+        return modifiedVirtualKey
     }
 
     static func keystrokesForTypingString(
         _ string: String,
         delayAfter: TimeInterval
-    ) -> [KeyStroke] {
+    ) throws -> [KeyStroke] {
         var strokes: [KeyStroke] = []
 
         for character in string {
-            let baseStroke = KeyStroke(
+            let baseStroke = try KeyStroke(
                 modifiedVirtualKey: modifiedVirtualKey(for: character),
                 phase: .press,
                 delayAfter: delayAfter

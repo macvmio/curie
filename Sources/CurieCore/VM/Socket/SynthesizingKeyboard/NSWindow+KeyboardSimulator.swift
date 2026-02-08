@@ -29,7 +29,7 @@ extension NSWindow {
     public func synthesize(
         keyboardInput: KeyboardInput,
         completion: @escaping () -> Void
-    ) {
+    ) throws {
         let eventGroup = DispatchGroup()
         defer {
             eventGroup.notify(queue: .main) {
@@ -39,7 +39,7 @@ extension NSWindow {
 
         var accumulatedDelayAfter: TimeInterval = 0
 
-        let allKeyStrokes = keyboardInput.allKeyStrokes
+        let allKeyStrokes = try keyboardInput.allKeyStrokes()
         for keyStroke in allKeyStrokes {
             post(
                 keyStroke: keyStroke,

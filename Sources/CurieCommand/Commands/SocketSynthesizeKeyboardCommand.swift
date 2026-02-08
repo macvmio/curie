@@ -34,6 +34,9 @@ struct SocketSynthesizeKeyboardCommand: Command {
     @Option(help: "Text input to synthesize; to synthesize complex input use `socket json` command.")
     var input: String
 
+    @Option(help: "Some meaningful timeout for input to complete.")
+    var timeout: Int = .init(SynthesizeKeyboardPayload.defaultTimeout)
+
     final class Executor: CommandExecutor {
         private let interactor: SocketInteractor
         private let console: Console
@@ -51,7 +54,8 @@ struct SocketSynthesizeKeyboardCommand: Command {
                         SynthesizeKeyboardPayload(
                             input: KeyboardInput(
                                 content: .text(command.input)
-                            )
+                            ),
+                            timeout: TimeInterval(command.timeout)
                         )
                     )
                 )

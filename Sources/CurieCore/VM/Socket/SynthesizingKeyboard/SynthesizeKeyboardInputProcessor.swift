@@ -23,21 +23,23 @@ final class SynthesizeKeyboardInputProcessor {
 
     func process(request: SynthesizeKeyboardPayload) -> PromisedSocketResponse {
         let response = BlockingSocketResponse(
-            timeout: .infinity,
+            timeout: request.timeout,
             closeSocketAfterDeliveringResponse: false
         )
 
         DispatchQueue.main.async {
             guard let targetWindow = NSApp.windows.first else {
-                response.set(
-                    response: .error("VM is missing window")
-                )
+                response.set(response: .error("VM is missing window"))
                 return
             }
 
-            targetWindow.synthesize(keyboardInput: request.input, completion: {
-                response.set(response: .success([:]))
-            })
+            do {
+                try targetWindow.synthesize(keyboardInput: request.input) {
+                    response.set(response: .success([:]))
+                }
+            } catch {
+                response.set(response: .error("Failed to synthesize keyboard input: \(error)"))
+            }
         }
 
         return response
