@@ -21,11 +21,11 @@ extension KeyPhase {
     var eventTypesToSynthesize: [NSEvent.EventType] {
         switch self {
         case .down:
-            return [.keyDown]
+            [.keyDown]
         case .up:
-            return [.keyUp]
+            [.keyUp]
         case .press:
-            return [.keyDown, .keyUp]
+            [.keyDown, .keyUp]
         }
     }
 }

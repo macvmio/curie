@@ -69,8 +69,10 @@ extension KeyStroke {
         return strokes
     }
 
-    /// Provides additional key strokes for the given modifiers. Part of these are coming before, and others - after the actual input.
-    /// Example: when input is `SHIFT+A`, the `SHIFT` key must be first pressed down, then the `A` key have to be pressed, then `SHIFT` must be unpressed.
+    /// Provides additional key strokes for the given modifiers. Part of these are coming before, and others - after the
+    /// actual input.
+    /// Example: when input is `SHIFT+A`, the `SHIFT` key must be first pressed down, then the `A` key have to be
+    /// pressed, then `SHIFT` must be unpressed.
     private static func wrappingStrokes(
         for flags: NSEvent.ModifierFlags,
         delayAfter: TimeInterval

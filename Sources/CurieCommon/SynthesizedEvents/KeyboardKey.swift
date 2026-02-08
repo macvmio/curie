@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-
 /// Human-friendly variants of various keys, mostly to make JSON user firendly.
 public enum KeyboardKey: String, Codable {
     case `return`, enter
