@@ -30,6 +30,7 @@ struct SocketCommand: Command {
             SocketTerminateVmCommand.self,
             SocketMakeScreenshotCommand.self,
             SocketJSONCommand.self,
+            SocketSynthesizeKeyboardCommand.self,
         ]
     )
 

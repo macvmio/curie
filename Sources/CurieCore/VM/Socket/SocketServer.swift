@@ -101,6 +101,10 @@ final class DefaultSocketServer: SocketServer {
                 screenshotter: screenshotter
             )
             promisedResponse = processor.process(request: makeScreenshotPayload)
+
+        case let .synthesizeKeyboard(synthesizeKeyboardPayload):
+            let processor = SynthesizeKeyboardInputProcessor()
+            promisedResponse = processor.process(request: synthesizeKeyboardPayload)
         }
 
         let socketResponse: CurieSocketResponse = promisedResponse.getSocketResponse()
