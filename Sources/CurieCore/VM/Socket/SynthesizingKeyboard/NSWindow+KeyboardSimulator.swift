@@ -39,49 +39,35 @@ extension NSWindow {
 
         var accumulatedDelayAfter: TimeInterval = 0
 
-        let strokes = keyboardInput.allKeyStrokes
-
-        for stroke in strokes {
-            let nsEventTypes: [NSEvent.EventType] = stroke.phase.eventTypesToSynthesize
-
+        let allKeyStrokes = keyboardInput.allKeyStrokes
+        for keyStroke in allKeyStrokes {
             post(
-                nsEventTypes: nsEventTypes,
-                code: stroke.modifiedVirtualKey.virtualKey.code,
-                characters: stroke.modifiedVirtualKey.virtualKey.characters,
-                charactersIgnoringModifiers: stroke.modifiedVirtualKey.virtualKey.charactersIgnoringModifiers,
-                modifierFlags: stroke.modifiedVirtualKey.modifierFlags,
-                delayAfter: stroke.delayAfter,
+                keyStroke: keyStroke,
                 accumulatedDelayAfter: &accumulatedDelayAfter,
                 eventGroup: eventGroup
             )
         }
     }
 
-    // swiftlint:disable:next function_parameter_count
     private func post(
-        nsEventTypes: [NSEvent.EventType],
-        code: Int,
-        characters: String,
-        charactersIgnoringModifiers: String,
-        modifierFlags: NSEvent.ModifierFlags,
-        delayAfter: TimeInterval,
+        keyStroke: KeyStroke,
         accumulatedDelayAfter: inout TimeInterval,
         eventGroup: DispatchGroup
     ) {
         var timestamp = ProcessInfo.processInfo.systemUptime
-
-        let events = nsEventTypes.compactMap { type in
+        let nsEventTypes: [NSEvent.EventType] = keyStroke.phase.eventTypesToSynthesize
+        let events = nsEventTypes.compactMap { (nsEventType: NSEvent.EventType) in
             NSEvent.keyEvent(
-                with: type,
+                with: nsEventType,
                 location: .zero,
-                modifierFlags: modifierFlags,
+                modifierFlags: keyStroke.modifiedVirtualKey.modifierFlags,
                 timestamp: timestamp,
                 windowNumber: windowNumber,
                 context: nil,
-                characters: characters,
-                charactersIgnoringModifiers: charactersIgnoringModifiers,
+                characters: keyStroke.modifiedVirtualKey.virtualKey.characters,
+                charactersIgnoringModifiers: keyStroke.modifiedVirtualKey.virtualKey.charactersIgnoringModifiers,
                 isARepeat: false,
-                keyCode: UInt16(code)
+                keyCode: UInt16(keyStroke.modifiedVirtualKey.virtualKey.code)
             )
         }
 
@@ -96,8 +82,8 @@ extension NSWindow {
                 eventGroup.leave()
             }
 
-            timestamp = ProcessInfo.processInfo.systemUptime + delayAfter
-            accumulatedDelayAfter += delayAfter
+            timestamp = ProcessInfo.processInfo.systemUptime + keyStroke.delayAfter
+            accumulatedDelayAfter += keyStroke.delayAfter
         }
     }
 }
