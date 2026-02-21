@@ -31,6 +31,7 @@ struct SocketCommand: Command {
             SocketMakeScreenshotCommand.self,
             SocketJSONCommand.self,
             SocketSynthesizeKeyboardCommand.self,
+            SocketSynthesizeMouseCommand.self,
         ]
     )
 
