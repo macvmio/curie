@@ -41,6 +41,7 @@ enum Setup {
         (SocketMakeScreenshotCommand.self, SocketMakeScreenshotCommand.Assembly()),
         (SocketPingCommand.self, SocketPingCommand.Assembly()),
         (SocketTerminateVmCommand.self, SocketTerminateVmCommand.Assembly()),
+        (SocketSynthesizeKeyboardCommand.self, SocketSynthesizeKeyboardCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
 
