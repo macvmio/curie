@@ -18,7 +18,7 @@ import Foundation
 
 public enum KeyboardInputContent: Codable {
     /// Single key with modifiers
-    case key(KeyboardKey, Set<KeyModifier> = [], KeyPhase = .press)
+    case key(KeyboardKey, modifiers: Set<KeyModifier> = [], phase: KeyPhase = .press)
 
     /// Generates key strokes to match given text
     case text(String)
@@ -38,8 +38,8 @@ public enum KeyboardInputContent: Codable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self = try .key(
                 container.decode(KeyboardKey.self, forKey: .key),
-                container.decode(Set<KeyModifier>.self, forKey: .modifiers),
-                container.decode(KeyPhase.self, forKey: .phase)
+                modifiers: container.decode(Set<KeyModifier>.self, forKey: .modifiers),
+                phase: container.decode(KeyPhase.self, forKey: .phase)
             )
         }
     }

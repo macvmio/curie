@@ -1,5 +1,5 @@
 //
-// Copyright 2024 Marcin Iwanicki, Tomasz Jarosik, and contributors
+// Copyright 2026 Marcin Iwanicki, Tomasz Jarosik, and contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 import Foundation
 
 public struct KeyboardInput: Codable {
-    public static let defaultdelayAfterStrokes = 0.1
+    public static let defaultDelayAfterStrokes = 0.1
 
     public var content: KeyboardInputContent
     public var delayAfter: TimeInterval
 
     public init(
         content: KeyboardInputContent,
-        delayAfter: TimeInterval = KeyboardInput.defaultdelayAfterStrokes
+        delayAfter: TimeInterval = KeyboardInput.defaultDelayAfterStrokes
     ) {
         self.content = content
         self.delayAfter = delayAfter
@@ -35,7 +35,7 @@ public struct KeyboardInput: Codable {
 
         content = try container.decode(KeyboardInputContent.self, forKey: .content)
         delayAfter = try container.decodeIfPresent(TimeInterval.self, forKey: .delayAfter) ?? KeyboardInput
-            .defaultdelayAfterStrokes
+            .defaultDelayAfterStrokes
     }
 
     enum CodingKeys: CodingKey {
@@ -46,7 +46,7 @@ public struct KeyboardInput: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(content, forKey: .content)
-        if delayAfter != Self.defaultdelayAfterStrokes {
+        if delayAfter != Self.defaultDelayAfterStrokes {
             try container.encode(delayAfter, forKey: .delayAfter)
         }
     }

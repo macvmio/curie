@@ -1,3 +1,4 @@
+//
 // Copyright 2026 Marcin Iwanicki, Tomasz Jarosik, and contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -101,7 +102,7 @@ final class SynthesizedEventsJSONTests: XCTestCase {
         }
 
         XCTAssertEqual(text, "Type this text")
-        XCTAssertEqual(decoded.delayAfter, KeyboardInput.defaultdelayAfterStrokes)
+        XCTAssertEqual(decoded.delayAfter, KeyboardInput.defaultDelayAfterStrokes)
     }
 
     func testKeyboardInput_SpecialCharactersInText() throws {
@@ -130,7 +131,7 @@ final class SynthesizedEventsJSONTests: XCTestCase {
     func testKeyboardInput_AllModifiersCombined() throws {
         let allModifiers: Set<KeyModifier> = [.shift, .command, .option, .control, .function]
         let input = KeyboardInput(
-            content: .key(.space, allModifiers, .press)
+            content: .key(.space, modifiers: allModifiers, phase: .press)
         )
         let data = try encoder.encode(input)
 

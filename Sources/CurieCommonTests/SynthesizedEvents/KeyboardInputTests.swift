@@ -46,9 +46,9 @@ final class KeyboardInputTests: XCTestCase {
         """.trimmingCharacters(in: .whitespacesAndNewlines))
     }
 
-    func testKeyboardInput_KeyContent_NoModifiers() throws {
+    func testKeyboardInput_KeyContent_WithModifier() throws {
         let input = KeyboardInput(
-            content: .key(.escape, [.command], .down),
+            content: .key(.escape, modifiers: [.command], phase: .down),
             delayAfter: 0.2
         )
         let data = try encoder.encode(input)
