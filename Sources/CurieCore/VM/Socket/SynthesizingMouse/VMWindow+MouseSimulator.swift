@@ -92,16 +92,11 @@ extension VMWindow {
                         return
                     }
 
-                    self.sendEventInActiveState(eventWithTimeOffset.event)
+                    sendEventInActiveState(eventWithTimeOffset.event)
 
-                    let visualClickRect = eventWithTimeOffset.visualizationRect(
-                        window: self,
-                        view: auxiliaryViewController.view
-                    )
+                    let clickView = ClickView(frame: eventWithTimeOffset.visualizationRect)
+                    auxiliaryViewController.view.addSubview(clickView)
 
-                    let clickView = ClickView(frame: visualClickRect)
-                    self.auxiliaryViewController.view.addSubview(clickView)
-                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + eventWithTimeOffset.nextEventAfter) {
                         clickView.removeFromSuperview()
                         eventGroup.leave()
@@ -151,7 +146,7 @@ private struct EventWithTimeOffset {
         timeOffset + nextEventAfter
     }
 
-    public func visualizationRect(window: NSWindow, view: NSView) -> NSRect {
+    public var visualizationRect: NSRect {
         let center = event.locationInWindow
         return NSRect(x: center.x - 10, y: center.y - 10, width: 20, height: 20)
     }

@@ -49,9 +49,9 @@ class VMWindow: NSWindow {
             self?.applicationDidBecomeActive()
         }
     }
-    
+
     public var viewToMakeFirstResponder: (VMWindow) -> NSView? = { _ in nil }
-    
+
     override func update() {
         super.update()
         makeFirstResponder(viewToMakeFirstResponder(self))
