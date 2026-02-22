@@ -18,10 +18,10 @@ import AppKit
 import CurieCommon
 import Foundation
 
-final class SynthesizeKeyboardInputProcessor {
+final class SynthesizeMouseInputProcessor {
     init() {}
 
-    func process(request: SynthesizeKeyboardPayload) -> PromisedSocketResponse {
+    func process(request: SynthesizeMousePayload) -> PromisedSocketResponse {
         let response = BlockingSocketResponse(
             timeout: request.timeout,
             closeSocketAfterDeliveringResponse: false
@@ -30,11 +30,14 @@ final class SynthesizeKeyboardInputProcessor {
         DispatchQueue.main.async {
             do {
                 let targetWindow = try NSApp.getSingleVmWindow()
-                try targetWindow.synthesize(keyboardInput: request.input, callbackQueue: .main) {
+                try targetWindow.synthesize(
+                    mouseClicks: request.mouseClicks,
+                    callbackQueue: .main
+                ) {
                     response.set(response: .success([:]))
                 }
             } catch {
-                response.set(response: .error("Failed to synthesize keyboard input: \(error)"))
+                response.set(response: .error("Failed to synthesize mouse input: \(error)"))
             }
         }
 

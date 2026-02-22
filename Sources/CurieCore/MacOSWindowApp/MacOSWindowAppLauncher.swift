@@ -65,7 +65,10 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
         let minWidth = CGFloat(VMConfig.DisplayConfig.minWidth)
         let minHeight = CGFloat(VMConfig.DisplayConfig.minHeight)
 
-        window = NSWindow(
+        let window = VMWindow(
+            vmViewController: NSHostingController(
+                rootView: MacOSWindowAppViewView(vm: MacOSWindowApp.vm)
+            ),
             contentRect: NSRect(x: 0, y: 0, width: idealWidth, height: idealHeight),
             styleMask: [.titled, .closable, .resizable, .miniaturizable],
             backing: .buffered,
@@ -75,13 +78,12 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
         window.setContentSize(NSSize(width: idealWidth, height: idealHeight))
         window.contentMinSize = NSSize(width: minWidth, height: minHeight)
         window.isReleasedWhenClosed = false
-        window.delegate = self
-
-        let hostingController = NSHostingController(
-            rootView: MacOSWindowAppViewView(vm: MacOSWindowApp.vm)
-        )
-        window.contentViewController = hostingController
+        window.viewToMakeFirstResponder = { window in
+            // VZVirtualMachineView should be created lazily by SwiftUI
+            window.contentView?.firstDescendant(of: VZVirtualMachineView.self)
+        }
         window.makeKeyAndOrderFront(nil)
+        self.window = window
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool {
@@ -97,15 +99,6 @@ private final class MacOSWindowAppDelegate: NSObject, NSApplicationDelegate, Obs
             machineStateURL: MacOSWindowApp.bundle.machineState.asURL
         )
         return .terminateCancel
-    }
-
-    func windowDidBecomeKey(_ notification: Notification) {
-        guard let window = notification.object as? NSWindow else {
-            return
-        }
-        if let vmView = window.contentView?.firstDescendant(of: VZVirtualMachineView.self) {
-            window.makeFirstResponder(vmView)
-        }
     }
 }
 
