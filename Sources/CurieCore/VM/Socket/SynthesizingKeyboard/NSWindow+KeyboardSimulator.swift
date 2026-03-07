@@ -26,13 +26,16 @@ extension NSWindow {
     /// Simulate the given sequence of keystrokes, routed through AppKit to the given window (defaults to keyWindow).
     /// - Parameters:
     ///   - keyboardInput: What to input
+    ///   - callbackQueue: thr queue where to schedule completion handler
+    ///   - completion: callabck that will be called once keyboard input is synthesized completely are performed
     public func synthesize(
         keyboardInput: KeyboardInput,
+        callbackQueue: DispatchQueue,
         completion: @escaping () -> Void
     ) throws {
         let eventGroup = DispatchGroup()
         defer {
-            eventGroup.notify(queue: .main) {
+            eventGroup.notify(queue: callbackQueue) {
                 completion()
             }
         }

@@ -23,6 +23,7 @@ public enum CurieSocketRequest {
     case terminateVm(TerminateVmPayload)
     case makeScreenshot(MakeScreenshotPayload)
     case synthesizeKeyboard(SynthesizeKeyboardPayload)
+    case synthesizeMouse(SynthesizeMousePayload)
 }
 
 // MARK: Request Payloads
@@ -51,10 +52,21 @@ public struct TerminateVmPayload {
 }
 
 public struct MakeScreenshotPayload {
+    public static let includeClickVisualizationDefaultValue: Bool = false
+
+    // Image will be created at this path.
     public var savePngImageAtPath: String
 
-    public init(savePngImageAtPath: String) {
+    // If mouse click visualization occurs during screenshot, should it be included into screenshot.
+    public var includeClickVisualization: Bool
+
+    public init(
+        savePngImageAtPath: String,
+        includeClickVisualization: Bool? = nil
+    ) {
         self.savePngImageAtPath = savePngImageAtPath
+        self.includeClickVisualization = includeClickVisualization ?? MakeScreenshotPayload
+            .includeClickVisualizationDefaultValue
     }
 }
 
@@ -66,8 +78,22 @@ public struct SynthesizeKeyboardPayload {
     /// Some meaningful timeout for the input to complete.
     public var timeout: TimeInterval
 
-    public init(input: KeyboardInput, timeout: TimeInterval?) {
+    public init(input: KeyboardInput, timeout: TimeInterval? = nil) {
         self.input = input
+        self.timeout = timeout ?? Self.defaultTimeout
+    }
+}
+
+public struct SynthesizeMousePayload {
+    public static let defaultTimeout: TimeInterval = 10
+
+    public var mouseClicks: [MouseClick]
+
+    /// Some meaningful timeout for the input to complete.
+    public var timeout: TimeInterval
+
+    public init(mouseClicks: [MouseClick], timeout: TimeInterval? = nil) {
+        self.mouseClicks = mouseClicks
         self.timeout = timeout ?? Self.defaultTimeout
     }
 }
@@ -101,6 +127,8 @@ public extension CurieSocketRequest {
             "Make screenshot"
         case .synthesizeKeyboard:
             "Synthesize keyboard input"
+        case .synthesizeMouse:
+            "Synthesize mouse input"
         }
     }
 }
@@ -111,6 +139,7 @@ extension CurieSocketRequest: Codable {
         case terminateVm
         case makeScreenshot
         case synthesizeKeyboard
+        case synthesizeMouse
     }
 
     public init(from decoder: Decoder) throws {
@@ -139,6 +168,9 @@ extension CurieSocketRequest: Codable {
         case .synthesizeKeyboard:
             let payload = try container.decode(SynthesizeKeyboardPayload.self, forKey: .synthesizeKeyboard)
             self = .synthesizeKeyboard(payload)
+        case .synthesizeMouse:
+            let payload = try container.decode(SynthesizeMousePayload.self, forKey: .synthesizeMouse)
+            self = .synthesizeMouse(payload)
         }
     }
 
@@ -153,6 +185,8 @@ extension CurieSocketRequest: Codable {
             try container.encode(payload, forKey: .makeScreenshot)
         case let .synthesizeKeyboard(payload):
             try container.encode(payload, forKey: .synthesizeKeyboard)
+        case let .synthesizeMouse(payload):
+            try container.encode(payload, forKey: .synthesizeMouse)
         }
     }
 }
@@ -276,6 +310,27 @@ extension SynthesizeKeyboardPayload: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(input, forKey: .input)
+        if timeout != Self.defaultTimeout {
+            try container.encode(timeout, forKey: .timeout)
+        }
+    }
+}
+
+extension SynthesizeMousePayload: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        mouseClicks = try container.decode([MouseClick].self, forKey: .mouseClicks)
+        timeout = try container.decodeIfPresent(TimeInterval.self, forKey: .timeout) ?? Self.defaultTimeout
+    }
+
+    enum CodingKeys: CodingKey {
+        case mouseClicks
+        case timeout
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(mouseClicks, forKey: .mouseClicks)
         if timeout != Self.defaultTimeout {
             try container.encode(timeout, forKey: .timeout)
         }

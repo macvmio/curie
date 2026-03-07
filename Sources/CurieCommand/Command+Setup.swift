@@ -42,6 +42,7 @@ enum Setup {
         (SocketPingCommand.self, SocketPingCommand.Assembly()),
         (SocketTerminateVmCommand.self, SocketTerminateVmCommand.Assembly()),
         (SocketSynthesizeKeyboardCommand.self, SocketSynthesizeKeyboardCommand.Assembly()),
+        (SocketSynthesizeMouseCommand.self, SocketSynthesizeMouseCommand.Assembly()),
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
 

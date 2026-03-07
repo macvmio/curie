@@ -28,7 +28,11 @@ final class MakeScreenshotRequestProcessor {
     func process(request: MakeScreenshotPayload) -> PromisedSocketResponse {
         DispatchQueue.main.sync {
             do {
-                try screenshotter.makePngScreeshot(createPngImageAtPath: request.savePngImageAtPath)
+                try screenshotter.makePngScreeshot(
+                    vmWindow: NSApp.getSingleVmWindow(),
+                    createPngImageAtPath: request.savePngImageAtPath,
+                    includeClickVisualization: request.includeClickVisualization
+                )
                 return ConstantPromisedSocketResponse(
                     response: .success(["imagePath": .string(request.savePngImageAtPath)]),
                     closeSocketAfterDeliveringResponse: false
@@ -44,7 +48,11 @@ final class MakeScreenshotRequestProcessor {
 }
 
 protocol Screenshotter: AnyObject {
-    func makePngScreeshot(createPngImageAtPath: String) throws
+    func makePngScreeshot(
+        vmWindow: VMWindow,
+        createPngImageAtPath: String,
+        includeClickVisualization: Bool
+    ) throws
 }
 
 enum ScreenshotterError: Error, CustomStringConvertible {
@@ -68,25 +76,26 @@ enum ScreenshotterError: Error, CustomStringConvertible {
 }
 
 final class DefaultScreenshotter: Screenshotter {
-    init() {}
-
-    public func makePngScreeshot(createPngImageAtPath path: String) throws {
-        let screenshot = try screenshotOfKeyWindow()
+    public func makePngScreeshot(
+        vmWindow: VMWindow,
+        createPngImageAtPath path: String,
+        includeClickVisualization: Bool
+    ) throws {
+        let screenshot = try screenshotOfVm(
+            vmWindow: vmWindow,
+            includeClickVisualization: includeClickVisualization
+        )
         let pngData = try pngData(from: screenshot)
         try pngData.write(to: URL(fileURLWithPath: path), options: .atomic)
     }
 
-    private func screenshotOfKeyWindow() throws -> NSImage {
-        guard let window = NSApp.windows.first else {
-            throw ScreenshotterError.noWindow
-        }
-        return try image(of: window)
-    }
-
-    private func image(of window: NSWindow) throws -> NSImage {
-        guard let view = window.contentView else {
-            throw ScreenshotterError.noWindowContentView
-        }
+    private func screenshotOfVm(
+        vmWindow: VMWindow,
+        includeClickVisualization: Bool
+    ) throws -> NSImage {
+        let view = vmWindow.viewForMakingVmScreenshot(
+            includeClickVisualization: includeClickVisualization
+        )
 
         let bounds = view.bounds
         guard let rep = view.bitmapImageRepForCachingDisplay(in: bounds) else {

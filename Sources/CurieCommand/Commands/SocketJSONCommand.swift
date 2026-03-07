@@ -82,6 +82,19 @@ extension CurieSocketRequest: @retroactive ExpressibleByArgument {
             .ping(PingPayload()),
             .terminateVm(TerminateVmPayload(waitToComplete: true, timeout: 10)),
             .makeScreenshot(MakeScreenshotPayload(savePngImageAtPath: "/path/to/output.png")),
+            .synthesizeKeyboard(SynthesizeKeyboardPayload(input: KeyboardInput(content: .text("hello")), timeout: nil)),
+            .synthesizeKeyboard(SynthesizeKeyboardPayload(input: KeyboardInput(content: .key(
+                .enter,
+                modifiers: [.shift],
+                phase: .press
+            )))),
+            .synthesizeMouse(SynthesizeMousePayload(mouseClicks: [.single(point: MouseCoordinate(x: 100, y: 200))])),
+            .synthesizeMouse(SynthesizeMousePayload(mouseClicks: [.single(
+                button: .right,
+                point: MouseCoordinate(x: 100, y: 200),
+                modifiers: [.shift],
+                delayAfter: 0.25
+            )])),
         ]
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]

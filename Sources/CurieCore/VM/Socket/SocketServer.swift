@@ -105,6 +105,10 @@ final class DefaultSocketServer: SocketServer {
         case let .synthesizeKeyboard(synthesizeKeyboardPayload):
             let processor = SynthesizeKeyboardInputProcessor()
             promisedResponse = processor.process(request: synthesizeKeyboardPayload)
+
+        case let .synthesizeMouse(synthesizeMousePayload):
+            let processor = SynthesizeMouseInputProcessor()
+            promisedResponse = processor.process(request: synthesizeMousePayload)
         }
 
         let socketResponse: CurieSocketResponse = promisedResponse.getSocketResponse()
