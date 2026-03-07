@@ -16,7 +16,7 @@
 
 import Foundation
 
-public enum KeyboardInputContent: Codable {
+public enum KeyboardInputContent: Sendable, Codable {
     /// Single key with modifiers
     case key(KeyboardKey, modifiers: Set<KeyModifier> = [], phase: KeyPhase = .press)
 

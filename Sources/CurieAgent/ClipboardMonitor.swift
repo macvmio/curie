@@ -21,7 +21,7 @@ protocol ClipboardMonitorDelegate: AnyObject {
     func clipboardMonitor(_ monitor: ClipboardMonitor, didDetectChange content: ClipboardContent)
 }
 
-final class ClipboardMonitor {
+final class ClipboardMonitor: @unchecked Sendable {
     weak var delegate: ClipboardMonitorDelegate?
 
     private var lastChangeCount: Int = 0

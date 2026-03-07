@@ -85,9 +85,9 @@ public final class TableRenderer {
             }
         }
 
-        private static let jsonDateFormatter = ISO8601DateFormatter()
+        private nonisolated(unsafe) static let jsonDateFormatter = ISO8601DateFormatter()
 
-        private static let humanDateFormatter: RelativeDateTimeFormatter = {
+        private nonisolated(unsafe) static let humanDateFormatter: RelativeDateTimeFormatter = {
             let formatter = RelativeDateTimeFormatter()
             formatter.unitsStyle = .full
             formatter.locale = Locale(identifier: "en_US_POSIX")

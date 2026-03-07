@@ -38,13 +38,17 @@ final class TerminateVmRequestProcessor {
             closeSocketAfterDeliveringResponse: closeSocketAfterDeliveringResponse
         )
 
+        nonisolated(unsafe) let vm = vm
+        nonisolated(unsafe) let vmBundle = vmBundle
+        nonisolated(unsafe) let unsafeResponse = settableResponse
+
         DispatchQueue.main.async {
             vm.terminateVmAndCurrentProcess(machineStateURL: vmBundle.machineState.asURL) { terminationResult in
                 switch terminationResult {
                 case .success:
-                    settableResponse.set(response: .success([:]))
+                    unsafeResponse.set(response: .success([:]))
                 case let .failure(error):
-                    settableResponse.set(response: .error("Failed to terminate VM: \(error)"))
+                    unsafeResponse.set(response: .error("Failed to terminate VM: \(error)"))
                 }
 
                 socketQueue.sync(flags: .barrier) {}

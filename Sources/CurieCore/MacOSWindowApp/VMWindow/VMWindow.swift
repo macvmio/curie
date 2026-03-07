@@ -46,7 +46,9 @@ class VMWindow: NSWindow {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.applicationDidBecomeActive()
+            MainActor.assumeIsolated {
+                self?.applicationDidBecomeActive()
+            }
         }
     }
 
@@ -58,9 +60,11 @@ class VMWindow: NSWindow {
     }
 
     deinit {
-        if let observer {
-            NotificationCenter.default.removeObserver(observer)
-            self.observer = nil
+        MainActor.assumeIsolated {
+            if let observer {
+                NotificationCenter.default.removeObserver(observer)
+                self.observer = nil
+            }
         }
     }
 

@@ -67,7 +67,7 @@ final class DefaultVMConfigurator: VMConfigurator {
         try createDiskImage(atPath: bundle.diskImage, size: spec.diskSize)
 
         // Create platform configuration
-        let restoreImage = try await loadRestoreImage(spec: spec)
+        nonisolated(unsafe) let restoreImage = try await loadRestoreImage(spec: spec)
         try createPlatformConfiguration(bundle: bundle, restoreImage: restoreImage)
     }
 
@@ -258,12 +258,8 @@ final class DefaultVMConfigurator: VMConfigurator {
     private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {
         try await withCheckedThrowingContinuation { continuation in
             VZMacOSRestoreImage.load(from: spec.restoreImagePath.asURL) { result in
-                switch result {
-                case let .success(restoreImage):
-                    continuation.resume(returning: restoreImage)
-                case let .failure(error):
-                    continuation.resume(throwing: error)
-                }
+                nonisolated(unsafe) let result = result
+                continuation.resume(with: result)
             }
         }
     }

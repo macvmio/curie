@@ -17,7 +17,7 @@
 import Carbon.HIToolbox
 
 final class CharacterKeyMapping {
-    static let shared = CharacterKeyMapping()
+    nonisolated(unsafe) static let shared = CharacterKeyMapping()
 
     private let characterMappings: [Character: (code: Int, needsShift: Bool)]
 

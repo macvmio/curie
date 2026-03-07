@@ -26,7 +26,8 @@ final class MakeScreenshotRequestProcessor {
     }
 
     func process(request: MakeScreenshotPayload) -> PromisedSocketResponse {
-        DispatchQueue.main.sync {
+        nonisolated(unsafe) let screenshotter = screenshotter
+        return DispatchQueue.main.sync {
             do {
                 try screenshotter.makePngScreeshot(
                     vmWindow: NSApp.getSingleVmWindow(),
@@ -48,7 +49,7 @@ final class MakeScreenshotRequestProcessor {
 }
 
 protocol Screenshotter: AnyObject {
-    func makePngScreeshot(
+    @MainActor func makePngScreeshot(
         vmWindow: VMWindow,
         createPngImageAtPath: String,
         includeClickVisualization: Bool
@@ -76,6 +77,7 @@ enum ScreenshotterError: Error, CustomStringConvertible {
 }
 
 final class DefaultScreenshotter: Screenshotter {
+    @MainActor
     public func makePngScreeshot(
         vmWindow: VMWindow,
         createPngImageAtPath path: String,
@@ -89,6 +91,7 @@ final class DefaultScreenshotter: Screenshotter {
         try pngData.write(to: URL(fileURLWithPath: path), options: .atomic)
     }
 
+    @MainActor
     private func screenshotOfVm(
         vmWindow: VMWindow,
         includeClickVisualization: Bool

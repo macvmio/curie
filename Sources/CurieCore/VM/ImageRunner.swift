@@ -171,6 +171,11 @@ final class DefaultImageRunner: ImageRunner {
         }
         vm.addSourceSignal(sigterm)
 
-        windowAppLauncher.launchWindow(with: vm, bundle: bundle)
+        nonisolated(unsafe) let vm = vm
+        nonisolated(unsafe) let bundle = bundle
+        nonisolated(unsafe) let launcher = windowAppLauncher
+        MainActor.assumeIsolated {
+            launcher.launchWindow(with: vm, bundle: bundle)
+        }
     }
 }

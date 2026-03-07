@@ -47,7 +47,7 @@ extension Output {
     }
 }
 
-public final class StandardOutput: Output {
+public final class StandardOutput: Output, @unchecked Sendable {
     public static let shared = StandardOutput()
 
     private let lock = NSLock()
@@ -92,7 +92,7 @@ final class ForwardOutput: Output {
     }
 }
 
-public final class CaptureOutput: Output {
+public final class CaptureOutput: Output, @unchecked Sendable {
     #if DEBUG
         public static let tests = CaptureOutput()
     #endif

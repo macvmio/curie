@@ -24,7 +24,7 @@ public protocol ClipboardSyncService {
     func stop()
 }
 
-public final class DefaultClipboardSyncService: NSObject, ClipboardSyncService {
+public final class DefaultClipboardSyncService: NSObject, ClipboardSyncService, @unchecked Sendable {
     private let console: Console
     private var socketDevice: VZVirtioSocketDevice?
     private var connection: VZVirtioSocketConnection?
@@ -199,6 +199,7 @@ public final class DefaultClipboardSyncService: NSObject, ClipboardSyncService {
 
         case .clipboardData:
             if let content = message.parseClipboardContent() {
+                nonisolated(unsafe) let content = content
                 DispatchQueue.main.async { [weak self] in
                     self?.writeHostClipboard(content: content)
                 }

@@ -37,7 +37,7 @@ protocol HostConnectionDelegate: AnyObject {
     func connection(_ connection: HostConnection, didReceive message: ClipboardMessage)
 }
 
-final class HostConnection {
+final class HostConnection: @unchecked Sendable {
     weak var delegate: HostConnectionDelegate?
 
     private let console: Console

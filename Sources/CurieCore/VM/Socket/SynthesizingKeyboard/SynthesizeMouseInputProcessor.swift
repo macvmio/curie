@@ -26,6 +26,7 @@ final class SynthesizeMouseInputProcessor {
             timeout: request.timeout,
             closeSocketAfterDeliveringResponse: false
         )
+        nonisolated(unsafe) let unsafeResponse = response
 
         DispatchQueue.main.async {
             do {
@@ -34,10 +35,10 @@ final class SynthesizeMouseInputProcessor {
                     mouseClicks: request.mouseClicks,
                     callbackQueue: .main
                 ) {
-                    response.set(response: .success([:]))
+                    unsafeResponse.set(response: .success([:]))
                 }
             } catch {
-                response.set(response: .error("Failed to synthesize mouse input: \(error)"))
+                unsafeResponse.set(response: .error("Failed to synthesize mouse input: \(error)"))
             }
         }
 

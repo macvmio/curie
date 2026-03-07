@@ -53,12 +53,14 @@ public final class URLSessionHTTPClient: HTTPClient {
                 }
             }
             if let tracker {
+                nonisolated(unsafe) let unsafeTracker = tracker
+                nonisolated(unsafe) let unsafeSelf = self
                 observer = task.progress.observe(\.fractionCompleted, options: [.initial, .new]) { _, _ in
                     let received = MemorySize(bytes: UInt64(task.countOfBytesReceived))
                     let expected = MemorySize(bytes: UInt64(task.countOfBytesExpectedToReceive))
                     let progress = expected.bytes > 0 ? Double(received.bytes) / Double(expected.bytes) : 0.0
-                    tracker.httpClient(
-                        self,
+                    unsafeTracker.httpClient(
+                        unsafeSelf,
                         progress: .init(received: received, expected: expected, progress: progress)
                     )
                 }

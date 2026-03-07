@@ -44,7 +44,7 @@ protocol AsyncInteractor: AnyObject {
     func execute(parameters: Parameters) async throws
 }
 
-final class DefaultInteractor: Interactor {
+final class DefaultInteractor: Interactor, @unchecked Sendable {
     private let buildInteractor: BuildInteractor
     private let cloneInteractor: CloneInteractor
     private let commitInteractor: CommitInteractor
@@ -100,6 +100,7 @@ final class DefaultInteractor: Interactor {
 
     // swiftlint:disable:next cyclomatic_complexity
     func execute(_ operation: Operation) throws {
+        nonisolated(unsafe) let operation = operation
         try runLoop.run { [self] _ in
             switch operation {
             case let .build(parameters):

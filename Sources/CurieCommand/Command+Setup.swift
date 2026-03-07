@@ -18,10 +18,10 @@ import ArgumentParser
 import CurieCommon
 import CurieCore
 import Foundation
-import SCInject
+@preconcurrency import SCInject
 
 enum Setup {
-    static let allStaticSubcommands: [(ParsableCommand.Type, Assembly)] = [
+    nonisolated(unsafe) static let allStaticSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (BuildCommand.self, BuildCommand.Assembly()),
         (CloneCommand.self, CloneCommand.Assembly()),
         (ConfigCommand.self, ConfigCommand.Assembly()),
@@ -46,7 +46,7 @@ enum Setup {
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
 
-    static let allRuntimeSubcommands: [(ParsableCommand.Type, Assembly)] = [
+    nonisolated(unsafe) static let allRuntimeSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (PullCommand.self, PullCommand.Assembly()),
         (PushCommand.self, PushCommand.Assembly()),
     ]
@@ -104,7 +104,7 @@ extension ParsableCommand {
 }
 
 private enum Shared {
-    static let resolver = Setup.resolver(with: DefaultContainer())
+    nonisolated(unsafe) static let resolver = Setup.resolver(with: DefaultContainer())
 }
 
 private extension CommandConfiguration {

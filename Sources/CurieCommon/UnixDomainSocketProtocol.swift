@@ -18,7 +18,7 @@ import Foundation
 
 // MARK: - Request
 
-public enum CurieSocketRequest {
+public enum CurieSocketRequest: Sendable {
     case ping(PingPayload)
     case terminateVm(TerminateVmPayload)
     case makeScreenshot(MakeScreenshotPayload)
@@ -28,11 +28,11 @@ public enum CurieSocketRequest {
 
 // MARK: Request Payloads
 
-public struct PingPayload {
+public struct PingPayload: Sendable {
     public init() {}
 }
 
-public struct TerminateVmPayload {
+public struct TerminateVmPayload: Sendable {
     private static let waitToCompleteDefaultValue: Bool = true
     private static let defaultTimeout: TimeInterval = 10
 
@@ -51,7 +51,7 @@ public struct TerminateVmPayload {
     }
 }
 
-public struct MakeScreenshotPayload {
+public struct MakeScreenshotPayload: Sendable {
     public static let includeClickVisualizationDefaultValue: Bool = false
 
     // Image will be created at this path.
@@ -70,7 +70,7 @@ public struct MakeScreenshotPayload {
     }
 }
 
-public struct SynthesizeKeyboardPayload {
+public struct SynthesizeKeyboardPayload: Sendable {
     public static let defaultTimeout: TimeInterval = 10
 
     public var input: KeyboardInput
@@ -84,7 +84,7 @@ public struct SynthesizeKeyboardPayload {
     }
 }
 
-public struct SynthesizeMousePayload {
+public struct SynthesizeMousePayload: Sendable {
     public static let defaultTimeout: TimeInterval = 10
 
     public var mouseClicks: [MouseClick]
@@ -100,14 +100,14 @@ public struct SynthesizeMousePayload {
 
 // MARK: - Response
 
-public enum CurieSocketResponse {
+public enum CurieSocketResponse: Sendable {
     case success([String: ResponseValue])
     case error(String)
 }
 
 // MARK: Response Payloads
 
-public enum ResponseValue {
+public enum ResponseValue: Sendable {
     case string(String)
     case bool(Bool)
     case int(Int)

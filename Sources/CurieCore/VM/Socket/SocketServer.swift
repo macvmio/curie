@@ -29,7 +29,7 @@ protocol SocketServer {
     func stop() throws
 }
 
-final class DefaultSocketServer: SocketServer {
+final class DefaultSocketServer: SocketServer, @unchecked Sendable {
     private let lock = NSLock()
     private let socketQueue: DispatchQueue
     private let unixSocketServer = UnixDomainSocketServer()
@@ -48,6 +48,8 @@ final class DefaultSocketServer: SocketServer {
         vm: VM,
         vmBundle: VMBundle
     ) throws {
+        nonisolated(unsafe) let vm = vm
+        nonisolated(unsafe) let vmBundle = vmBundle
         try lock.withLock {
             _ = try unixSocketServer.start(
                 socketPath: socketPath,

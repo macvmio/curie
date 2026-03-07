@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct MemorySize: Equatable, Codable, CustomStringConvertible, Comparable {
+public struct MemorySize: Sendable, Equatable, Codable, CustomStringConvertible, Comparable {
     public let bytes: UInt64
 
     enum CodingKeys: CodingKey {
