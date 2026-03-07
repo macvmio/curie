@@ -9,7 +9,7 @@ let package = Package(
         .macOS(.v13),
     ],
     dependencies: [
-        .package(url: "https://github.com/macvmio/SwiftCommons.git", .upToNextMajor(from: "0.2.1")),
+        .package(url: "https://github.com/macvmio/SwiftCommons.git", .upToNextMajor(from: "0.3.0")),
         .package(url: "https://github.com/apple/swift-tools-support-core", .upToNextMajor(from: "0.6.1")),
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.5.0")),
     ],
