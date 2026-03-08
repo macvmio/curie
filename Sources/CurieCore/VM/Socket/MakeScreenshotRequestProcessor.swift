@@ -49,7 +49,8 @@ final class MakeScreenshotRequestProcessor {
 }
 
 protocol Screenshotter: AnyObject {
-    @MainActor func makePngScreeshot(
+    @MainActor
+    func makePngScreeshot(
         vmWindow: VMWindow,
         createPngImageAtPath: String,
         includeClickVisualization: Bool

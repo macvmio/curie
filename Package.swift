@@ -3,6 +3,10 @@
 
 import PackageDescription
 
+let swiftSettings: [SwiftSetting] = [
+    .unsafeFlags(["-warnings-as-errors"]),
+]
+
 let package = Package(
     name: "curie",
     platforms: [
@@ -19,14 +23,16 @@ let package = Package(
             dependencies: [
                 .target(name: "CurieCommand"),
             ],
-            path: "Sources/Curie"
+            path: "Sources/Curie",
+            swiftSettings: swiftSettings
         ),
         .executableTarget(
             name: "curie-agent",
             dependencies: [
                 .target(name: "CurieCommon"),
             ],
-            path: "Sources/CurieAgent"
+            path: "Sources/CurieAgent",
+            swiftSettings: swiftSettings
         ),
         .target(
             name: "CurieCommand",
@@ -36,7 +42,8 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .testTarget(
             name: "CurieCommandTests",
@@ -47,7 +54,8 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .target(
             name: "CurieCore",
@@ -55,14 +63,16 @@ let package = Package(
                 .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .target(
             name: "CurieCoreMocks",
             dependencies: [
                 .target(name: "CurieCore"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .testTarget(
             name: "CurieCoreTests",
@@ -72,14 +82,16 @@ let package = Package(
                 .target(name: "CurieCommonMocks"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .target(
             name: "CurieCommon",
             dependencies: [
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .target(
             name: "CurieCommonMocks",
@@ -87,7 +99,8 @@ let package = Package(
                 .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .testTarget(
             name: "CurieCommonTests",
@@ -96,7 +109,8 @@ let package = Package(
                 .target(name: "CurieCommonMocks"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
                 .product(name: "SCInject", package: "SwiftCommons"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
     ]
 )
