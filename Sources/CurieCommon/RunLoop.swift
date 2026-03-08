@@ -21,12 +21,13 @@ public protocol RunLoopAccessor {
     func error(_ error: CoreError)
 }
 
-public protocol RunLoop: RunLoopAccessor {
-    func run(_ closure: @escaping (RunLoopAccessor) async throws -> Void) throws
+@MainActor
+public protocol RunLoop: RunLoopAccessor, Sendable {
+    func run(_ closure: @escaping @Sendable (RunLoopAccessor) async throws -> Void) throws
 }
 
-public class DefaultRunLoop: RunLoop {
-    public enum Interval: TimeInterval {
+public class DefaultRunLoop: RunLoop, @unchecked Sendable {
+    public enum Interval: TimeInterval, Sendable {
         case `default` = 1.0
         case short = 0.001
     }
@@ -37,11 +38,11 @@ public class DefaultRunLoop: RunLoop {
 
     private let interval: Interval
 
-    public init(interval: Interval = .default) {
+    public nonisolated init(interval: Interval = .default) {
         self.interval = interval
     }
 
-    public func run(_ closure: @escaping (any RunLoopAccessor) async throws -> Void) throws {
+    public func run(_ closure: @escaping @Sendable (any RunLoopAccessor) async throws -> Void) throws {
         Task { [weak self] in
             guard let self else { return }
             do {

@@ -18,7 +18,7 @@ import Combine
 import CurieCommon
 import Foundation
 
-public struct CreateParameters {
+public struct CreateParameters: Sendable {
     public var reference: String
     public var name: String?
 
@@ -31,12 +31,13 @@ public struct CreateParameters {
     }
 }
 
+@MainActor
 final class CreateInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let bundleParser: VMBundleParser
     private let console: Console
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         bundleParser: VMBundleParser,
         console: Console

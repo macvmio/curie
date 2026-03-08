@@ -17,6 +17,7 @@
 import CurieCommon
 import Foundation
 
+@MainActor
 final class AgentRunner {
     private let console: Console
     private let connection: HostConnection

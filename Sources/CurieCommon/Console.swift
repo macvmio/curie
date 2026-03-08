@@ -16,7 +16,7 @@
 
 import Foundation
 
-public protocol Console: AnyObject {
+public protocol Console: AnyObject, Sendable {
     var output: Output { get }
     var quiet: Bool { get set }
 

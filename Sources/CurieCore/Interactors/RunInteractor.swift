@@ -31,6 +31,7 @@ public struct RunInteractorContext {
 }
 
 public protocol RunInteractor {
+    @MainActor
     func execute(with context: RunInteractorContext) throws
 }
 
@@ -57,6 +58,7 @@ public final class DefaultRunInteractor: RunInteractor {
         self.console = console
     }
 
+    @MainActor
     public func execute(with context: RunInteractorContext) throws {
         console.text("Run image \(context.reference)")
 

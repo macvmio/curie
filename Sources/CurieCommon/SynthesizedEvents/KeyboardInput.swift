@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct KeyboardInput: Codable {
+public struct KeyboardInput: Sendable, Codable {
     public static let defaultDelayAfterStrokes = 0.1
 
     public var content: KeyboardInputContent

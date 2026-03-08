@@ -21,7 +21,7 @@ public struct ErrorResponse: Codable {
     public let reason: String
 }
 
-public final class ServerListeningHandle {
+public final class ServerListeningHandle: @unchecked Sendable {
     public let socketPath: String
     public let fileDescriptor: Int32
     public private(set) var isListening: Bool
@@ -61,7 +61,7 @@ public struct Response<T: Codable> {
     }
 }
 
-public final class UnixDomainSocketServer {
+public final class UnixDomainSocketServer: @unchecked Sendable {
     private let lock = NSLock()
     private var trackedHandles: [ServerListeningHandle] = []
 
@@ -83,9 +83,9 @@ public final class UnixDomainSocketServer {
         }
     }
 
-    public func start<RequestPayload: Codable>(
+    public func start<RequestPayload: Codable & Sendable>(
         socketPath: String,
-        responseProvider: @escaping (RequestPayload) -> Response<some Codable>,
+        responseProvider: @escaping @Sendable (RequestPayload) -> Response<some Codable & Sendable>,
         connectionQueue: DispatchQueue
     ) throws -> ServerListeningHandle {
         let serverFileDescriptor = socket(AF_UNIX, SOCK_STREAM, 0)
@@ -145,7 +145,7 @@ public final class UnixDomainSocketServer {
         return listeningHandle
     }
 
-    private func handleClient<RequestPayload: Codable, ResponsePayload: Codable>(
+    private func handleClient<RequestPayload: Codable & Sendable, ResponsePayload: Codable & Sendable>(
         listeningHandle: ServerListeningHandle,
         clientFileDescriptor: Int32,
         responseProvider: (RequestPayload) -> Response<ResponsePayload>

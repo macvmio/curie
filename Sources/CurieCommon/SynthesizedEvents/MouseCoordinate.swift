@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct MouseCoordinate: Codable {
+public struct MouseCoordinate: Sendable, Codable {
     // swiftlint:disable:next identifier_name
     public var x: Int
     // swiftlint:disable:next identifier_name

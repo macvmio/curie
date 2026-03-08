@@ -21,6 +21,7 @@ import SwiftUI
 import Virtualization
 
 final class MacOSWindowAppLauncher {
+    @MainActor
     func launchWindow(with vm: VM, bundle: VMBundle) {
         let app = NSApplication.shared
         app.setActivationPolicy(.regular)

@@ -26,15 +26,16 @@ final class SynthesizeKeyboardInputProcessor {
             timeout: request.timeout,
             closeSocketAfterDeliveringResponse: false
         )
+        nonisolated(unsafe) let unsafeResponse = response
 
         DispatchQueue.main.async {
             do {
                 let targetWindow = try NSApp.getSingleVmWindow()
                 try targetWindow.synthesize(keyboardInput: request.input, callbackQueue: .main) {
-                    response.set(response: .success([:]))
+                    unsafeResponse.set(response: .success([:]))
                 }
             } catch {
-                response.set(response: .error("Failed to synthesize keyboard input: \(error)"))
+                unsafeResponse.set(response: .error("Failed to synthesize keyboard input: \(error)"))
             }
         }
 

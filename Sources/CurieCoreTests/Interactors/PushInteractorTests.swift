@@ -22,6 +22,7 @@ import Foundation
 import SCInject
 import XCTest
 
+@MainActor
 final class PushInteractorTests: XCTestCase {
     private var subject: Interactor!
     private var env: InteractorsTestsEnvironment!

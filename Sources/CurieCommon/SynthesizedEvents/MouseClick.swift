@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct MouseClick: Codable {
+public struct MouseClick: Sendable, Codable {
     public static let defaultDelayBetweenClicks: TimeInterval = 0.1
 
     public var point: MouseCoordinate

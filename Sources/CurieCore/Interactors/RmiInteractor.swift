@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct RmiParameters {
+public struct RmiParameters: Sendable {
     public var reference: String
 
     public init(reference: String) {
@@ -25,11 +25,12 @@ public struct RmiParameters {
     }
 }
 
+@MainActor
 final class RmiInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         console: Console
     ) {

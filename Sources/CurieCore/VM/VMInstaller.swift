@@ -19,7 +19,8 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-protocol VMInstaller {
+@MainActor
+protocol VMInstaller: Sendable {
     func install(vm: VM, restoreImagePath: AbsolutePath) async throws
 }
 
@@ -27,21 +28,23 @@ final class DefaultVMInstaller: VMInstaller {
     private let console: Console
     private let queue: DispatchQueue = .main
 
-    init(console: Console) {
+    nonisolated init(console: Console) {
         self.console = console
     }
 
     func install(vm: VM, restoreImagePath: AbsolutePath) async throws {
-        let result = await withCheckedContinuation { continuation in
-            queue.async { [console] in
-                let installer = VZMacOSInstaller(
-                    virtualMachine: vm.virtualMachine,
-                    restoringFromImageAt: restoreImagePath.asURL
-                )
+        let result = await withCheckedContinuation { [console] continuation in
+            queue.async {
+                let installer = MainActor.assumeIsolated {
+                    VZMacOSInstaller(
+                        virtualMachine: vm.virtualMachine,
+                        restoringFromImageAt: restoreImagePath.asURL
+                    )
+                }
                 let observer: NSKeyValueObservation = installer.progress.observe(
                     \.fractionCompleted,
                     options: [.initial, .new]
-                ) { [console] _, change in
+                ) { _, change in
                     console.progress(prompt: "Building", progress: change.newValue ?? 0)
                 }
                 installer.install { result in

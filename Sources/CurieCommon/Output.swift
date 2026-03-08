@@ -17,12 +17,12 @@
 import Darwin
 import Foundation
 
-public enum OutputStream {
+public enum OutputStream: Sendable {
     case stdout
     case stderr
 }
 
-public protocol Output: AnyObject {
+public protocol Output: AnyObject, Sendable {
     func write(_ string: String, to stream: OutputStream)
 
     func write(_ string: String)
@@ -47,7 +47,7 @@ extension Output {
     }
 }
 
-public final class StandardOutput: Output {
+public final class StandardOutput: Output, @unchecked Sendable {
     public static let shared = StandardOutput()
 
     private let lock = NSLock()
@@ -71,13 +71,13 @@ public final class StandardOutput: Output {
     }
 }
 
-final class ForwardOutput: Output {
+final class ForwardOutput: Output, Sendable {
     let redirected = false
 
-    private let forwardStdout: ((String) -> Void)?
-    private let forwardStderr: ((String) -> Void)?
+    private let forwardStdout: (@Sendable (String) -> Void)?
+    private let forwardStderr: (@Sendable (String) -> Void)?
 
-    init(stdout: ((String) -> Void)?, stderr: ((String) -> Void)?) {
+    init(stdout: (@Sendable (String) -> Void)?, stderr: (@Sendable (String) -> Void)?) {
         forwardStdout = stdout
         forwardStderr = stderr
     }
@@ -92,7 +92,7 @@ final class ForwardOutput: Output {
     }
 }
 
-public final class CaptureOutput: Output {
+public final class CaptureOutput: Output, @unchecked Sendable {
     #if DEBUG
         public static let tests = CaptureOutput()
     #endif

@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct ImagesParameters {
+public struct ImagesParameters: Sendable {
     public let format: OutputFormat
 
     public init(format: OutputFormat) {
@@ -25,12 +25,13 @@ public struct ImagesParameters {
     }
 }
 
+@MainActor
 final class ImagesInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let wallClock: WallClock
     private let console: Console
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         wallClock: WallClock,
         console: Console

@@ -18,21 +18,29 @@ import CurieCommon
 import Foundation
 
 public final class MockOutput: Output {
-    public enum Call: Equatable {
+    public enum Call: Equatable, Sendable {
         case write(string: String, stream: CurieCommon.OutputStream)
     }
 
-    public private(set) var calls: [Call] = []
+    private let _calls = Atomic<[Call]>(value: [])
+    private let _redirected = Atomic<Bool>(value: false)
 
-    public func write(_ string: String, to stream: CurieCommon.OutputStream) {
-        calls.append(.write(string: string, stream: stream))
+    public var calls: [Call] {
+        _calls.load()
     }
 
-    public var redirected: Bool = false
+    public func write(_ string: String, to stream: CurieCommon.OutputStream) {
+        _calls.withLock { $0.append(.write(string: string, stream: stream)) }
+    }
+
+    public var redirected: Bool {
+        get { _redirected.load() }
+        set { _redirected.update(newValue) }
+    }
 }
 
 public final class MockConsole: Console {
-    public enum Call: Equatable {
+    public enum Call: Equatable, Sendable {
         // swiftlint:disable:next duplicate_enum_cases
         case text(String)
 
@@ -48,34 +56,43 @@ public final class MockConsole: Console {
         case progress(String, Double, String?)
     }
 
-    public private(set) var calls: [Call] = []
+    private let _calls = Atomic<[Call]>(value: [])
+    private let _quiet = Atomic<Bool>(value: false)
 
-    public var output: any CurieCommon.Output = MockOutput()
-    public var quiet: Bool = false
+    public var calls: [Call] {
+        _calls.load()
+    }
+
+    public let output: any CurieCommon.Output = MockOutput()
+
+    public var quiet: Bool {
+        get { _quiet.load() }
+        set { _quiet.update(newValue) }
+    }
 
     public init() {}
 
     public func text(_ message: String) {
-        calls.append(.text(message))
+        _calls.withLock { $0.append(.text(message)) }
     }
 
     public func text(_ message: String, always: Bool) {
-        calls.append(.text(message, always))
+        _calls.withLock { $0.append(.text(message, always)) }
     }
 
     public func error(_ message: String) {
-        calls.append(.error(message))
+        _calls.withLock { $0.append(.error(message)) }
     }
 
     public func clear() {
-        calls.append(.clear)
+        _calls.withLock { $0.append(.clear) }
     }
 
     public func progress(prompt: String, progress: Double) {
-        calls.append(.progress(prompt, progress))
+        _calls.withLock { $0.append(.progress(prompt, progress)) }
     }
 
     public func progress(prompt: String, progress: Double, suffix: String?) {
-        calls.append(.progress(prompt, progress, suffix))
+        _calls.withLock { $0.append(.progress(prompt, progress, suffix)) }
     }
 }

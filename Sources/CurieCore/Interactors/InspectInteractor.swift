@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct InspectParameters {
+public struct InspectParameters: Sendable {
     public var reference: String
     public let format: OutputFormat
 
@@ -30,6 +30,7 @@ public struct InspectParameters {
     }
 }
 
+@MainActor
 final class InspectInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let bundleParser: VMBundleParser
@@ -43,7 +44,7 @@ final class InspectInteractor: AsyncInteractor {
         return encoder
     }()
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         bundleParser: VMBundleParser,
         aprClient: ARPClient,

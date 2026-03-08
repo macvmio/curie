@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-public enum MouseButton: String, Codable, Equatable {
+public enum MouseButton: String, Sendable, Codable, Equatable {
     case left
     case right
 }

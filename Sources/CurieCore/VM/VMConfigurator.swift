@@ -26,18 +26,20 @@ struct VMSpec {
     var configPath: AbsolutePath?
 }
 
-protocol VMConfigurator {
+@MainActor
+protocol VMConfigurator: Sendable {
     func createVM(with bundle: VMBundle, spec: VMSpec) async throws
     func loadVM(with bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VM
 }
 
+@MainActor
 final class DefaultVMConfigurator: VMConfigurator {
     private let bundleParser: VMBundleParser
     private let fileSystem: CurieCommon.FileSystem
     private let wallClock: WallClock
     private let console: Console
 
-    init(
+    nonisolated init(
         bundleParser: VMBundleParser,
         fileSystem: CurieCommon.FileSystem,
         wallClock: WallClock,
@@ -67,10 +69,11 @@ final class DefaultVMConfigurator: VMConfigurator {
         try createDiskImage(atPath: bundle.diskImage, size: spec.diskSize)
 
         // Create platform configuration
-        let restoreImage = try await loadRestoreImage(spec: spec)
+        nonisolated(unsafe) let restoreImage = try await loadRestoreImage(spec: spec)
         try createPlatformConfiguration(bundle: bundle, restoreImage: restoreImage)
     }
 
+    @MainActor
     func loadVM(with bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VM {
         let config = try bundleParser.readConfig(from: bundle, overrideConfig: overrideConfig)
         let metadata = try bundleParser.readMetadata(from: bundle)
@@ -258,12 +261,8 @@ final class DefaultVMConfigurator: VMConfigurator {
     private func loadRestoreImage(spec: VMSpec) async throws -> VZMacOSRestoreImage {
         try await withCheckedThrowingContinuation { continuation in
             VZMacOSRestoreImage.load(from: spec.restoreImagePath.asURL) { result in
-                switch result {
-                case let .success(restoreImage):
-                    continuation.resume(returning: restoreImage)
-                case let .failure(error):
-                    continuation.resume(throwing: error)
-                }
+                nonisolated(unsafe) let result = result
+                continuation.resume(with: result)
             }
         }
     }

@@ -19,7 +19,7 @@ import Foundation
 
 // swiftlint:disable nesting
 
-public struct VMPartialConfig: Equatable, Codable {
+public struct VMPartialConfig: Equatable, Codable, Sendable {
     struct DisplayPartialConfig: Equatable, Codable {
         var width: Int?
         var height: Int?
@@ -53,7 +53,7 @@ public struct VMPartialConfig: Equatable, Codable {
     }
 }
 
-public struct VMConfig: Equatable, Codable {
+public struct VMConfig: Equatable, Codable, Sendable {
     enum CPUConfig: Equatable, Codable {
         case manual(CPUCount: Int)
         case minimumAllowedCPUCount

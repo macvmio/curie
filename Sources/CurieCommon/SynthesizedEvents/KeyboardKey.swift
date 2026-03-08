@@ -15,7 +15,7 @@
 //
 
 /// Human-friendly variants of various keys, mostly to make JSON user friendly.
-public enum KeyboardKey: String, Codable {
+public enum KeyboardKey: String, Sendable, Codable {
     case `return`, enter
     case escape, esc
     case tab

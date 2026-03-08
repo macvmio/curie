@@ -23,7 +23,7 @@ public enum Plugin: String {
     case push
 }
 
-public protocol PluginExecutor {
+public protocol PluginExecutor: Sendable {
     func supportsCommand(_ command: String) -> Bool
     func executePlugin(_ plugin: Plugin, parameters: [String: String]) throws
 }
@@ -33,7 +33,7 @@ final class DefaultPluginExecutor: PluginExecutor {
     private let fileSystem: CurieCommon.FileSystem
     private let console: Console
 
-    init(
+    nonisolated init(
         system: System,
         fileSystem: CurieCommon.FileSystem,
         console: Console

@@ -31,6 +31,7 @@ public struct StartInteractorContext {
 }
 
 public protocol StartInteractor {
+    @MainActor
     func execute(with context: StartInteractorContext) throws
 }
 
@@ -56,6 +57,7 @@ public final class DefaultStartInteractor: StartInteractor {
         self.console = console
     }
 
+    @MainActor
     public func execute(with context: StartInteractorContext) throws {
         console.text("Start \(context.reference) container")
 

@@ -19,7 +19,7 @@ import Foundation
 import TSCBasic
 import Virtualization
 
-protocol VMBundleParser {
+protocol VMBundleParser: Sendable {
     func readPlatformConfiguration(from bundle: VMBundle) throws -> VZMacPlatformConfiguration
     func readConfig(from bundle: VMBundle) throws -> VMConfig
     func readConfig(from bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VMConfig

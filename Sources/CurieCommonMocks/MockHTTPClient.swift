@@ -18,7 +18,7 @@ import CurieCommon
 import Foundation
 
 public final class MockHTTPClient: HTTPClient {
-    public struct MockDownload {
+    public struct MockDownload: Sendable {
         public var url: URL
         public let response: URLResponse
         public var progress: [HTTPClientDownloadProgress]
@@ -30,17 +30,24 @@ public final class MockHTTPClient: HTTPClient {
         }
     }
 
-    public var mockDownloadResult: [URL: [MockDownload]] = [:]
+    private let _mockDownloadResult = Atomic<[URL: [MockDownload]]>(value: [:])
+
+    public var mockDownloadResult: [URL: [MockDownload]] {
+        get { _mockDownloadResult.load() }
+        set { _mockDownloadResult.update(newValue) }
+    }
 
     public init() {}
 
     public func download(url: URL, tracker: (any HTTPClientDownloadTracker)?) async throws -> (URL, URLResponse) {
-        guard let download = mockDownloadResult[url]?.popLast() else {
+        guard let download = _mockDownloadResult.withLock({ $0[url]?.popLast() }) else {
             fatalError("Missing mock download")
         }
 
         for item in download.progress {
-            tracker?.httpClient(self, progress: item)
+            await MainActor.run {
+                tracker?.httpClient(self, progress: item)
+            }
         }
 
         return (download.url, download.response)

@@ -17,7 +17,7 @@
 import Foundation
 import TSCBasic
 
-public struct HTTPClientDownloadProgress {
+public struct HTTPClientDownloadProgress: Sendable {
     public let received: MemorySize
     public let expected: MemorySize
     public let progress: Double
@@ -29,11 +29,12 @@ public struct HTTPClientDownloadProgress {
     }
 }
 
-public protocol HTTPClientDownloadTracker: AnyObject {
+@MainActor
+public protocol HTTPClientDownloadTracker: AnyObject, Sendable {
     func httpClient(_ httpClient: HTTPClient, progress: HTTPClientDownloadProgress)
 }
 
-public protocol HTTPClient {
+public protocol HTTPClient: Sendable {
     func download(url: URL, tracker: (any HTTPClientDownloadTracker)?) async throws -> (URL, URLResponse)
 }
 
@@ -52,18 +53,24 @@ public final class URLSessionHTTPClient: HTTPClient {
                     continuation.resume(throwing: CoreError.generic("Unexpected result"))
                 }
             }
-            if let tracker {
-                observer = task.progress.observe(\.fractionCompleted, options: [.initial, .new]) { _, _ in
-                    let received = MemorySize(bytes: UInt64(task.countOfBytesReceived))
-                    let expected = MemorySize(bytes: UInt64(task.countOfBytesExpectedToReceive))
-                    let progress = expected.bytes > 0 ? Double(received.bytes) / Double(expected.bytes) : 0.0
+            defer {
+                task.resume()
+            }
+            guard let tracker else {
+                return
+            }
+            observer = task.progress.observe(\.fractionCompleted, options: [.initial, .new]) { [weak self] _, _ in
+                guard let self else { return }
+                let received = MemorySize(bytes: UInt64(task.countOfBytesReceived))
+                let expected = MemorySize(bytes: UInt64(task.countOfBytesExpectedToReceive))
+                let progress = expected.bytes > 0 ? Double(received.bytes) / Double(expected.bytes) : 0.0
+                Task { @MainActor in
                     tracker.httpClient(
                         self,
                         progress: .init(received: received, expected: expected, progress: progress)
                     )
                 }
             }
-            task.resume()
         }
         withExtendedLifetime(observer) {}
         return result

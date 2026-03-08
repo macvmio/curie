@@ -35,7 +35,7 @@ public enum OutputType {
     }
 }
 
-public protocol System {
+public protocol System: Sendable {
     func makeSIGINTSourceSignal(
         signalHandler: @escaping () -> Void
     ) -> DispatchSourceSignal

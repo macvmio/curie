@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct CloneParameters {
+public struct CloneParameters: Sendable {
     public var sourceReference: String
     public var targetReference: String
 
@@ -27,11 +27,12 @@ public struct CloneParameters {
     }
 }
 
+@MainActor
 final class CloneInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         console: Console
     ) {

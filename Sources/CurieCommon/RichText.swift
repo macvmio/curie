@@ -52,7 +52,7 @@ public struct RichText: ExpressibleByStringLiteral {
         let function: Function?
         let mode: Mode?
 
-        static let none = Attributes(
+        nonisolated(unsafe) static let none = Attributes(
             style: nil,
             color: nil,
             function: nil,

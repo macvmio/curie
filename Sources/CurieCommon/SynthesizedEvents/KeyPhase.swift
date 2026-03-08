@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-public enum KeyPhase: String, Codable {
+public enum KeyPhase: String, Sendable, Codable {
     /// Down alone is generally used to enable key modifier (e.g. shift + <other key while shift is pressed>)
     /// The event flow would be:  down (for shift) -> press (for other keys) -> up (for shift)
     case down

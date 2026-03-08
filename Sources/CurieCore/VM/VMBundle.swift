@@ -18,7 +18,7 @@ import CurieCommon
 import Foundation
 import TSCBasic
 
-public struct VMBundle {
+public struct VMBundle: Sendable {
     public let path: AbsolutePath
 
     static let fileExtension = "curie"

@@ -29,7 +29,7 @@ protocol SocketServer {
     func stop() throws
 }
 
-final class DefaultSocketServer: SocketServer {
+final class DefaultSocketServer: SocketServer, @unchecked Sendable {
     private let lock = NSLock()
     private let socketQueue: DispatchQueue
     private let unixSocketServer = UnixDomainSocketServer()

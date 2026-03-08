@@ -16,7 +16,7 @@
 
 import Foundation
 
-public protocol WallClock {
+public protocol WallClock: Sendable {
     func now() -> Date
 }
 

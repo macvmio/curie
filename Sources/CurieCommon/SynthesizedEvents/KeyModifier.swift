@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-public enum KeyModifier: String, Codable, CaseIterable {
+public enum KeyModifier: String, Sendable, Codable, CaseIterable {
     case shift
     case command
     case option

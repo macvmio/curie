@@ -18,14 +18,32 @@ import CurieCommon
 import Foundation
 
 public final class MockSystem: System {
-    public enum Call: Equatable {
+    public enum Call: Equatable, Sendable {
         case execute([String])
         case executeWithOutput([String])
     }
 
-    public private(set) var calls: [Call] = []
-    public var mockExecuteOutput: String?
-    public var mockEnvironmentVariables: [String: String] = [:]
+    private let _state = Atomic<State>(value: State())
+
+    private struct State: Sendable {
+        var calls: [Call] = []
+        var mockExecuteOutput: String?
+        var mockEnvironmentVariables: [String: String] = [:]
+    }
+
+    public var calls: [Call] {
+        _state.withLock { $0.calls }
+    }
+
+    public var mockExecuteOutput: String? {
+        get { _state.withLock { $0.mockExecuteOutput } }
+        set { _state.withLock { $0.mockExecuteOutput = newValue } }
+    }
+
+    public var mockEnvironmentVariables: [String: String] {
+        get { _state.withLock { $0.mockEnvironmentVariables } }
+        set { _state.withLock { $0.mockEnvironmentVariables = newValue } }
+    }
 
     public init() {}
 
@@ -55,24 +73,27 @@ public final class MockSystem: System {
     }
 
     public func execute(_ arguments: [String]) throws {
-        calls.append(.execute(arguments))
+        _state.withLock { $0.calls.append(.execute(arguments)) }
     }
 
     public func execute(_ arguments: [String], output: CurieCommon.OutputType) throws {
-        calls.append(.executeWithOutput(arguments))
+        let mockOutput = _state.withLock {
+            $0.calls.append(.executeWithOutput(arguments))
+            return $0.mockExecuteOutput
+        }
         switch output {
         case .stdout:
             break
         case .muted:
             break
         case let .custom(output):
-            if let mockExecuteOutput {
-                output.write(mockExecuteOutput)
+            if let mockOutput {
+                output.write(mockOutput)
             }
         }
     }
 
     public func environmentVariable(name: String) -> String? {
-        mockEnvironmentVariables[name]
+        _state.withLock { $0.mockEnvironmentVariables[name] }
     }
 }

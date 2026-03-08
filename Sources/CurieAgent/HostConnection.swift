@@ -31,13 +31,14 @@ struct SockaddrVM {
     var svmCid: UInt32
 }
 
+@MainActor
 protocol HostConnectionDelegate: AnyObject {
     func connectionDidConnect(_ connection: HostConnection)
     func connectionDidDisconnect(_ connection: HostConnection)
     func connection(_ connection: HostConnection, didReceive message: ClipboardMessage)
 }
 
-final class HostConnection {
+final class HostConnection: @unchecked Sendable {
     weak var delegate: HostConnectionDelegate?
 
     private let console: Console

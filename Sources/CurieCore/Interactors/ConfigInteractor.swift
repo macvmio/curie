@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct ConfigParameters {
+public struct ConfigParameters: Sendable {
     public var reference: String
 
     public init(reference: String) {
@@ -25,11 +25,12 @@ public struct ConfigParameters {
     }
 }
 
+@MainActor
 final class ConfigInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let system: System
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         system: System
     ) {
