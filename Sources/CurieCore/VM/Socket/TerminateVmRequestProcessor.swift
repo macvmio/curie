@@ -39,7 +39,6 @@ final class TerminateVmRequestProcessor {
         )
 
         nonisolated(unsafe) let vm = vm
-        nonisolated(unsafe) let vmBundle = vmBundle
         nonisolated(unsafe) let unsafeResponse = settableResponse
 
         DispatchQueue.main.async {

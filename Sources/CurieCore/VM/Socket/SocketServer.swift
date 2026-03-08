@@ -49,7 +49,6 @@ final class DefaultSocketServer: SocketServer, @unchecked Sendable {
         vmBundle: VMBundle
     ) throws {
         nonisolated(unsafe) let vm = vm
-        nonisolated(unsafe) let vmBundle = vmBundle
         try lock.withLock {
             _ = try unixSocketServer.start(
                 socketPath: socketPath,
