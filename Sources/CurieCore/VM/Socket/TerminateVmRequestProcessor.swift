@@ -38,7 +38,6 @@ final class TerminateVmRequestProcessor {
             closeSocketAfterDeliveringResponse: closeSocketAfterDeliveringResponse
         )
 
-        nonisolated(unsafe) let vm = vm
         nonisolated(unsafe) let unsafeResponse = settableResponse
 
         DispatchQueue.main.async {

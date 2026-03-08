@@ -70,6 +70,7 @@ let package = Package(
             name: "CurieCoreMocks",
             dependencies: [
                 .target(name: "CurieCore"),
+                .target(name: "CurieCommon"),
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
             ],
             swiftSettings: swiftSettings

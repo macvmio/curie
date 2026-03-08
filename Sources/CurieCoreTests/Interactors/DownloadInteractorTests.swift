@@ -23,6 +23,7 @@ import XCTest
 
 @testable import CurieCore
 
+@MainActor
 final class DownloadInteractorTests: XCTestCase {
     private var subject: Interactor!
     private var env: InteractorsTestsEnvironment!

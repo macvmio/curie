@@ -31,11 +31,15 @@ public struct RestoreImage: Equatable {
     }
 }
 
-public protocol RestoreImageService {
+@MainActor
+public protocol RestoreImageService: Sendable {
     func latestSupported() async throws -> RestoreImage
 }
 
+@MainActor
 final class DefaultRestoreImageService: RestoreImageService {
+    nonisolated init() {}
+
     func latestSupported() async throws -> RestoreImage {
         try await withCheckedThrowingContinuation { continuation in
             VZMacOSRestoreImage.fetchLatestSupported { result in

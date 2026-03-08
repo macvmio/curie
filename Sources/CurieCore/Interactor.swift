@@ -16,7 +16,7 @@
 
 import CurieCommon
 
-public enum Operation {
+public enum Operation: Sendable {
     case build(BuildParameters)
     case clone(CloneParameters)
     case commit(CommitParameters)
@@ -34,6 +34,7 @@ public enum Operation {
     case rm(RmParameters)
 }
 
+@MainActor
 public protocol Interactor {
     func execute(_ operation: Operation) throws
 }
@@ -44,7 +45,8 @@ protocol AsyncInteractor: AnyObject {
     func execute(parameters: Parameters) async throws
 }
 
-final class DefaultInteractor: Interactor, @unchecked Sendable {
+@MainActor
+final class DefaultInteractor: Interactor {
     private let buildInteractor: BuildInteractor
     private let cloneInteractor: CloneInteractor
     private let commitInteractor: CommitInteractor
@@ -62,7 +64,7 @@ final class DefaultInteractor: Interactor, @unchecked Sendable {
     private let rmInteractor: RmInteractor
     private let runLoop: CurieCommon.RunLoop
 
-    init(
+    nonisolated init(
         buildInteractor: BuildInteractor,
         cloneInteractor: CloneInteractor,
         commitInteractor: CommitInteractor,
@@ -100,7 +102,6 @@ final class DefaultInteractor: Interactor, @unchecked Sendable {
 
     // swiftlint:disable:next cyclomatic_complexity
     func execute(_ operation: Operation) throws {
-        nonisolated(unsafe) let operation = operation
         try runLoop.run { [self] _ in
             switch operation {
             case let .build(parameters):

@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public enum OutputFormat {
+public enum OutputFormat: Sendable {
     case text
     case json
 }

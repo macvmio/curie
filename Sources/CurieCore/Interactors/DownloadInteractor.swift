@@ -19,7 +19,7 @@ import CurieCommon
 import Foundation
 import TSCBasic
 
-public struct DownloadParameters {
+public struct DownloadParameters: Sendable {
     public var path: String
 
     public init(path: String) {
@@ -27,13 +27,14 @@ public struct DownloadParameters {
     }
 }
 
+@MainActor
 final class DownloadInteractor: AsyncInteractor {
     private let restoreImageService: RestoreImageService
     private let httpClient: HTTPClient
     private let fileSystem: CurieCommon.FileSystem
     private let console: Console
 
-    init(
+    nonisolated init(
         restoreImageService: RestoreImageService,
         httpClient: HTTPClient,
         fileSystem: CurieCommon.FileSystem,

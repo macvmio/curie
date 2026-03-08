@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct ExportParameters {
+public struct ExportParameters: Sendable {
     public var reference: String
     public var path: String
     public var compress: Bool
@@ -29,11 +29,12 @@ public struct ExportParameters {
     }
 }
 
+@MainActor
 final class ExportInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         console: Console
     ) {

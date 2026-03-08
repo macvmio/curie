@@ -21,6 +21,7 @@ import CurieCoreMocks
 import Foundation
 import SCInject
 
+@MainActor
 final class InteractorsTestsEnvironment {
     let restoreImageService = MockRestoreImageService()
     let directory: TemporaryDirectory

@@ -25,13 +25,14 @@ struct VMStartOptions {
     var socketPath: String?
 }
 
-final class VM: NSObject {
+@MainActor
+final class VM {
     enum Event: Equatable {
         case imageDidStop
         case imageStopFailed
     }
 
-    public var events: AnyPublisher<Event, Never> {
+    public nonisolated var events: AnyPublisher<Event, Never> {
         _events.eraseToAnyPublisher()
     }
 
@@ -40,7 +41,8 @@ final class VM: NSObject {
 
     private let vm: VZVirtualMachine
     private let console: Console
-    private let _events = PassthroughSubject<Event, Never>()
+    private nonisolated let _events = PassthroughSubject<Event, Never>()
+    private let delegate: VMDelegate
 
     private var sourceSignals: [DispatchSourceSignal] = []
     private var clipboardSyncService: ClipboardSyncService?
@@ -55,10 +57,9 @@ final class VM: NSObject {
         self.config = config
         self.metadata = metadata
         self.console = console
+        delegate = VMDelegate(console: console, events: _events)
 
-        super.init()
-
-        vm.delegate = self
+        vm.delegate = delegate
     }
 
     public func startClipboardSync(service: ClipboardSyncService) {
@@ -79,8 +80,6 @@ final class VM: NSObject {
     }
 
     public func start(options: VMStartOptions, completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        precondition(Thread.isMainThread)
-
         console.text("Will start container")
         let startOptions = VZMacOSVirtualMachineStartOptions()
         startOptions.startUpFromMacOSRecovery = options.startUpFromMacOSRecovery
@@ -94,8 +93,6 @@ final class VM: NSObject {
     }
 
     public func pause(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        precondition(Thread.isMainThread)
-
         console.text("Will pause container")
         vm.pause { [vm] result in
             switch result {
@@ -118,8 +115,6 @@ final class VM: NSObject {
     }
 
     public func resume(machineStateURL: URL, completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        precondition(Thread.isMainThread)
-
         console.text("Will start paused container")
         if #available(macOS 14.0, *) {
             vm.restoreMachineStateFrom(url: machineStateURL) { [vm] error in
@@ -135,8 +130,6 @@ final class VM: NSObject {
     }
 
     public func stop(completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        precondition(Thread.isMainThread)
-
         guard vm.state != .stopped else {
             completionHandler(.success(()))
             return
@@ -158,8 +151,6 @@ final class VM: NSObject {
         machineStateURL: URL,
         completionHandler: @escaping (Result<Void, Error>) -> Void
     ) {
-        precondition(Thread.isMainThread)
-
         console.text("Will exit container")
         let completion = { [console, config] (result: Result<Void, Error>) in
             switch result {
@@ -206,16 +197,24 @@ final class VM: NSObject {
     }
 }
 
-extension VM: VZVirtualMachineDelegate {
+private final class VMDelegate: NSObject, VZVirtualMachineDelegate {
+    private let console: Console
+    private let events: PassthroughSubject<VM.Event, Never>
+
+    init(console: Console, events: PassthroughSubject<VM.Event, Never>) {
+        self.console = console
+        self.events = events
+    }
+
     func virtualMachine(_: VZVirtualMachine, didStopWithError error: Error) {
         console.error("Container stopped with error. \(error)")
-        _events.send(.imageStopFailed)
+        events.send(.imageStopFailed)
         Darwin.exit(1)
     }
 
     func guestDidStop(_: VZVirtualMachine) {
         console.text("Guest did stop container")
-        _events.send(.imageDidStop)
+        events.send(.imageDidStop)
         Darwin.exit(0)
     }
 }

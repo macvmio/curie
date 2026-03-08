@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct PsParameters {
+public struct PsParameters: Sendable {
     public let format: OutputFormat
 
     public init(format: OutputFormat) {
@@ -25,12 +25,13 @@ public struct PsParameters {
     }
 }
 
+@MainActor
 final class PsInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let wallClock: WallClock
     private let console: Console
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         wallClock: WallClock,
         console: Console

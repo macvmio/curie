@@ -19,6 +19,7 @@ import CurieCommon
 import Foundation
 
 protocol ImageRunner {
+    @MainActor
     func run(vm: VM, bundle: VMBundle, options: VMStartOptions) throws
 }
 
@@ -53,6 +54,7 @@ final class DefaultImageRunner: ImageRunner {
         self.socketServer = socketServer
     }
 
+    @MainActor
     func run(vm: VM, bundle: VMBundle, options: VMStartOptions) throws {
         let info = try VMInfo(
             config: vm.config,
@@ -149,32 +151,35 @@ final class DefaultImageRunner: ImageRunner {
     private func launchConsole(with vm: VM, bundle: VMBundle) {
         withExtendedLifetime(vm) { _ in
             system.keepAlive {
+                MainActor.assumeIsolated {
+                    vm.terminateVmAndCurrentProcess(
+                        machineStateURL: bundle.machineState.asURL
+                    )
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private func launchWindow(with vm: VM, bundle: VMBundle) {
+        let sigint = system.makeSIGINTSourceSignal {
+            MainActor.assumeIsolated {
                 vm.terminateVmAndCurrentProcess(
                     machineStateURL: bundle.machineState.asURL
                 )
             }
         }
-    }
-
-    private func launchWindow(with vm: VM, bundle: VMBundle) {
-        let sigint = system.makeSIGINTSourceSignal {
-            vm.terminateVmAndCurrentProcess(
-                machineStateURL: bundle.machineState.asURL
-            )
-        }
         vm.addSourceSignal(sigint)
 
         let sigterm = system.makeSIGTERMSourceSignal {
-            vm.terminateVmAndCurrentProcess(
-                machineStateURL: bundle.machineState.asURL
-            )
+            MainActor.assumeIsolated {
+                vm.terminateVmAndCurrentProcess(
+                    machineStateURL: bundle.machineState.asURL
+                )
+            }
         }
         vm.addSourceSignal(sigterm)
 
-        nonisolated(unsafe) let vm = vm
-        nonisolated(unsafe) let launcher = windowAppLauncher
-        MainActor.assumeIsolated {
-            launcher.launchWindow(with: vm, bundle: bundle)
-        }
+        windowAppLauncher.launchWindow(with: vm, bundle: bundle)
     }
 }

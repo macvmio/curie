@@ -18,7 +18,7 @@ import Combine
 import CurieCommon
 import Foundation
 
-public struct CommitParameters {
+public struct CommitParameters: Sendable {
     public var containerReference: String
     public var imageReference: String?
 
@@ -28,12 +28,13 @@ public struct CommitParameters {
     }
 }
 
+@MainActor
 final class CommitInteractor: AsyncInteractor {
     private let configurator: VMConfigurator
     private let imageCache: ImageCache
     private let console: Console
 
-    init(
+    nonisolated init(
         configurator: VMConfigurator,
         imageCache: ImageCache,
         console: Console

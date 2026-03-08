@@ -33,4 +33,10 @@ public final class Atomic<T>: @unchecked Sendable {
         lock.lock(); defer { lock.unlock() }
         value = newValue
     }
+
+    @discardableResult
+    public func withLock<R>(_ body: (inout T) throws -> R) rethrows -> R {
+        lock.lock(); defer { lock.unlock() }
+        return try body(&value)
+    }
 }

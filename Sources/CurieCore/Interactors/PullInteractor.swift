@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct PullParameters {
+public struct PullParameters: Sendable {
     public let reference: String
 
     public init(reference: String) {
@@ -25,11 +25,12 @@ public struct PullParameters {
     }
 }
 
+@MainActor
 final class PullInteractor: AsyncInteractor {
     private let pluginExecutor: PluginExecutor
     private let console: Console
 
-    init(
+    nonisolated init(
         pluginExecutor: PluginExecutor,
         console: Console
     ) {

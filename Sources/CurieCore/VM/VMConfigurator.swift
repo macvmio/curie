@@ -26,18 +26,20 @@ struct VMSpec {
     var configPath: AbsolutePath?
 }
 
-protocol VMConfigurator {
+@MainActor
+protocol VMConfigurator: Sendable {
     func createVM(with bundle: VMBundle, spec: VMSpec) async throws
     func loadVM(with bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VM
 }
 
+@MainActor
 final class DefaultVMConfigurator: VMConfigurator {
     private let bundleParser: VMBundleParser
     private let fileSystem: CurieCommon.FileSystem
     private let wallClock: WallClock
     private let console: Console
 
-    init(
+    nonisolated init(
         bundleParser: VMBundleParser,
         fileSystem: CurieCommon.FileSystem,
         wallClock: WallClock,
@@ -71,6 +73,7 @@ final class DefaultVMConfigurator: VMConfigurator {
         try createPlatformConfiguration(bundle: bundle, restoreImage: restoreImage)
     }
 
+    @MainActor
     func loadVM(with bundle: VMBundle, overrideConfig: VMPartialConfig?) throws -> VM {
         let config = try bundleParser.readConfig(from: bundle, overrideConfig: overrideConfig)
         let metadata = try bundleParser.readMetadata(from: bundle)

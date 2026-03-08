@@ -18,11 +18,16 @@ import CurieCommon
 import Foundation
 
 public final class MockWallClock: WallClock {
-    public var mockNow: Date = .now
+    private let _mockNow = Atomic<Date>(value: .now)
+
+    public var mockNow: Date {
+        get { _mockNow.load() }
+        set { _mockNow.update(newValue) }
+    }
 
     public init() {}
 
     public func now() -> Date {
-        mockNow
+        _mockNow.load()
     }
 }

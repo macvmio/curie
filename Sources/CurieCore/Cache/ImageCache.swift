@@ -35,7 +35,7 @@ struct ImageItem: Equatable {
     var name: String?
 }
 
-protocol ImageCache {
+protocol ImageCache: Sendable {
     func makeImageReference(_ reference: String) throws -> ImageReference
     func findReference(_ reference: String) throws -> ImageReference
     func findImageReference(_ reference: String) throws -> ImageReference

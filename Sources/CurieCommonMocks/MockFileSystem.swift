@@ -19,16 +19,38 @@ import Foundation
 import TSCBasic
 
 public final class MockFileSystem: CurieCommon.FileSystem {
-    public enum Call: Equatable {
+    public enum Call: Equatable, Sendable {
         case write(data: Data, path: AbsolutePath)
     }
 
-    public var currentWorkingDirectory: TSCBasic.AbsolutePath
-    public var homeDirectory: TSCBasic.AbsolutePath
+    private let _state: Atomic<State>
+
+    private struct State: Sendable {
+        var currentWorkingDirectory: AbsolutePath
+        var homeDirectory: AbsolutePath
+        var calls: [Call] = []
+        var mockRead: @Sendable (AbsolutePath) throws -> Data = { _ in Data() }
+    }
+
+    public var currentWorkingDirectory: TSCBasic.AbsolutePath {
+        _state.withLock { $0.currentWorkingDirectory }
+    }
+
+    public var homeDirectory: TSCBasic.AbsolutePath {
+        _state.withLock { $0.homeDirectory }
+    }
+
+    public var calls: [Call] {
+        _state.withLock { $0.calls }
+    }
+
+    public var mockRead: @Sendable (AbsolutePath) throws -> Data {
+        get { _state.withLock { $0.mockRead } }
+        set { _state.withLock { $0.mockRead = newValue } }
+    }
 
     init(currentWorkingDirectory: TSCBasic.AbsolutePath, homeDirectory: TSCBasic.AbsolutePath) {
-        self.currentWorkingDirectory = currentWorkingDirectory
-        self.homeDirectory = homeDirectory
+        _state = Atomic(value: State(currentWorkingDirectory: currentWorkingDirectory, homeDirectory: homeDirectory))
     }
 
     public convenience init() {
@@ -37,10 +59,6 @@ public final class MockFileSystem: CurieCommon.FileSystem {
             homeDirectory: try! AbsolutePath(validating: "/Users/testuser")
         )
     }
-
-    public private(set) var calls: [Call] = []
-
-    public var mockRead: (AbsolutePath) throws -> Data = { _ in Data() }
 
     public func exists(at _: TSCBasic.AbsolutePath) -> Bool {
         fatalError("Not implemented yet")
@@ -99,11 +117,12 @@ public final class MockFileSystem: CurieCommon.FileSystem {
     }
 
     public func write(data: Data, to path: TSCBasic.AbsolutePath) throws {
-        calls.append(.write(data: data, path: path))
+        _state.withLock { $0.calls.append(.write(data: data, path: path)) }
     }
 
     public func read(from path: TSCBasic.AbsolutePath) throws -> Data {
-        try mockRead(path)
+        let mockRead = _state.withLock { $0.mockRead }
+        return try mockRead(path)
     }
 }
 

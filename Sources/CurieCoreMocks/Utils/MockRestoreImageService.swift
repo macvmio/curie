@@ -14,17 +14,23 @@
 // limitations under the License.
 //
 
+import CurieCommon
 import CurieCore
 import Foundation
 import Virtualization
 
 public final class MockRestoreImageService: RestoreImageService {
-    public var mockLatestSupported: [CurieCore.RestoreImage] = []
+    private let _mockLatestSupported = Atomic<[CurieCore.RestoreImage]>(value: [])
+
+    public var mockLatestSupported: [CurieCore.RestoreImage] {
+        get { _mockLatestSupported.load() }
+        set { _mockLatestSupported.update(newValue) }
+    }
 
     public init() {}
 
     public func latestSupported() async throws -> CurieCore.RestoreImage {
-        guard let latestSupported = mockLatestSupported.popLast() else {
+        guard let latestSupported = _mockLatestSupported.withLock({ $0.popLast() }) else {
             fatalError("Missing mock latest supported")
         }
         return latestSupported

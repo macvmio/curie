@@ -17,7 +17,7 @@
 import CurieCommon
 import Foundation
 
-public struct ImportParameters {
+public struct ImportParameters: Sendable {
     public var reference: String
     public var path: String
 
@@ -27,11 +27,12 @@ public struct ImportParameters {
     }
 }
 
+@MainActor
 final class ImportInteractor: AsyncInteractor {
     private let imageCache: ImageCache
     private let console: Console
 
-    init(
+    nonisolated init(
         imageCache: ImageCache,
         console: Console
     ) {

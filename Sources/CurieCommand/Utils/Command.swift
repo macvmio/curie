@@ -22,6 +22,7 @@ import SCInject
 protocol CommandExecutor {
     associatedtype Command
 
+    @MainActor
     func execute(command: Command) throws
 }
 
@@ -31,7 +32,9 @@ protocol Command: ParsableCommand {
 
 extension Command {
     func run() throws {
-        try resolver.resolve(Executor.self).execute(command: self)
+        try MainActor.assumeIsolated {
+            try resolver.resolve(Executor.self).execute(command: self)
+        }
     }
 }
 

@@ -19,6 +19,7 @@ import CurieCommonMocks
 import Foundation
 import XCTest
 
+@MainActor
 final class DefaultARPClientTests: XCTestCase {
     private var subject: DefaultARPClient!
     private var system: MockSystem!

@@ -22,14 +22,15 @@ struct ARPItem: Equatable, Codable {
     let macAddress: String
 }
 
-protocol ARPClient {
+@MainActor
+protocol ARPClient: Sendable {
     func executeARPQuery() throws -> [ARPItem]
 }
 
 final class DefaultARPClient: ARPClient {
     private let system: System
 
-    init(system: System) {
+    nonisolated init(system: System) {
         self.system = system
     }
 

@@ -18,7 +18,7 @@ import CurieCommon
 import Foundation
 import TSCBasic
 
-public struct BuildParameters {
+public struct BuildParameters: Sendable {
     var ipwsPath: String
     var reference: String
     var diskSize: String?
@@ -37,13 +37,14 @@ public struct BuildParameters {
     }
 }
 
+@MainActor
 final class BuildInteractor: AsyncInteractor {
     private let configurator: VMConfigurator
     private let installer: VMInstaller
     private let imageCache: ImageCache
     private let fileSystem: CurieCommon.FileSystem
 
-    init(
+    nonisolated init(
         configurator: VMConfigurator,
         installer: VMInstaller,
         imageCache: ImageCache,
@@ -71,7 +72,7 @@ final class BuildInteractor: AsyncInteractor {
         ))
 
         // Load VM
-        let vm = try configurator.loadVM(with: bundle, overrideConfig: nil)
+        let vm = try await MainActor.run { try configurator.loadVM(with: bundle, overrideConfig: nil) }
 
         // Install VM image
         try await installer.install(vm: vm, restoreImagePath: restoreImagePath)

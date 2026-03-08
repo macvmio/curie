@@ -30,7 +30,7 @@ public enum FileSystemItem: Hashable {
     case directory(Directory)
 }
 
-public protocol FileSystem {
+public protocol FileSystem: Sendable {
     var currentWorkingDirectory: AbsolutePath { get }
 
     var homeDirectory: AbsolutePath { get }
@@ -69,9 +69,9 @@ public protocol FileSystem {
 }
 
 public final class DefaultFileSystem: FileSystem {
-    public struct Config {
+    public struct Config: Sendable {
         // swiftlint:disable:next nesting
-        public struct Overrides {
+        public struct Overrides: Sendable {
             var currentWorkingDirectory: AbsolutePath?
             var homeDirectory: AbsolutePath?
 
@@ -93,7 +93,7 @@ public final class DefaultFileSystem: FileSystem {
         }
     }
 
-    private let fileManager = FileManager.default
+    private nonisolated(unsafe) let fileManager = FileManager.default
     private let config: Config
 
     public init(config: Config = .init()) {
