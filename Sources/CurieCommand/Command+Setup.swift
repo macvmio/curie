@@ -21,7 +21,7 @@ import Foundation
 import SCInject
 
 enum Setup {
-    nonisolated(unsafe) static let allStaticSubcommands: [(ParsableCommand.Type, Assembly)] = [
+    static let allStaticSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (BuildCommand.self, BuildCommand.Assembly()),
         (CloneCommand.self, CloneCommand.Assembly()),
         (ConfigCommand.self, ConfigCommand.Assembly()),
@@ -46,7 +46,7 @@ enum Setup {
         (VersionCommand.self, VersionCommand.Assembly()),
     ]
 
-    nonisolated(unsafe) static let allRuntimeSubcommands: [(ParsableCommand.Type, Assembly)] = [
+    static let allRuntimeSubcommands: [(ParsableCommand.Type, Assembly)] = [
         (PullCommand.self, PullCommand.Assembly()),
         (PushCommand.self, PushCommand.Assembly()),
     ]
