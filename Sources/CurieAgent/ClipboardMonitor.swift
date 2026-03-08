@@ -17,11 +17,13 @@
 import AppKit
 import Foundation
 
+@MainActor
 protocol ClipboardMonitorDelegate: AnyObject {
     func clipboardMonitor(_ monitor: ClipboardMonitor, didDetectChange content: ClipboardContent)
 }
 
-final class ClipboardMonitor: @unchecked Sendable {
+@MainActor
+final class ClipboardMonitor {
     weak var delegate: ClipboardMonitorDelegate?
 
     private var lastChangeCount: Int = 0
@@ -34,7 +36,10 @@ final class ClipboardMonitor: @unchecked Sendable {
 
     func start() {
         timer = Timer.scheduledTimer(withTimeInterval: pollInterval, repeats: true) { [weak self] _ in
-            self?.checkForChanges()
+            Task { @MainActor in
+                guard let self else { return }
+                self.checkForChanges()
+            }
         }
     }
 

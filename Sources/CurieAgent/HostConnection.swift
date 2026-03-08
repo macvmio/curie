@@ -31,6 +31,7 @@ struct SockaddrVM {
     var svmCid: UInt32
 }
 
+@MainActor
 protocol HostConnectionDelegate: AnyObject {
     func connectionDidConnect(_ connection: HostConnection)
     func connectionDidDisconnect(_ connection: HostConnection)
